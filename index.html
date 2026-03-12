@@ -1,0 +1,49 @@
+<!D<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niskaram Tracker Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #f0f2f5; font-family: 'Inter', sans-serif; }
+        .niskaram-btn { transition: all 0.2s; border: 1px solid #ddd; }
+        .niskaram-btn.active { background-color: #10b981; color: white; border-color: #059669; }
+    </style>
+</head>
+<body class="pb-10">
+    <div class="bg-emerald-800 p-6 text-white rounded-b-[2rem] shadow-xl text-center">
+        <h1 class="text-2xl font-black tracking-tight uppercase">Prayer Tracker</h1>
+        <p id="today" class="text-sm opacity-90 mt-1 font-medium"></p>
+    </div>
+    <div class="p-4 space-y-4" id="list"></div>
+    <script>
+        const d = new Date();
+        document.getElementById('today').innerText = d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
+        const prayers = ["Subhi", "Luhr", "Asr", "Maghrib", "Isha"];
+        const listDiv = document.getElementById('list');
+        students.forEach(name => {
+            let prayerButtons = prayers.map(p => `<button onclick="togglePrayer(this)" class="niskaram-btn px-2 py-1 text-[10px] font-bold rounded-md bg-white text-gray-600">${p}</button>`).join('');
+            listDiv.innerHTML += `<div class="bg-white p-4 rounded-2xl shadow-sm border-b-4 border-emerald-500"><div class="flex items-center justify-between mb-3"><div class="flex items-center space-x-3"><div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold">${name[0]}</div><h3 class="font-bold text-gray-800">${name}</h3></div><span class="text-[10px] bg-gray-100 px-2 py-1 rounded text-gray-500 font-bold uppercase">Class 1</span></div><div class="grid grid-cols-5 gap-1">${prayerButtons}</div></div>`;
+        });
+        function togglePrayer(btn) {
+            btn.classList.toggle('active');
+            if(btn.classList.contains('active')) { btn.innerHTML += ' ✓'; } else { btn.innerText = btn.innerText.replace(' ✓', ''); }
+        }
+    </script>
+</body>
+</html>
+OCTYPE html>
+
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>Hello, World!</title>
+</head>
+<body>
+  <h1>
+    Hello, World!
+  </h1>
+</body>
+</html>
