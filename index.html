@@ -6,30 +6,39 @@
     <title>Hidayatul Islam Prayer Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .card { background: white; border-radius: 15px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border-left: 5px solid #059669; }
-        .niskaram-btn { transition: 0.3s; border: 1px solid #e2e8f0; font-weight: 600; }
-        .active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
-        .prayer-time-box { background: #f1f5f9; padding: 12px; border-radius: 15px; margin-bottom: 15px; display: grid; grid-template-cols: repeat(5, 1fr); gap: 8px; text-align: center; font-size: 11px; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.05); }
-        .score-box { background: #ecfdf5; color: #065f46; padding: 2px 10px; border-radius: 20px; font-size: 13px; border: 1px solid #10b981; }
+        body { background-color: #f0fdf4; font-family: 'Inter', sans-serif; }
+        .card { background: white; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-top: 4px solid #059669; }
+        .niskaram-btn { transition: 0.3s; border: 1px solid #e2e8f0; font-weight: 600; font-size: 11px; }
+        .active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); }
+        .star-section { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; border-radius: 20px; padding: 15px; margin-bottom: 20px; text-align: center; }
+        .progress-btn { font-size: 10px; color: #059669; background: #ecfdf5; border: 1px dashed #10b981; padding: 2px 8px; border-radius: 10px; margin-top: 5px; }
     </style>
 </head>
 <body class="pb-20">
 
     <div class="bg-emerald-800 p-8 text-white rounded-b-[3rem] shadow-2xl text-center">
-        <h1 class="text-2xl font-bold tracking-wide uppercase leading-tight">Hidayatul Islam Madrasa</h1>
-        <p id="today" class="text-emerald-100 mt-2 font-medium text-sm"></p>
-        
-        <div id="prayer-times" class="mt-6 prayer-time-box text-gray-800 font-bold">
-            <div><div class="text-emerald-700">Fajr</div><div class="text-lg">05:17</div></div>
-            <div><div class="text-emerald-700">Dhuhr</div><div class="text-lg">12:39</div></div>
-            <div><div class="text-emerald-700">Asr</div><div class="text-lg">03:59</div></div>
-            <div><div class="text-emerald-700">Maghrib</div><div class="text-lg">06:38</div></div>
-            <div><div class="text-emerald-700">Isha</div><div class="text-lg">07:49</div></div>
+        <h1 class="text-2xl font-bold uppercase tracking-tight">Hidayatul Islam Madrasa</h1>
+        <p id="today" class="text-emerald-100 mt-1 text-sm"></p>
+
+        <div class="mt-6 grid grid-cols-5 gap-2 bg-emerald-900/50 p-3 rounded-2xl text-[10px] font-bold">
+            <div>Fajr<br><span class="text-sm">05:17</span></div>
+            <div>Dhuhr<br><span class="text-sm">12:39</span></div>
+            <div>Asr<br><span class="text-sm">03:59</span></div>
+            <div>Maghrib<br><span class="text-sm">06:38</span></div>
+            <div>Isha<br><span class="text-sm">07:49</span></div>
         </div>
     </div>
 
-    <div class="p-4 space-y-5" id="list"></div>
+    <div class="p-4">
+        <div class="star-section shadow-lg">
+            <h2 class="font-black text-lg flex justify-center items-center">
+                🏆 STAR OF THE WEEK 🏆
+            </h2>
+            <p class="text-sm mt-1 font-bold">Dishan, Fazil, Afreena</p>
+        </div>
+
+        <div class="space-y-4" id="list"></div>
+    </div>
 
     <script>
         const d = new Date();
@@ -43,6 +52,8 @@
         const NAME_ENTRY = "entry.877237437";
         const PRAYER_ENTRY = "entry.330346532";
 
+        // ലോഗ് ഡാറ്റ - ഈ ആഴ്ചത്തെ മൊത്തം കണക്ക് സൂക്ഷിക്കാൻ
+        let historyData = JSON.parse(localStorage.getItem('prayer_history')) || {};
         let localData = JSON.parse(localStorage.getItem('hidayatul_p_data')) || { date: dateKey, entries: [] };
 
         if (localData.date !== dateKey) {
@@ -53,26 +64,31 @@
         const listDiv = document.getElementById('list');
 
         students.forEach(name => {
-            let score = localData.entries.filter(e => e.startsWith(name)).length;
+            let todayScore = localData.entries.filter(e => e.startsWith(name)).length;
+            let totalWeekly = historyData[name] || 0;
+            
             let prayerButtons = prayers.map(p => {
                 const isDone = localData.entries.includes(`${name}-${p}`);
                 return `<button id="${name}-${p}" onclick="submitPrayer('${name}', '${p}', this)" 
-                        class="niskaram-btn py-2 text-[11px] rounded-lg bg-gray-50 text-gray-700 ${isDone ? 'active' : ''}">
+                        class="niskaram-btn py-2 rounded-xl bg-gray-50 text-gray-700 ${isDone ? 'active' : ''}">
                         ${p}${isDone ? ' ✓' : ''}</button>`;
             }).join('');
 
             listDiv.innerHTML += `
                 <div class="card p-5">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold text-lg">${name[0]}</div>
-                            <h3 class="font-bold text-gray-800 text-lg">${name}</h3>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex flex-col">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-sm">${name[0]}</div>
+                                <h3 class="font-bold text-gray-800">${name}</h3>
+                            </div>
+                            <button onclick="showProgress('${name}')" class="progress-btn">📊 My Progress</button>
                         </div>
-                        <span class="score-box font-bold" id="score-${name}">Today: ${score}/5</span>
+                        <div class="text-right">
+                            <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-1 rounded-full font-bold">Today: ${todayScore}/5</span>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-5 gap-2">
-                        ${prayerButtons}
-                    </div>
+                    <div class="grid grid-cols-5 gap-2">${prayerButtons}</div>
                 </div>
             `;
         });
@@ -85,12 +101,22 @@
             fetch(FORM_URL, { method: "POST", body: formData, mode: "no-cors" }).then(() => {
                 btn.classList.add('active');
                 btn.innerHTML += ' ✓';
+                
+                // ഇന്നത്തെ കണക്ക്
                 localData.entries.push(`${studentName}-${prayerName}`);
                 localStorage.setItem('hidayatul_p_data', JSON.stringify(localData));
-                let newScore = localData.entries.filter(e => e.startsWith(studentName)).length;
-                document.getElementById(`score-${studentName}`).innerText = `Today: ${newScore}/5`;
-                alert(`${studentName}-ന്റെ ${prayerName} നിസ്കാരം രേഖപ്പെടുത്തി!`);
-            }).catch(() => alert("Error! Net Connection പരിശോധിക്കുക."));
+
+                // ആകെ കണക്ക് (History)
+                historyData[studentName] = (historyData[studentName] || 0) + 1;
+                localStorage.setItem('prayer_history', JSON.stringify(historyData));
+                
+                location.reload(); // സ്കോർ ഉടനെ കാണാൻ
+            });
+        }
+
+        function showProgress(name) {
+            let total = historyData[name] || 0;
+            alert(`${name}, നിങ്ങൾ ഈ ആഴ്ച ഇതുവരെ ${total} നിസ്കാരങ്ങൾ പൂർത്തിയാക്കിയിട്ടുണ്ട്. മാഷാ അള്ളാ!`);
         }
     </script>
 </body>
