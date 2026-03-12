@@ -6,19 +6,19 @@
     <title>Hidayatul Islam Prayer Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
         .card { background: white; border-radius: 15px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border-left: 5px solid #059669; }
         .niskaram-btn { transition: 0.3s; border: 1px solid #e2e8f0; font-weight: 600; }
         .active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
-        .score-box { background: #ecfdf5; color: #065f46; padding: 2px 8px; border-radius: 20px; font-size: 12px; }
+        .score-box { background: #ecfdf5; color: #065f46; padding: 2px 10px; border-radius: 20px; font-size: 13px; border: 1px solid #10b981; }
     </style>
 </head>
 <body class="pb-20">
 
-    <div class="bg-emerald-700 p-8 text-white rounded-b-[3rem] shadow-2xl text-center">
-        <h1 class="text-2xl font-bold tracking-wide">HIDAYATUL ISLAM MADRASA</h1>
+    <div class="bg-emerald-800 p-8 text-white rounded-b-[3rem] shadow-2xl text-center">
+        <h1 class="text-2xl font-bold tracking-wide uppercase">Hidayatul Islam Madrasa</h1>
         <p id="today" class="text-emerald-100 mt-2 font-medium"></p>
-        <div class="mt-4 inline-block bg-emerald-600 px-4 py-1 rounded-full text-xs">Prayer Tracker</div>
+        <div class="mt-4 inline-block bg-emerald-700 px-6 py-1 rounded-full text-xs font-bold tracking-widest">PRAYER TRACKER</div>
     </div>
 
     <div class="p-4 space-y-5" id="list"></div>
@@ -28,17 +28,17 @@
         const dateKey = d.toDateString();
         document.getElementById('today').innerText = d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-        const students = ["Dishan", "Talhat", "Sifan", "Yasin", "Suhair", "Faasil", "Fida", "Rifa", "Afrina", "Suhaiba", "Nila", "Shakira", "Raseena", "Aiza", "Misha"];
+        // നിങ്ങൾ നൽകിയ കൃത്യമായ സ്പെല്ലിംഗിലുള്ള പേരുകൾ
+        const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Luhr", "Asr", "Maghrib", "Isha"];
         
-        // Google Form details
         const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfoB6SzEuo4nrvGKGzdcjrvXLqFCZyu6kKyTa0mG8Gl8yUPMA/formResponse";
         const NAME_ENTRY = "entry.877237437";
         const PRAYER_ENTRY = "entry.330346532";
 
         let localData = JSON.parse(localStorage.getItem('hidayatul_p_data')) || { date: dateKey, entries: [] };
 
-        // Reset if new day
+        // പുതിയ ദിവസമാണെങ്കിൽ പഴയത് മായ്ക്കുന്നു
         if (localData.date !== dateKey) {
             localData = { date: dateKey, entries: [] };
             localStorage.setItem('hidayatul_p_data', JSON.stringify(localData));
@@ -47,7 +47,6 @@
         const listDiv = document.getElementById('list');
 
         students.forEach(name => {
-            // ഓരോ കുട്ടിയുടെയും ഇന്നത്തെ സ്കോർ കണക്കാക്കുന്നു
             let score = localData.entries.filter(e => e.startsWith(name)).length;
             
             let prayerButtons = prayers.map(p => {
@@ -87,12 +86,11 @@
                 localData.entries.push(`${studentName}-${prayerName}`);
                 localStorage.setItem('hidayatul_p_data', JSON.stringify(localData));
 
-                // സ്കോർ അപ്‌ഡേറ്റ് ചെയ്യുന്നു
                 let newScore = localData.entries.filter(e => e.startsWith(studentName)).length;
                 document.getElementById(`score-${studentName}`).innerText = `Today: ${newScore}/5`;
                 
                 alert(`${studentName}-ന്റെ ${prayerName} നിസ്കാരം രേഖപ്പെടുത്തി!`);
-            }).catch(() => alert("Error! Net Connection നോക്കൂ."));
+            }).catch(() => alert("നെറ്റ് കണക്ഷൻ പരിശോധിക്കുക!"));
         }
     </script>
 </body>
