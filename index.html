@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hidayatul Islam Prayer Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
         .login-card { background: white; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
@@ -21,23 +22,23 @@
     <div id="auth-page" class="flex items-center justify-center min-h-screen p-6">
         <div class="login-card p-8 w-full max-w-md text-center">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">🕌</div>
-            <h2 class="text-2xl font-bold text-gray-800">മദ്രസ പോർട്ടൽ</h2>
-            <p class="text-gray-500 text-sm mb-6">തുടരാൻ നിങ്ങളുടെ ഫോൺ നമ്പർ നൽകുക</p>
+            <h2 class="text-2xl font-bold text-gray-800 uppercase tracking-tight">Hidayatul Islam</h2>
+            <p class="text-gray-500 text-sm mb-6">തുടരാൻ ഫോൺ നമ്പർ നൽകുക</p>
             
             <input type="tel" id="phone" placeholder="Phone Number" class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-gray-50 mb-4 text-center text-lg font-bold">
-            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-emerald-800 transition uppercase tracking-widest">Enter</button>
+            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-emerald-800 transition uppercase tracking-widest">Login</button>
             <p id="msg" class="text-red-500 text-xs mt-4 font-bold hidden">ശരിയായ നമ്പർ നൽകുക!</p>
         </div>
     </div>
 
     <div id="main-content" class="hidden">
         <div class="bg-emerald-800 p-8 text-white rounded-b-[3rem] shadow-xl text-center relative">
-            <button onclick="logout()" class="absolute top-4 right-4 text-[10px] bg-white/10 px-3 py-1 rounded-full border border-white/20">Change Number</button>
-            <h1 class="text-2xl font-bold uppercase tracking-tight">Hidayatul Islam Madrasa</h1>
+            <button onclick="logout()" class="absolute top-4 right-4 text-[10px] bg-white/10 px-3 py-1 rounded-full border border-white/20">Log Out</button>
+            <h1 class="text-2xl font-bold uppercase tracking-tight">Prayer Tracker</h1>
             <p id="today" class="text-emerald-100 mt-1 text-sm"></p>
             
             <div class="mt-6 grid grid-cols-5 gap-1 bg-emerald-900/40 p-3 rounded-2xl text-[10px]">
-                <div>Fajr<br><span class="font-bold">05:17</span></div>
+                <div>Fajr<br><span class="font-bold">05:15</span></div>
                 <div>Dhuhr<br><span class="font-bold">12:39</span></div>
                 <div>Asr<br><span class="font-bold">03:59</span></div>
                 <div>Maghrib<br><span class="font-bold">06:38</span></div>
@@ -49,8 +50,9 @@
             <div class="star-box shadow-lg">
                 <div class="text-3xl mb-1">🏆</div>
                 <h2 class="font-black text-lg uppercase">Star of the Week</h2>
-                <p class="text-white/90 font-bold mt-1 italic text-sm">Winners will be announced soon!</p>
+                <p class="text-white/90 font-bold mt-1 italic text-sm">Winner: Will update soon!</p>
             </div>
+            
             <div class="space-y-4" id="list"></div>
         </div>
     </div>
@@ -87,7 +89,8 @@
             const dateKey = d.toDateString();
             document.getElementById('today').innerText = d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
 
-            const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
+            // വിദ്യാർത്ഥികളുടെ പട്ടിക
+            const students = ["Dishan", "Talhat", "Sifan", "Yasin", "Suhair", "Faasil", "Fida", "Rifa", "Afrina", "Suhaiba", "Nila", "Shakira", "Raseena", "Aiza", "Misha"];
             const prayers = ["Subhi", "Luhr", "Asr", "Maghrib", "Isha"];
             const listDiv = document.getElementById('list');
             listDiv.innerHTML = "";
@@ -118,35 +121,12 @@
 
         function submitP(n, p, b) {
             if(b.classList.contains('active')) return;
+            
             const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfoB6SzEuo4nrvGKGzdcjrvXLqFCZyu6kKyTa0mG8Gl8yUPMA/formResponse";
             const formData = new FormData();
             formData.append("entry.877237437", n);
             formData.append("entry.330346532", p);
-            
-            // ലോഗിൻ ചെയ്ത ഫോൺ നമ്പർ വേണമെങ്കിൽ ഗൂഗിൾ ഫോമിലെ മറ്റൊരു എട്രിയിലേക്ക് അയക്കാം
-            // formData.append("entry.YOUR_PHONE_ID", localStorage.getItem('userPhone'));
 
             fetch(FORM_URL, { method: "POST", body: formData, mode: "no-cors" }).then(() => {
-                b.classList.add('active'); b.innerHTML += ' ✓';
-                let data = JSON.parse(localStorage.getItem('h_p_data')) || { date: new Date().toDateString(), entries: [] };
-                data.entries.push(`${n}-${p}`);
-                localStorage.setItem('h_p_data', JSON.stringify(data));
-                
-                let history = JSON.parse(localStorage.getItem('p_history')) || {};
-                history[n] = (history[n] || 0) + 1;
-                localStorage.setItem('p_history', JSON.stringify(history));
-                
-                alert(`${n}-ന്റെ ${p} നിസ്കാരം രേഖപ്പെടുത്തി!`);
-                location.reload();
-            });
-        }
-
-        function showProgress(name) {
-            let history = JSON.parse(localStorage.getItem('p_history')) || {};
-            let total = history[name] || 0;
-            alert(`${name}, നിങ്ങൾ ഇതുവരെ ${total} നിസ്കാരങ്ങൾ പൂർത്തിയാക്കിയിട്ടുണ്ട്!`);
-        }
-    </script>
-</body>
-</html>
-
+                b.classList.
+                    
