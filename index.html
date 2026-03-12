@@ -17,7 +17,7 @@
 <body class="pb-20">
 
     <div class="bg-emerald-800 p-8 text-white rounded-b-[3rem] shadow-xl text-center">
-        <h1 class="text-2xl font-bold uppercase">Hidayatul Islam Madrasa</h1>
+        <h1 class="text-2xl font-bold uppercase tracking-tight">Hidayatul Islam Madrasa</h1>
         <p id="today" class="text-emerald-100 mt-1 text-sm"></p>
 
         <div class="mt-6 grid grid-cols-5 gap-1 bg-emerald-900/40 p-3 rounded-2xl text-[10px]">
@@ -33,7 +33,7 @@
         <div class="star-box shadow-lg">
             <div class="text-3xl mb-1">🏆</div>
             <h2 class="font-black text-lg uppercase tracking-wider">Star of the Week</h2>
-            <p class="text-white/90 font-bold mt-1">Dishan, Fazil, Afreena</p>
+            <p class="text-white/90 font-bold mt-1 italic">Winners will be announced soon!</p>
         </div>
 
         <div class="space-y-4" id="list"></div>
@@ -95,7 +95,6 @@
                 localData.entries.push(`${studentName}-${prayerName}`);
                 localStorage.setItem('hidayatul_p_data', JSON.stringify(localData));
                 
-                // ചരിത്രം സേവ് ചെയ്യുന്നു
                 historyData[studentName] = (historyData[studentName] || 0) + 1;
                 localStorage.setItem('prayer_history', JSON.stringify(historyData));
                 
@@ -106,9 +105,8 @@
 
         function showProgress(name) {
             let total = historyData[name] || 0;
-            alert(`${name}, നിങ്ങൾ ഈ ആഴ്ച ഇതുവരെ ${total} നിസ്കാരങ്ങൾ പൂർത്തിയാക്കിയിട്ടുണ്ട്! മാഷാ അള്ളാ!`);
+            alert(`${name}, നിങ്ങൾ ഇതുവരെ ${total} നിസ്കാരങ്ങൾ പൂർത്തിയാക്കിയിട്ടുണ്ട്!`);
         }
     </script>
 </body>
 </html>
-
