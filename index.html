@@ -10,7 +10,7 @@
         .card { background: white; border-radius: 15px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border-left: 5px solid #059669; }
         .niskaram-btn { transition: 0.3s; border: 1px solid #e2e8f0; font-weight: 600; }
         .active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
-        .prayer-time-box { background: #f1f5f9; padding: 10px; border-radius: 12px; margin-bottom: 15px; display: grid; grid-template-cols: repeat(5, 1fr); gap: 5px; text-align: center; font-size: 10px; }
+        .prayer-time-box { background: #f1f5f9; padding: 12px; border-radius: 15px; margin-bottom: 15px; display: grid; grid-template-cols: repeat(5, 1fr); gap: 8px; text-align: center; font-size: 11px; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.05); }
         .score-box { background: #ecfdf5; color: #065f46; padding: 2px 10px; border-radius: 20px; font-size: 13px; border: 1px solid #10b981; }
     </style>
 </head>
@@ -21,11 +21,11 @@
         <p id="today" class="text-emerald-100 mt-2 font-medium text-sm"></p>
         
         <div id="prayer-times" class="mt-6 prayer-time-box text-gray-800 font-bold">
-            <div><div class="text-emerald-700">Fajr</div><div id="fajr-t">--:--</div></div>
-            <div><div class="text-emerald-700">Dhuhr</div><div id="dhuhr-t">--:--</div></div>
-            <div><div class="text-emerald-700">Asr</div><div id="asr-t">--:--</div></div>
-            <div><div class="text-emerald-700">Maghrib</div><div id="maghrib-t">--:--</div></div>
-            <div><div class="text-emerald-700">Isha</div><div id="isha-t">--:--</div></div>
+            <div><div class="text-emerald-700">Fajr</div><div class="text-lg">05:17</div></div>
+            <div><div class="text-emerald-700">Dhuhr</div><div class="text-lg">12:39</div></div>
+            <div><div class="text-emerald-700">Asr</div><div class="text-lg">03:59</div></div>
+            <div><div class="text-emerald-700">Maghrib</div><div class="text-lg">06:38</div></div>
+            <div><div class="text-emerald-700">Isha</div><div class="text-lg">07:49</div></div>
         </div>
     </div>
 
@@ -35,32 +35,6 @@
         const d = new Date();
         const dateKey = d.toDateString();
         document.getElementById('today').innerText = d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-
-        // ഹാസൻ ജില്ലയിലെ സമയം ലഭിക്കാൻ
-        async function getPrayerTimes() {
-            try {
-                // Hassan, Karnataka, India എന്ന ലൊക്കേഷൻ ഉപയോഗിക്കുന്നു
-                const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Hassan&country=India&state=Karnataka&method=2');
-                const data = await res.json();
-                const times = data.data.timings;
-                document.getElementById('fajr-t').innerText = convertTo12Hr(times.Fajr);
-                document.getElementById('dhuhr-t').innerText = convertTo12Hr(times.Dhuhr);
-                document.getElementById('asr-t').innerText = convertTo12Hr(times.Asr);
-                document.getElementById('maghrib-t').innerText = convertTo12Hr(times.Maghrib);
-                document.getElementById('isha-t').innerText = convertTo12Hr(times.Isha);
-            } catch (e) { console.log("Time Error"); }
-        }
-
-        // സമയം 12 മണിക്കൂർ ഫോർമാറ്റിലേക്ക് മാറ്റാൻ (ഉദാഹരണത്തിന് 13:30 എന്നത് 01:30 ആക്കാൻ)
-        function convertTo12Hr(time) {
-            let [h, m] = time.split(':');
-            let hr = parseInt(h);
-            let suffix = hr >= 12 ? '' : ''; // വേണമെങ്കിൽ AM/PM ഇവിടെ ചേർക്കാം
-            hr = hr % 12 || 12;
-            return `${hr}:${m}${suffix}`;
-        }
-        
-        getPrayerTimes();
 
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Luhr", "Asr", "Maghrib", "Isha"];
@@ -116,9 +90,8 @@
                 let newScore = localData.entries.filter(e => e.startsWith(studentName)).length;
                 document.getElementById(`score-${studentName}`).innerText = `Today: ${newScore}/5`;
                 alert(`${studentName}-ന്റെ ${prayerName} നിസ്കാരം രേഖപ്പെടുത്തി!`);
-            }).catch(() => alert("Error!"));
+            }).catch(() => alert("Error! Net Connection പരിശോധിക്കുക."));
         }
     </script>
 </body>
 </html>
-
