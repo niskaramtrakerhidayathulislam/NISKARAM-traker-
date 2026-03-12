@@ -5,128 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hidayatul Islam Prayer Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .login-card { background: white; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        body { background-color: #f1f5f9; font-family: sans-serif; }
         .hidden { display: none; }
-        .card { background: white; border-radius: 15px; border-left: 5px solid #059669; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .niskaram-btn { transition: 0.2s; border: 1px solid #e2e8f0; font-weight: 600; font-size: 11px; }
+        .card { background: white; border-radius: 15px; border-left: 5px solid #059669; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .niskaram-btn { transition: 0.2s; border: 1px solid #e2e8f0; font-weight: 600; font-size: 11px; padding: 10px 5px; border-radius: 8px; background: #f8fafc; }
         .active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
-        .star-box { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
-        .progress-link { font-size: 11px; color: #059669; font-weight: bold; cursor: pointer; text-decoration: underline; }
+        .countdown-box { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.3); }
     </style>
 </head>
 <body class="pb-20">
 
     <div id="auth-page" class="flex items-center justify-center min-h-screen p-6">
-        <div class="login-card p-8 w-full max-w-md text-center">
-            <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">🕌</div>
-            <h2 class="text-2xl font-bold text-gray-800 uppercase tracking-tight">Hidayatul Islam</h2>
-            <p class="text-gray-500 text-sm mb-6">തുടരാൻ ഫോൺ നമ്പർ നൽകുക</p>
-            
-            <input type="tel" id="phone" placeholder="Phone Number" class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-gray-50 mb-4 text-center text-lg font-bold">
-            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-emerald-800 transition uppercase tracking-widest">Login</button>
-            <p id="msg" class="text-red-500 text-xs mt-4 font-bold hidden">ശരിയായ നമ്പർ നൽകുക!</p>
+        <div class="bg-white p-8 w-full max-w-md text-center rounded-[25px] shadow-xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2 font-serif">ഹിദായതുൽ ഇസ്‌ലാം</h2>
+            <p class="text-gray-500 text-sm mb-6 font-medium">ഫോൺ നമ്പർ നൽകി ലോഗിൻ ചെയ്യുക</p>
+            <input type="tel" id="phone" placeholder="Phone Number" class="w-full p-4 border rounded-xl mb-4 text-center font-bold outline-none focus:ring-2 focus:ring-emerald-500">
+            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-emerald-800 transition">പ്രവേശിക്കുക (ENTER)</button>
         </div>
     </div>
 
     <div id="main-content" class="hidden">
-        <div class="bg-emerald-800 p-8 text-white rounded-b-[3rem] shadow-xl text-center relative">
+        <div class="bg-emerald-800 p-6 text-white rounded-b-[3rem] shadow-xl text-center relative">
             <button onclick="logout()" class="absolute top-4 right-4 text-[10px] bg-white/10 px-3 py-1 rounded-full border border-white/20">Log Out</button>
-            <h1 class="text-2xl font-bold uppercase tracking-tight">Prayer Tracker</h1>
-            <p id="today" class="text-emerald-100 mt-1 text-sm"></p>
+            <h1 class="text-xl font-bold uppercase tracking-wide">Hidayatul Islam Tracker</h1>
             
-            <div class="mt-6 grid grid-cols-5 gap-1 bg-emerald-900/40 p-3 rounded-2xl text-[10px]">
-                <div>Fajr<br><span class="font-bold">05:15</span></div>
-                <div>Dhuhr<br><span class="font-bold">12:39</span></div>
-                <div>Asr<br><span class="font-bold">03:59</span></div>
-                <div>Maghrib<br><span class="font-bold">06:38</span></div>
-                <div>Isha<br><span class="font-bold">07:49</span></div>
+            <div class="bg-yellow-500/20 text-yellow-200 inline-block px-4 py-1 rounded-full text-[11px] font-bold mt-2">
+                റമദാൻ 23, 1447 ഹിജ്റ
+            </div>
+            
+            <p id="today" class="text-emerald-100 mt-2 text-sm font-medium"></p>
+
+            <div class="countdown-box">
+                <p id="next-prayer-name" class="text-[10px] uppercase tracking-widest opacity-80 font-bold">അടുത്ത ബാങ്ക് സമയം</p>
+                <p id="timer" class="text-3xl font-black tracking-tighter mt-1">00:00:00</p>
+            </div>
+            
+            <div class="mt-6 grid grid-cols-5 gap-1 bg-emerald-900/40 p-3 rounded-2xl text-[9px] uppercase font-bold">
+                <div>Subhi<br><span class="text-xs text-yellow-400">05:15</span></div>
+                <div>Luhar<br><span class="text-xs">12:39</span></div>
+                <div>Asr<br><span class="text-xs">03:59</span></div>
+                <div>Maghrib<br><span class="text-xs">06:38</span></div>
+                <div>Isha<br><span class="text-xs">07:49</span></div>
             </div>
         </div>
 
-        <div class="p-4">
-            <div class="star-box shadow-lg">
-                <div class="text-3xl mb-1">🏆</div>
-                <h2 class="font-black text-lg uppercase">Star of the Week</h2>
-                <p class="text-white/90 font-bold mt-1 italic text-sm">Winner: Will update soon!</p>
-            </div>
-            
-            <div class="space-y-4" id="list"></div>
-        </div>
+        <div class="p-4 space-y-4" id="list"></div>
     </div>
 
     <script>
-        function handleLogin() {
-            const phone = document.getElementById('phone').value;
-            if (phone.length >= 10) {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userPhone', phone);
-                showMain();
-            } else {
-                document.getElementById('msg').classList.remove('hidden');
-            }
-        }
+        // ബാങ്ക് സമയങ്ങൾ ഇവിടെ കൃത്യമായി നൽകിയിട്ടുണ്ട്
+        const PRAYER_TIMES = {
+            "Subhi": "05:15",
+            "Luhar": "12:39",
+            "Asr": "15:59",    // 24hr format: 03:59 PM
+            "Maghrib": "18:38", // 24hr format: 06:38 PM
+            "Isha": "19:49"     // 24hr format: 07:49 PM
+        };
 
-        function showMain() {
-            document.getElementById('auth-page').classList.add('hidden');
-            document.getElementById('main-content').classList.remove('hidden');
-            loadTracker();
-        }
+        function updateTimer() {
+            const now = new Date();
+            let nextTarget = null;
+            let nextName = "";
 
-        function logout() {
-            localStorage.removeItem('isLoggedIn');
-            location.reload();
-        }
+            // അടുത്ത ബാങ്ക് ഏതാണെന്ന് കണ്ടെത്തുന്നു
+            for (let name in PRAYER_TIMES) {
+                const [hrs, mins] = PRAYER_TIMES[name].split(':');
+                const target = new Date();
+                target.setHours(hrs, mins, 0);
 
-        window.onload = function() {
-            if (localStorage.getItem('isLoggedIn') === 'true') showMain();
-        }
-
-        function loadTracker() {
-            const d = new Date();
-            const dateKey = d.toDateString();
-            document.getElementById('today').innerText = d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
-
-            // വിദ്യാർത്ഥികളുടെ പട്ടിക
-            const students = ["Dishan", "Talhat", "Sifan", "Yasin", "Suhair", "Faasil", "Fida", "Rifa", "Afrina", "Suhaiba", "Nila", "Shakira", "Raseena", "Aiza", "Misha"];
-            const prayers = ["Subhi", "Luhr", "Asr", "Maghrib", "Isha"];
-            const listDiv = document.getElementById('list');
-            listDiv.innerHTML = "";
-
-            let localData = JSON.parse(localStorage.getItem('h_p_data')) || { date: dateKey, entries: [] };
-            if (localData.date !== dateKey) localData = { date: dateKey, entries: [] };
-
-            students.forEach(name => {
-                let score = localData.entries.filter(e => e.startsWith(name)).length;
-                let btns = prayers.map(p => {
-                    const done = localData.entries.includes(`${name}-${p}`);
-                    return `<button onclick="submitP('${name}','${p}',this)" class="niskaram-btn py-2 rounded-lg bg-gray-50 ${done?'active':''}">${p}${done?' ✓':''}</button>`;
-                }).join('');
-
-                listDiv.innerHTML += `
-                <div class="card p-5 mb-4 shadow-sm">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-gray-800 text-lg">${name}</h3>
-                        <span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full uppercase">Today: ${score}/5</span>
-                    </div>
-                    <div class="grid grid-cols-5 gap-2">${btns}</div>
-                    <div class="mt-4 pt-3 border-t border-gray-100 text-center">
-                        <span onclick="showProgress('${name}')" class="progress-link">📊 VIEW MY PROGRESS</span>
-                    </div>
-                </div>`;
-            });
-        }
-
-        function submitP(n, p, b) {
-            if(b.classList.contains('active')) return;
-            
-            const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfoB6SzEuo4nrvGKGzdcjrvXLqFCZyu6kKyTa0mG8Gl8yUPMA/formResponse";
-            const formData = new FormData();
-            formData.append("entry.877237437", n);
-            formData.append("entry.330346532", p);
-
-            fetch(FORM_URL, { method: "POST", body: formData, mode: "no-cors" }).then(() => {
-                b.classList.
+                if (target > now) {
+                    nextTarget = target;
+                    nextName = name;
+                    break;
                     
