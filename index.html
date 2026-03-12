@@ -6,33 +6,32 @@
     <title>Hidayatul Islam Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0d1117; color: white; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        .main-card { background: linear-gradient(180deg, #064e3b 0%, #065f46 100%); border-radius: 0 0 40px 40px; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        body { background-color: #0d1117; color: white; font-family: sans-serif; }
+        .main-card { background: linear-gradient(180deg, #064e3b 0%, #065f46 100%); border-radius: 0 0 40px 40px; padding: 30px 20px; text-align: center; }
         .timer-box { background: rgba(0,0,0,0.4); border-radius: 20px; padding: 20px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); }
-        .student-card { background: #161b22; border-radius: 18px; padding: 18px; margin-bottom: 16px; border: 1px solid #30363d; transition: 0.3s; }
-        .student-card:active { transform: scale(0.98); }
+        .student-card { background: #161b22; border-radius: 18px; padding: 18px; margin-bottom: 16px; border: 1px solid #30363d; }
         .prayer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
-        .p-btn { background: #21262d; border: 1px solid #30363d; padding: 12px 2px; border-radius: 10px; font-size: 10px; font-weight: 800; cursor: pointer; color: #c9d1d9; transition: 0.2s; }
-        .p-btn.active { background: #10b981 !important; color: white !important; border-color: #10b981 !important; box-shadow: 0 0 15px rgba(16,185,129,0.4); }
-        .ramadan-tag { background: #d97706; color: white; padding: 6px 15px; border-radius: 50px; font-size: 12px; font-weight: 900; display: inline-block; box-shadow: 0 4px 10px rgba(217,119,6,0.3); }
+        .p-btn { background: #21262d; border: 1px solid #30363d; padding: 12px 2px; border-radius: 10px; font-size: 10px; font-weight: 800; cursor: pointer; color: #c9d1d9; }
+        .p-btn.active { background: #10b981 !important; color: white !important; border-color: #10b981 !important; }
+        .ramadan-tag { background: #d97706; color: white; padding: 6px 15px; border-radius: 50px; font-size: 12px; font-weight: 900; display: inline-block; }
     </style>
 </head>
 <body class="pb-10">
 
     <div class="main-card">
-        <h1 class="text-xl font-black uppercase tracking-[0.2em] text-emerald-50">Hidayatul Islam</h1>
-        <div class="ramadan-tag mt-4 uppercase">റമദാൻ 23, 1447 ഹിജ്റ</div>
+        <h1 class="text-xl font-black uppercase tracking-widest text-emerald-50">Hidayatul Islam</h1>
+        <div class="ramadan-tag mt-4">റമദാൻ 23, 1447 ഹിജ്റ</div>
         
         <div class="timer-box">
-            <p id="next-label" class="text-[10px] text-emerald-300 uppercase font-black tracking-widest mb-2">അടുത്ത ബാങ്ക് സമയം</p>
+            <p id="next-label" class="text-[10px] text-emerald-300 uppercase font-black mb-2">അടുത്ത ബാങ്ക് സമയം</p>
             <div id="timer" class="text-5xl font-black font-mono tracking-tighter text-white">00:00:00</div>
         </div>
 
-        <div class="grid grid-cols-5 gap-1 text-[10px] font-black opacity-90 mt-4 uppercase tracking-tighter">
+        <div class="grid grid-cols-5 gap-1 text-[10px] font-black opacity-90 mt-4 uppercase">
             <div>Subhi<br><span class="text-yellow-400 text-xs">05:15</span></div>
-            <div>Luhar<br><span class="text-xs">12:39</span></div>
-            <div>Asr<br><span class="text-xs">03:59</span></div>
-            <div>Maghrib<br><span class="text-xs">06:38</span></div>
+            <div>Duhar<br><span class="text-xs">12:38</span></div>
+            <div>Asr<br><span class="text-xs">03:58</span></div>
+            <div>Maghrib<br><span class="text-xs">06:39</span></div>
             <div>Isha<br><span class="text-xs">07:49</span></div>
         </div>
     </div>
@@ -40,13 +39,13 @@
     <div class="p-5" id="list"></div>
 
     <script>
-        // സമയങ്ങൾ കൃത്യമായി സെറ്റ് ചെയ്തിട്ടുണ്ട്
+        // ടൈമർ കണക്കാക്കാൻ 24 മണിക്കൂർ ഫോർമാറ്റ് വേണം
         const PRAYER_TIMES = [
             { id: 'Subhi', h: 5, m: 15 },
-            { id: 'Luhar', h: 12, m: 39 },
-            { id: 'Asr', h: 15, m: 59 },
-            { id: 'Maghrib', h: 18, m: 38 },
-            { id: 'Isha', h: 19, m: 49 }
+            { id: 'Duhar', h: 12, m: 38 },
+            { id: 'Asr', h: 15, m: 58 },   // 03:58 PM
+            { id: 'Maghrib', h: 18, m: 39 }, // 06:39 PM
+            { id: 'Isha', h: 19, m: 49 }    // 07:49 PM
         ];
 
         function updateTimer() {
@@ -81,20 +80,20 @@
         updateTimer();
 
         function loadStudents() {
-            // ആൺകുട്ടികളും പെൺകുട്ടികളും അടങ്ങുന്ന മുഴുവൻ പട്ടിക
+            // നിങ്ങൾ നേരത്തെ നൽകിയ ശരിയായ ലിസ്റ്റ്
             const students = [
-                "Dishan", "Talhat", "Sifan", "Yasin", "Suhair", "Faasil", 
-                "Fida", "Rifa", "Afrina", "Suhaiba", "Nila", "Shakira", 
+                "Dishan", "Twalhath", "Sifan", "Yasin", "Suhair", "Fazil", 
+                "Fida", "Rifa", "Afreena", "Suhaiba", "Nila", "Shakira", 
                 "Raseena", "Aiza", "Misha"
             ];
             
             const listDiv = document.getElementById('list');
-            const prayers = ["Subhi", "Luhar", "Asr", "Maghrib", "Isha"];
+            const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
 
             students.forEach(name => {
                 listDiv.innerHTML += `
                     <div class="student-card">
-                        <h3 class="font-black text-gray-100 text-lg uppercase tracking-tight">${name}</h3>
+                        <h3 class="font-black text-gray-100 text-lg uppercase">${name}</h3>
                         <div class="prayer-grid">
                             ${prayers.map(p => `<button onclick="submitP('${name}','${p}',this)" class="p-btn">${p}</button>`).join('')}
                         </div>
@@ -112,8 +111,8 @@
 
             fetch(FORM_URL, { method: "POST", body: formData, mode: "no-cors" }).then(() => {
                 b.classList.add('active'); b.innerText = "✓ " + p;
-                alert(`മാഷാ അള്ളാ! ${n}: ${p} രേഖപ്പെടുത്തി.`);
-            }).catch(() => alert("Error: ഇന്റർനെറ്റ് ഉണ്ടോ എന്ന് നോക്കുക."));
+                alert(`${n}: ${p} രേഖപ്പെടുത്തി.`);
+            }).catch(() => alert("Error: ഇന്റർനെറ്റ് പരിശോധിക്കുക."));
         }
 
         window.onload = loadStudents;
