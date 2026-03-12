@@ -3,60 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam Prayer Tracker</title>
+    <title>Hidayatul Islam Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #f1f5f9; font-family: sans-serif; }
-        .card { background: white; border-radius: 15px; border-left: 5px solid #059669; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .niskaram-btn { transition: 0.2s; border: 1px solid #e2e8f0; font-weight: 600; font-size: 11px; padding: 10px 5px; border-radius: 8px; background: #f8fafc; cursor: pointer; }
-        .active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
-        .countdown-box { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.3); }
+        body { background-color: #0d1117; color: white; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        .main-card { background: linear-gradient(180deg, #064e3b 0%, #065f46 100%); border-radius: 0 0 40px 40px; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .timer-box { background: rgba(0,0,0,0.4); border-radius: 20px; padding: 20px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); }
+        .student-card { background: #161b22; border-radius: 18px; padding: 18px; margin-bottom: 16px; border: 1px solid #30363d; transition: 0.3s; }
+        .student-card:active { transform: scale(0.98); }
+        .prayer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
+        .p-btn { background: #21262d; border: 1px solid #30363d; padding: 12px 2px; border-radius: 10px; font-size: 10px; font-weight: 800; cursor: pointer; color: #c9d1d9; transition: 0.2s; }
+        .p-btn.active { background: #10b981 !important; color: white !important; border-color: #10b981 !important; box-shadow: 0 0 15px rgba(16,185,129,0.4); }
+        .ramadan-tag { background: #d97706; color: white; padding: 6px 15px; border-radius: 50px; font-size: 12px; font-weight: 900; display: inline-block; box-shadow: 0 4px 10px rgba(217,119,6,0.3); }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-10">
 
-    <div id="main-content">
-        <div class="bg-emerald-800 p-6 text-white rounded-b-[3rem] shadow-xl text-center relative">
-            <h1 class="text-xl font-bold uppercase tracking-wide">Hidayatul Islam Tracker</h1>
-            
-            <div class="bg-yellow-500/20 text-yellow-200 inline-block px-4 py-1 rounded-full text-[11px] font-bold mt-2">
-                റമദാൻ 23, 1447 ഹിജ്റ
-            </div>
-            
-            <p id="today" class="text-emerald-100 mt-2 text-sm font-medium"></p>
-
-            <div class="countdown-box">
-                <p id="next-prayer-name" class="text-[10px] uppercase tracking-widest opacity-80 font-bold text-yellow-200">അടുത്ത ബാങ്ക് സമയം</p>
-                <p id="timer" class="text-3xl font-black tracking-tighter mt-1 text-white">00:00:00</p>
-            </div>
-            
-            <div class="mt-6 grid grid-cols-5 gap-1 bg-emerald-900/40 p-3 rounded-2xl text-[9px] uppercase font-bold">
-                <div>Subhi<br><span class="text-xs text-yellow-400">05:15</span></div>
-                <div>Luhar<br><span class="text-xs">12:39</span></div>
-                <div>Asr<br><span class="text-xs">03:59</span></div>
-                <div>Maghrib<br><span class="text-xs">06:38</span></div>
-                <div>Isha<br><span class="text-xs">07:49</span></div>
-            </div>
+    <div class="main-card">
+        <h1 class="text-xl font-black uppercase tracking-[0.2em] text-emerald-50">Hidayatul Islam</h1>
+        <div class="ramadan-tag mt-4 uppercase">റമദാൻ 23, 1447 ഹിജ്റ</div>
+        
+        <div class="timer-box">
+            <p id="next-label" class="text-[10px] text-emerald-300 uppercase font-black tracking-widest mb-2">അടുത്ത ബാങ്ക് സമയം</p>
+            <div id="timer" class="text-5xl font-black font-mono tracking-tighter text-white">00:00:00</div>
         </div>
 
-        <div class="p-4 space-y-4" id="list"></div>
+        <div class="grid grid-cols-5 gap-1 text-[10px] font-black opacity-90 mt-4 uppercase tracking-tighter">
+            <div>Subhi<br><span class="text-yellow-400 text-xs">05:15</span></div>
+            <div>Luhar<br><span class="text-xs">12:39</span></div>
+            <div>Asr<br><span class="text-xs">03:59</span></div>
+            <div>Maghrib<br><span class="text-xs">06:38</span></div>
+            <div>Isha<br><span class="text-xs">07:49</span></div>
+        </div>
     </div>
 
+    <div class="p-5" id="list"></div>
+
     <script>
-        // ബാങ്ക് സമയങ്ങൾ
-        const PRAYER_TIMES = {
-            "Subhi": "05:15",
-            "Luhar": "12:39",
-            "Asr": "15:59",    
-            "Maghrib": "18:38", 
-            "Isha": "19:49"     
-        };
+        // സമയങ്ങൾ കൃത്യമായി സെറ്റ് ചെയ്തിട്ടുണ്ട്
+        const PRAYER_TIMES = [
+            { id: 'Subhi', h: 5, m: 15 },
+            { id: 'Luhar', h: 12, m: 39 },
+            { id: 'Asr', h: 15, m: 59 },
+            { id: 'Maghrib', h: 18, m: 38 },
+            { id: 'Isha', h: 19, m: 49 }
+        ];
 
         function updateTimer() {
             const now = new Date();
-            let nextTarget = null;
-            let nextName = "";
+            let target = null;
+            let name = "";
 
-            for (let name in PRAYER_TIMES) {
-                const [hrs, mins] = PRAYER
-                
+            for (let p of PRAYER_TIMES) {
+                let t = new Date();
+                t.setHours(p.h, p.m, 0);
+                if (t > now) { target = t; name = p.id; break; }
+            }
+
+            if (!target) {
+                target = new Date();
+                target.setDate(target.getDate() + 1);
+                target.setHours(PRAYER_TIMES[0].h, PRAYER_TIMES[0].m, 0);
+                name = PRAYER_TIMES[0].id;
+            }
+
+            const diff = target - now;
+            const hh = Math.floor(diff / 3600000);
+            const mm = Math.floor((diff % 3600000) / 60000);
+            const ss = Math.floor((diff % 60000) / 1000);
+
+            document.getElementById('timer').innerText = 
+                `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+            document.getElementById('next-label').innerText = `അടുത്ത ബാങ്ക് (${name}) ഇനി:`;
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        function loadStudents() {
+            // ആൺകുട്ടികളും പെൺകുട്ടികളും അടങ്ങുന്ന മുഴുവൻ പട്ടിക
+            const students = [
+                "Dishan", "Talhat", "Sifan", "Yasin", "Suhair", "Faasil", 
+                "Fida", "Rifa", "Afrina", "Suhaiba", "Nila", "Shakira", 
+                "Raseena", "Aiza", "Misha"
+            ];
+            
+            const listDiv = document.getElementById('list');
+            const prayers = ["Subhi", "Luhar", "Asr", "Maghrib", "Isha"];
+
+            students.forEach(name => {
+                listDiv.innerHTML += `
+                    <div class="student-card">
+                        <h3 class="font-black text-gray-100 text-lg uppercase tracking-tight">${name}</h3>
+                        <div class="prayer-grid">
+                            ${prayers.map(p => `<button onclick="submitP('${name}','${p}',this)" class="p-btn">${p}</button>`).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function submitP(n, p, b) {
+            if(b.classList.contains('active')) return;
+            const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfoB6SzEuo4nrvGKGzdcjrvXLqFCZyu6kKyTa0mG8Gl8yUPMA/formResponse";
+            const formData = new FormData();
+            formData.append("entry.877237437", n);
+            formData.append("entry.330346532", p);
+
+            fetch(FORM_URL, { method: "POST", body: formData, mode: "no-cors" }).then(() => {
+                b.classList.add('active'); b.innerText = "✓ " + p;
+                alert(`മാഷാ അള്ളാ! ${n}: ${p} രേഖപ്പെടുത്തി.`);
+            }).catch(() => alert("Error: ഇന്റർനെറ്റ് ഉണ്ടോ എന്ന് നോക്കുക."));
+        }
+
+        window.onload = loadStudents;
+    </script>
+</body>
+</html>
+
