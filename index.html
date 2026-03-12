@@ -10,15 +10,23 @@
         .card { background: white; border-radius: 15px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border-left: 5px solid #059669; }
         .niskaram-btn { transition: 0.3s; border: 1px solid #e2e8f0; font-weight: 600; }
         .active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
+        .prayer-time-box { background: #f1f5f9; padding: 10px; border-radius: 12px; margin-bottom: 15px; display: grid; grid-template-cols: repeat(5, 1fr); gap: 5px; text-align: center; font-size: 10px; }
         .score-box { background: #ecfdf5; color: #065f46; padding: 2px 10px; border-radius: 20px; font-size: 13px; border: 1px solid #10b981; }
     </style>
 </head>
 <body class="pb-20">
 
     <div class="bg-emerald-800 p-8 text-white rounded-b-[3rem] shadow-2xl text-center">
-        <h1 class="text-2xl font-bold tracking-wide uppercase">Hidayatul Islam Madrasa</h1>
-        <p id="today" class="text-emerald-100 mt-2 font-medium"></p>
-        <div class="mt-4 inline-block bg-emerald-700 px-6 py-1 rounded-full text-xs font-bold tracking-widest">PRAYER TRACKER</div>
+        <h1 class="text-2xl font-bold tracking-wide uppercase leading-tight">Hidayatul Islam Madrasa</h1>
+        <p id="today" class="text-emerald-100 mt-2 font-medium text-sm"></p>
+        
+        <div id="prayer-times" class="mt-6 prayer-time-box text-gray-800 font-bold">
+            <div><div class="text-emerald-700">Fajr</div><div id="fajr-t">--:--</div></div>
+            <div><div class="text-emerald-700">Dhuhr</div><div id="dhuhr-t">--:--</div></div>
+            <div><div class="text-emerald-700">Asr</div><div id="asr-t">--:--</div></div>
+            <div><div class="text-emerald-700">Maghrib</div><div id="maghrib-t">--:--</div></div>
+            <div><div class="text-emerald-700">Isha</div><div id="isha-t">--:--</div></div>
+        </div>
     </div>
 
     <div class="p-4 space-y-5" id="list"></div>
@@ -28,7 +36,32 @@
         const dateKey = d.toDateString();
         document.getElementById('today').innerText = d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-        // നിങ്ങൾ നൽകിയ കൃത്യമായ സ്പെല്ലിംഗിലുള്ള പേരുകൾ
+        // ഹാസൻ ജില്ലയിലെ സമയം ലഭിക്കാൻ
+        async function getPrayerTimes() {
+            try {
+                // Hassan, Karnataka, India എന്ന ലൊക്കേഷൻ ഉപയോഗിക്കുന്നു
+                const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Hassan&country=India&state=Karnataka&method=2');
+                const data = await res.json();
+                const times = data.data.timings;
+                document.getElementById('fajr-t').innerText = convertTo12Hr(times.Fajr);
+                document.getElementById('dhuhr-t').innerText = convertTo12Hr(times.Dhuhr);
+                document.getElementById('asr-t').innerText = convertTo12Hr(times.Asr);
+                document.getElementById('maghrib-t').innerText = convertTo12Hr(times.Maghrib);
+                document.getElementById('isha-t').innerText = convertTo12Hr(times.Isha);
+            } catch (e) { console.log("Time Error"); }
+        }
+
+        // സമയം 12 മണിക്കൂർ ഫോർമാറ്റിലേക്ക് മാറ്റാൻ (ഉദാഹരണത്തിന് 13:30 എന്നത് 01:30 ആക്കാൻ)
+        function convertTo12Hr(time) {
+            let [h, m] = time.split(':');
+            let hr = parseInt(h);
+            let suffix = hr >= 12 ? '' : ''; // വേണമെങ്കിൽ AM/PM ഇവിടെ ചേർക്കാം
+            hr = hr % 12 || 12;
+            return `${hr}:${m}${suffix}`;
+        }
+        
+        getPrayerTimes();
+
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Luhr", "Asr", "Maghrib", "Isha"];
         
@@ -38,7 +71,6 @@
 
         let localData = JSON.parse(localStorage.getItem('hidayatul_p_data')) || { date: dateKey, entries: [] };
 
-        // പുതിയ ദിവസമാണെങ്കിൽ പഴയത് മായ്ക്കുന്നു
         if (localData.date !== dateKey) {
             localData = { date: dateKey, entries: [] };
             localStorage.setItem('hidayatul_p_data', JSON.stringify(localData));
@@ -48,7 +80,6 @@
 
         students.forEach(name => {
             let score = localData.entries.filter(e => e.startsWith(name)).length;
-            
             let prayerButtons = prayers.map(p => {
                 const isDone = localData.entries.includes(`${name}-${p}`);
                 return `<button id="${name}-${p}" onclick="submitPrayer('${name}', '${p}', this)" 
@@ -74,23 +105,18 @@
 
         function submitPrayer(studentName, prayerName, btn) {
             if(btn.classList.contains('active')) return;
-
             const formData = new FormData();
             formData.append(NAME_ENTRY, studentName);
             formData.append(PRAYER_ENTRY, prayerName);
-
             fetch(FORM_URL, { method: "POST", body: formData, mode: "no-cors" }).then(() => {
                 btn.classList.add('active');
                 btn.innerHTML += ' ✓';
-                
                 localData.entries.push(`${studentName}-${prayerName}`);
                 localStorage.setItem('hidayatul_p_data', JSON.stringify(localData));
-
                 let newScore = localData.entries.filter(e => e.startsWith(studentName)).length;
                 document.getElementById(`score-${studentName}`).innerText = `Today: ${newScore}/5`;
-                
                 alert(`${studentName}-ന്റെ ${prayerName} നിസ്കാരം രേഖപ്പെടുത്തി!`);
-            }).catch(() => alert("നെറ്റ് കണക്ഷൻ പരിശോധിക്കുക!"));
+            }).catch(() => alert("Error!"));
         }
     </script>
 </body>
