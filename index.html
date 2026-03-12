@@ -7,14 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #f0f2f5; font-family: 'Inter', sans-serif; }
-        .niskaram-btn { transition: all 0.2s; border: 1px solid #ddd; }
-        .niskaram-btn.active { background-color: #10b981; color: white; border-color: #059669; }
+        .niskaram-btn { transition: all 0.2s; border: 1px solid #ddd; padding: 8px 4px; }
+        .niskaram-btn.active { background-color: #10b981; color: white; border-color: #059669; font-weight: bold; }
     </style>
 </head>
 <body class="pb-10">
 
     <div class="bg-emerald-800 p-6 text-white rounded-b-[2rem] shadow-xl text-center">
-        <h1 class="text-2xl font-black tracking-tight uppercase">Prayer Tracker</h1>
+        <h1 class="text-2xl font-black tracking-tight uppercase">Hidayatul Islam Madrasa</h1>
         <p id="today" class="text-sm opacity-90 mt-1 font-medium"></p>
     </div>
 
@@ -22,33 +22,39 @@
 
     <script>
         const d = new Date();
+        const dateKey = d.toDateString(); // ഇന്നത്തെ തീയതി ഒരു കീ ആയി ഉപയോഗിക്കുന്നു
         document.getElementById('today').innerText = d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-        const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
+        const students = ["Dishan", "Talhat", "Sifan", "Yasin", "Suhair", "Faasil", "Fida", "Rifa", "Afrina", "Suhaiba", "Nila", "Shakira", "Raseena", "Aiza", "Misha"];
         const prayers = ["Subhi", "Luhr", "Asr", "Maghrib", "Isha"];
         const listDiv = document.getElementById('list');
 
-        // ഗൂഗിൾ ഫോം വിവരങ്ങൾ
         const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfoB6SzEuo4nrvGKGzdcjrvXLqFCZyu6kKyTa0mG8Gl8yUPMA/formResponse";
         const NAME_ENTRY = "entry.877237437";
         const PRAYER_ENTRY = "entry.330346532";
 
+        // സേവ് ചെയ്ത വിവരങ്ങൾ ലോഡ് ചെയ്യുന്നു
+        let savedData = JSON.parse(localStorage.getItem('niskaram_data')) || {};
+        
+        // പുതിയ ദിവസം ആണെങ്കിൽ പഴയ ഡാറ്റ ക്ലിയർ ചെയ്യുന്നു
+        if (savedData.date !== dateKey) {
+            savedData = { date: dateKey, entries: [] };
+            localStorage.setItem('niskaram_data', JSON.stringify(savedData));
+        }
+
         students.forEach(name => {
-            let prayerButtons = prayers.map(p => 
-                `<button onclick="submitPrayer('${name}', '${p}', this)" class="niskaram-btn px-2 py-1 text-[10px] font-bold rounded-md bg-white text-gray-600">${p}</button>`
-            ).join('');
+            let prayerButtons = prayers.map(p => {
+                const isDone = savedData.entries.includes(`${name}-${p}`);
+                return `<button id="${name}-${p}" onclick="submitPrayer('${name}', '${p}', this)" class="niskaram-btn px-2 py-1 text-[10px] rounded-md bg-white text-gray-600 ${isDone ? 'active' : ''}">${p}${isDone ? ' ✓' : ''}</button>`;
+            }).join('');
 
             listDiv.innerHTML += `
                 <div class="bg-white p-4 rounded-2xl shadow-sm border-b-4 border-emerald-500">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold">${name[0]}</div>
-                            <h3 class="font-bold text-gray-800">${name}</h3>
-                        </div>
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold">${name[0]}</div>
+                        <h3 class="font-bold text-gray-800">${name}</h3>
                     </div>
-                    <div class="grid grid-cols-5 gap-1">
-                        ${prayerButtons}
-                    </div>
+                    <div class="grid grid-cols-5 gap-1">${prayerButtons}</div>
                 </div>
             `;
         });
@@ -60,17 +66,16 @@
             formData.append(NAME_ENTRY, studentName);
             formData.append(PRAYER_ENTRY, prayerName);
 
-            fetch(FORM_URL, {
-                method: "POST",
-                body: formData,
-                mode: "no-cors"
-            }).then(() => {
+            fetch(FORM_URL, { method: "POST", body: formData, mode: "no-cors" }).then(() => {
                 btn.classList.add('active');
                 btn.innerHTML += ' ✓';
+                
+                // ഫോണിൽ സേവ് ചെയ്യുന്നു
+                savedData.entries.push(`${studentName}-${prayerName}`);
+                localStorage.setItem('niskaram_data', JSON.stringify(savedData));
+                
                 alert(studentName + "-ന്റെ " + prayerName + " രേഖപ്പെടുത്തി!");
-            }).catch(err => {
-                alert("Error! വീണ്ടും ശ്രമിക്കൂ.");
-            });
+            }).catch(err => alert("Error! വീണ്ടും ശ്രമിക്കൂ."));
         }
     </script>
 </body>
