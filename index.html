@@ -7,106 +7,146 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .card { background: white; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #059669; }
+        .login-card { background: white; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        .card { background: white; border-radius: 15px; border-left: 5px solid #059669; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .niskaram-btn { transition: 0.2s; border: 1px solid #e2e8f0; font-weight: 600; font-size: 11px; }
         .active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
         .star-box { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
-        .progress-link { font-size: 10px; color: #059669; text-decoration: underline; cursor: pointer; margin-top: 4px; display: inline-block; }
+        .progress-link { font-size: 11px; color: #059669; font-weight: bold; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body class="pb-20">
 
-    <div class="bg-emerald-800 p-8 text-white rounded-b-[3rem] shadow-xl text-center">
-        <h1 class="text-2xl font-bold uppercase tracking-tight">Hidayatul Islam Madrasa</h1>
-        <p id="today" class="text-emerald-100 mt-1 text-sm"></p>
-
-        <div class="mt-6 grid grid-cols-5 gap-1 bg-emerald-900/40 p-3 rounded-2xl text-[10px]">
-            <div>Fajr<br><span class="text-xs font-bold">05:17</span></div>
-            <div>Dhuhr<br><span class="text-xs font-bold">12:39</span></div>
-            <div>Asr<br><span class="text-xs font-bold">03:59</span></div>
-            <div>Maghrib<br><span class="text-xs font-bold">06:38</span></div>
-            <div>Isha<br><span class="text-xs font-bold">07:49</span></div>
+    <div id="auth-page" class="flex items-center justify-center min-h-screen p-6">
+        <div class="login-card p-8 w-full max-w-md text-center">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">🕌</div>
+            <h2 class="text-2xl font-bold text-gray-800">മദ്രസ പോർട്ടൽ</h2>
+            <p class="text-gray-500 text-sm mb-6">തുടരാൻ നിങ്ങളുടെ ഫോൺ നമ്പർ നൽകുക</p>
+            
+            <input type="tel" id="phone" placeholder="Phone Number" class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-gray-50 mb-4 text-center text-lg font-bold">
+            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-emerald-800 transition uppercase tracking-widest">Enter</button>
+            <p id="msg" class="text-red-500 text-xs mt-4 font-bold hidden">ശരിയായ നമ്പർ നൽകുക!</p>
         </div>
     </div>
 
-    <div class="p-4">
-        <div class="star-box shadow-lg">
-            <div class="text-3xl mb-1">🏆</div>
-            <h2 class="font-black text-lg uppercase tracking-wider">Star of the Week</h2>
-            <p class="text-white/90 font-bold mt-1 italic">Winners will be announced soon!</p>
+    <div id="main-content" class="hidden">
+        <div class="bg-emerald-800 p-8 text-white rounded-b-[3rem] shadow-xl text-center relative">
+            <button onclick="logout()" class="absolute top-4 right-4 text-[10px] bg-white/10 px-3 py-1 rounded-full border border-white/20">Change Number</button>
+            <h1 class="text-2xl font-bold uppercase tracking-tight">Hidayatul Islam Madrasa</h1>
+            <p id="today" class="text-emerald-100 mt-1 text-sm"></p>
+            
+            <div class="mt-6 grid grid-cols-5 gap-1 bg-emerald-900/40 p-3 rounded-2xl text-[10px]">
+                <div>Fajr<br><span class="font-bold">05:17</span></div>
+                <div>Dhuhr<br><span class="font-bold">12:39</span></div>
+                <div>Asr<br><span class="font-bold">03:59</span></div>
+                <div>Maghrib<br><span class="font-bold">06:38</span></div>
+                <div>Isha<br><span class="font-bold">07:49</span></div>
+            </div>
         </div>
 
-        <div class="space-y-4" id="list"></div>
+        <div class="p-4">
+            <div class="star-box shadow-lg">
+                <div class="text-3xl mb-1">🏆</div>
+                <h2 class="font-black text-lg uppercase">Star of the Week</h2>
+                <p class="text-white/90 font-bold mt-1 italic text-sm">Winners will be announced soon!</p>
+            </div>
+            <div class="space-y-4" id="list"></div>
+        </div>
     </div>
 
     <script>
-        const d = new Date();
-        const dateKey = d.toDateString();
-        document.getElementById('today').innerText = d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-
-        const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
-        const prayers = ["Subhi", "Luhr", "Asr", "Maghrib", "Isha"];
-        
-        const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfoB6SzEuo4nrvGKGzdcjrvXLqFCZyu6kKyTa0mG8Gl8yUPMA/formResponse";
-        const NAME_ENTRY = "entry.877237437";
-        const PRAYER_ENTRY = "entry.330346532";
-
-        let localData = JSON.parse(localStorage.getItem('hidayatul_p_data')) || { date: dateKey, entries: [] };
-        let historyData = JSON.parse(localStorage.getItem('prayer_history')) || {};
-
-        if (localData.date !== dateKey) {
-            localData = { date: dateKey, entries: [] };
-            localStorage.setItem('hidayatul_p_data', JSON.stringify(localData));
+        function handleLogin() {
+            const phone = document.getElementById('phone').value;
+            if (phone.length >= 10) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userPhone', phone);
+                showMain();
+            } else {
+                document.getElementById('msg').classList.remove('hidden');
+            }
         }
 
-        const listDiv = document.getElementById('list');
+        function showMain() {
+            document.getElementById('auth-page').classList.add('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+            loadTracker();
+        }
 
-        students.forEach(name => {
-            let score = localData.entries.filter(e => e.startsWith(name)).length;
-            let prayerButtons = prayers.map(p => {
-                const isDone = localData.entries.includes(`${name}-${p}`);
-                return `<button onclick="submitPrayer('${name}', '${p}', this)" 
-                        class="niskaram-btn py-2 rounded-lg bg-gray-50 text-gray-700 ${isDone ? 'active' : ''}">
-                        ${p}${isDone ? ' ✓' : ''}</button>`;
-            }).join('');
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            location.reload();
+        }
 
-            listDiv.innerHTML += `
-                <div class="card p-5">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 class="font-bold text-gray-800 text-lg">${name}</h3>
-                            <span onclick="showProgress('${name}')" class="progress-link">📊 My Progress</span>
-                        </div>
-                        <span class="bg-emerald-100 text-emerald-800 text-[10px] px-3 py-1 rounded-full font-bold">Today: ${score}/5</span>
+        window.onload = function() {
+            if (localStorage.getItem('isLoggedIn') === 'true') showMain();
+        }
+
+        function loadTracker() {
+            const d = new Date();
+            const dateKey = d.toDateString();
+            document.getElementById('today').innerText = d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+
+            const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
+            const prayers = ["Subhi", "Luhr", "Asr", "Maghrib", "Isha"];
+            const listDiv = document.getElementById('list');
+            listDiv.innerHTML = "";
+
+            let localData = JSON.parse(localStorage.getItem('h_p_data')) || { date: dateKey, entries: [] };
+            if (localData.date !== dateKey) localData = { date: dateKey, entries: [] };
+
+            students.forEach(name => {
+                let score = localData.entries.filter(e => e.startsWith(name)).length;
+                let btns = prayers.map(p => {
+                    const done = localData.entries.includes(`${name}-${p}`);
+                    return `<button onclick="submitP('${name}','${p}',this)" class="niskaram-btn py-2 rounded-lg bg-gray-50 ${done?'active':''}">${p}${done?' ✓':''}</button>`;
+                }).join('');
+
+                listDiv.innerHTML += `
+                <div class="card p-5 mb-4 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-gray-800 text-lg">${name}</h3>
+                        <span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full uppercase">Today: ${score}/5</span>
                     </div>
-                    <div class="grid grid-cols-5 gap-2">${prayerButtons}</div>
-                </div>
-            `;
-        });
+                    <div class="grid grid-cols-5 gap-2">${btns}</div>
+                    <div class="mt-4 pt-3 border-t border-gray-100 text-center">
+                        <span onclick="showProgress('${name}')" class="progress-link">📊 VIEW MY PROGRESS</span>
+                    </div>
+                </div>`;
+            });
+        }
 
-        function submitPrayer(studentName, prayerName, btn) {
-            if(btn.classList.contains('active')) return;
+        function submitP(n, p, b) {
+            if(b.classList.contains('active')) return;
+            const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfoB6SzEuo4nrvGKGzdcjrvXLqFCZyu6kKyTa0mG8Gl8yUPMA/formResponse";
             const formData = new FormData();
-            formData.append(NAME_ENTRY, studentName);
-            formData.append(PRAYER_ENTRY, prayerName);
+            formData.append("entry.877237437", n);
+            formData.append("entry.330346532", p);
+            
+            // ലോഗിൻ ചെയ്ത ഫോൺ നമ്പർ വേണമെങ്കിൽ ഗൂഗിൾ ഫോമിലെ മറ്റൊരു എട്രിയിലേക്ക് അയക്കാം
+            // formData.append("entry.YOUR_PHONE_ID", localStorage.getItem('userPhone'));
+
             fetch(FORM_URL, { method: "POST", body: formData, mode: "no-cors" }).then(() => {
-                btn.classList.add('active');
-                btn.innerHTML += ' ✓';
-                localData.entries.push(`${studentName}-${prayerName}`);
-                localStorage.setItem('hidayatul_p_data', JSON.stringify(localData));
+                b.classList.add('active'); b.innerHTML += ' ✓';
+                let data = JSON.parse(localStorage.getItem('h_p_data')) || { date: new Date().toDateString(), entries: [] };
+                data.entries.push(`${n}-${p}`);
+                localStorage.setItem('h_p_data', JSON.stringify(data));
                 
-                historyData[studentName] = (historyData[studentName] || 0) + 1;
-                localStorage.setItem('prayer_history', JSON.stringify(historyData));
+                let history = JSON.parse(localStorage.getItem('p_history')) || {};
+                history[n] = (history[n] || 0) + 1;
+                localStorage.setItem('p_history', JSON.stringify(history));
                 
-                alert(`${studentName}-ന്റെ ${prayerName} രേഖപ്പെടുത്തി!`);
-                location.reload(); 
+                alert(`${n}-ന്റെ ${p} നിസ്കാരം രേഖപ്പെടുത്തി!`);
+                location.reload();
             });
         }
 
         function showProgress(name) {
-            let total = historyData[name] || 0;
+            let history = JSON.parse(localStorage.getItem('p_history')) || {};
+            let total = history[name] || 0;
             alert(`${name}, നിങ്ങൾ ഇതുവരെ ${total} നിസ്കാരങ്ങൾ പൂർത്തിയാക്കിയിട്ടുണ്ട്!`);
         }
     </script>
 </body>
 </html>
+
