@@ -3,164 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam Multi-System Tracker</title>
+    <title>Hidayatul Islam Madrasa Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #0d1117; color: white; font-family: sans-serif; padding-bottom: 80px; }
+        body { background-color: #f3f4f6; color: #1f2937; font-family: 'Inter', sans-serif; padding-bottom: 80px; }
         .hidden { display: none; }
-        .main-card { background: linear-gradient(180deg, #064e3b 0%, #065f46 100%); border-radius: 0 0 40px 40px; padding: 25px 20px; text-align: center; }
-        .timer-box { background: rgba(0,0,0,0.4); border-radius: 20px; padding: 15px; margin: 15px 0; border: 1px solid rgba(255,255,255,0.1); }
-        .task-card { background: #161b22; border-radius: 18px; padding: 15px; margin-bottom: 15px; border: 1px solid #30363d; }
-        .p-btn { background: #21262d; border: 1px solid #30363d; padding: 10px 2px; border-radius: 10px; font-size: 10px; font-weight: 800; color: #c9d1d9; cursor: pointer; }
-        .active { background: #10b981 !important; color: white !important; pointer-events: none; border-color: #10b981; }
-        .jamath { background: #059669 !important; border-color: #10b981; }
-        .alone { background: #2563eb !important; border-color: #3b82f6; }
-        .bottom-nav { background: #161b22; border-top: 1px solid #30363d; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
-        .nav-item { text-align: center; font-size: 10px; color: #8b949e; cursor: pointer; }
-        .nav-item.active { color: #10b981; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-        input, select { background: #0d1117 !important; border: 1px solid #30363d !important; color: white !important; }
+        .header-card { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 40px 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .bottom-nav { background: white; border-top: 1px solid #e5e7eb; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item { text-align: center; font-size: 11px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 600; }
+        .nav-item.active { color: #065f46; }
+        .nav-item i { font-size: 24px; display: block; margin-bottom: 4px; }
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .azan-box { background: #f9fafb; padding: 12px; border-radius: 15px; border: 1px solid #f3f4f6; text-align: center; }
+        .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; transition: 0.3s; }
+        .p-btn.active { background: #10b981 !important; color: white !important; border-color: #059669; }
+        .input-box { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; margin-bottom: 15px; outline: none; transition: 0.3s; }
+        .input-box:focus { border-color: #065f46; ring: 2px solid #065f46; }
     </style>
 </head>
 <body>
 
-    <div class="main-card">
-        <h2 class="text-[10px] font-bold text-emerald-200 uppercase tracking-widest">Hidayatul Islam Madrasa Achangi</h2>
-        <h1 id="page-title" class="text-xl font-black uppercase text-white">Prayer Tracker</h1>
+    <div class="header-card">
+        <h1 class="text-2xl font-black uppercase tracking-tight mb-1">Hidayatul Islam</h1>
+        <p class="text-[10px] font-bold opacity-80 uppercase tracking-[4px]">Madrasa Achangi - Class 6</p>
     </div>
 
-    <div id="home-page" class="p-4">
-        <div class="timer-box text-center">
-            <p class="text-[10px] text-emerald-300 uppercase font-black mb-2">PRAYER TIMES (AZAN)</p>
-            <div class="grid grid-cols-5 gap-1 text-[10px] font-black uppercase tracking-tighter">
-                <div class="bg-black/20 p-2 rounded-lg">SUBHI<br><span class="text-yellow-400">05:15</span></div>
-                <div class="bg-black/20 p-2 rounded-lg">DUHAR<br>12:38</div>
-                <div class="bg-black/20 p-2 rounded-lg">ASR<br>03:58</div>
-                <div class="bg-black/20 p-2 rounded-lg">MAGHRIB<br>06:39</div>
-                <div class="bg-black/20 p-2 rounded-lg">ISHA<br>07:49</div>
+    <div id="home-page" class="p-5">
+        <div class="card text-center">
+            <h3 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest">Azan Timings</h3>
+            <div class="grid grid-cols-5 gap-2">
+                <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">SUBHI</p><p class="text-sm font-black text-emerald-700">05:15</p></div>
+                <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">DUHAR</p><p class="text-sm font-black text-emerald-700">12:38</p></div>
+                <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">ASR</p><p class="text-sm font-black text-emerald-700">03:58</p></div>
+                <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">MAGHRIB</p><p class="text-sm font-black text-emerald-700">06:39</p></div>
+                <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">ISHA</p><p class="text-sm font-black text-emerald-700">07:49</p></div>
             </div>
         </div>
-        <h2 class="text-xs font-bold uppercase text-emerald-500 mb-4 ml-1">Daily Records (Quick Mark)</h2>
-        <div id="quick-list"></div>
+        <div class="mt-10 text-center">
+            <img src="https://img.icons8.com/clouds/200/mosque.png" class="mx-auto opacity-50 w-32">
+            <p class="text-gray-400 text-xs font-medium uppercase mt-4">Welcome to Madrasa Tracker</p>
+        </div>
     </div>
 
-    <div id="activity-page" class="p-4 hidden">
-        <div class="mb-4 bg-emerald-900/30 p-4 rounded-2xl border border-emerald-500/20 flex justify-between items-center">
-            <span class="text-xs font-bold uppercase tracking-widest">Total Points</span>
-            <span id="total-pts" class="text-2xl font-black text-emerald-400">0</span>
+    <div id="tracker-page" class="p-5 hidden">
+        <h2 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest ml-1">Daily Prayer Log</h2>
+        <div id="tracker-list"></div>
+    </div>
+
+    <div id="history-page" class="p-5 hidden">
+        <h2 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest ml-1">Overall Performance</h2>
+        <div id="history-list"></div>
+    </div>
+
+    <div id="profile-page" class="p-5 hidden">
+        <div id="auth-section">
+            <div class="card shadow-xl">
+                <h2 class="text-xl font-black text-emerald-700 mb-6 uppercase">Account Access</h2>
+                <input type="email" id="email" placeholder="Email Address" class="input-box">
+                <input type="password" id="password" placeholder="Password" class="input-box">
+                <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl mb-3 shadow-lg">LOGIN</button>
+                <button onclick="handleSignUp()" class="w-full border-2 border-emerald-700 text-emerald-700 font-bold py-3 rounded-xl mb-4 text-xs">CREATE NEW ACCOUNT</button>
+                <p onclick="forgotPassword()" class="text-center text-xs text-gray-400 underline cursor-pointer">Forgot Password?</p>
+            </div>
         </div>
-
-        <h2 class="text-xs font-bold uppercase text-emerald-500 mb-4 ml-1">Advanced Prayer Log</h2>
-        <div id="advanced-prayer-list"></div>
-
-        <h2 class="text-xs font-bold uppercase text-emerald-500 mb-4 mt-8 ml-1">Other Islamic Activities</h2>
-        <div class="task-card">
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-sm font-bold">Swalath Count</span>
-                <input type="number" id="swalath-count" placeholder="0" class="w-20 p-2 rounded-lg text-center font-bold">
+        <div id="user-info" class="hidden">
+            <div class="card text-center py-10">
+                <div class="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-md">
+                    <i class="fa-solid fa-user-check text-4xl text-emerald-700"></i>
+                </div>
+                <p id="user-display-email" class="text-sm font-bold text-gray-600 mb-6"></p>
+                <button onclick="handleLogout()" class="bg-red-50 text-red-600 font-black px-8 py-3 rounded-full border border-red-100 text-xs tracking-widest">LOGOUT</button>
             </div>
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-sm font-bold">Quran Recited?</span>
-                <select id="quran-status" class="w-24 p-2 rounded-lg font-bold">
-                    <option value="no">No</option>
-                    <option value="yes">Yes</option>
-                </select>
-            </div>
-            <button onclick="saveProProgress()" class="w-full bg-emerald-600 py-4 rounded-xl font-black text-xs uppercase tracking-widest transition shadow-lg">Save All Progress</button>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" id="nav-home" onclick="showPage('home')">
-            <i class="fa-solid fa-house-mosque"></i>
-            HOME
-        </div>
-        <div class="nav-item" id="nav-activity" onclick="showPage('activity')">
-            <i class="fa-solid fa-star"></i>
-            ACTIVITY
-        </div>
+        <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house"></i>HOME</div>
+        <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-list"></i>TRACKER</div>
+        <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-chart-line"></i>HISTORY</div>
+        <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-circle-user"></i>PROFILE</div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, collection, query, where, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0",
+            authDomain: "hidayatul-islam-traker.firebaseapp.com",
+            projectId: "hidayatul-islam-traker",
+            storageBucket: "hidayatul-islam-traker.firebasestorage.app",
+            messagingSenderId: "82744495268",
+            appId: "1:82744495268:web:afc2f87d3d06884363ea31"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         const today = new Date().toISOString().split('T')[0];
-        
-        let db = JSON.parse(localStorage.getItem('madrassa_multi_db')) || { date: today, points: 0, prayerData: {}, swalath: 0, quran: 'no' };
 
-        if (db.date !== today) db = { date: today, points: 0, prayerData: {}, swalath: 0, quran: 'no' };
-
-        function showPage(page) {
-            document.getElementById('home-page').classList.toggle('hidden', page !== 'home');
-            document.getElementById('activity-page').classList.toggle('hidden', page !== 'activity');
-            document.getElementById('nav-home').classList.toggle('active', page === 'home');
-            document.getElementById('nav-activity').classList.toggle('active', page === 'activity');
-            document.getElementById('page-title').innerText = page === 'home' ? 'Prayer Tracker' : 'Activity Hub';
-            if(page === 'home') loadHomeUI();
-            else loadActivityUI();
-        }
-
-        function loadHomeUI() {
-            const container = document.getElementById('quick-list');
-            container.innerHTML = "";
-            students.forEach(name => {
-                container.innerHTML += `
-                    <div class="task-card">
-                        <h3 class="font-black text-gray-100 uppercase mb-2 text-sm">${name}</h3>
-                        <div class="grid grid-cols-5 gap-1">
-                            ${prayers.map(p => {
-                                const isDone = db.prayerData[`${name}_${p}`];
-                                return `<button id="q_${name}_${p}" onclick="quickMark('${name}','${p}')" class="p-btn ${isDone ? 'active' : ''}">${isDone ? '✓' : p}</button>`;
-                            }).join('')}
-                        </div>
-                    </div>`;
+        // Navigation Function
+        window.navigate = (page, el) => {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            ['home', 'tracker', 'history', 'profile'].forEach(p => {
+                document.getElementById(p+'-page').classList.toggle('hidden', p !== page);
             });
-        }
-
-        function loadActivityUI() {
-            document.getElementById('total-pts').innerText = db.points;
-            const container = document.getElementById('advanced-prayer-list');
-            container.innerHTML = prayers.map(p => {
-                const status = db.prayerData[`user_${p}`] || "";
-                return `
-                    <div class="task-card">
-                        <div class="flex justify-between items-center mb-2"><span class="font-bold text-sm uppercase">${p}</span></div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="markProPrayer('${p}','jamath')" class="p-btn ${status === 'jamath' ? 'jamath active' : ''}">JAMATH (+10)</button>
-                            <button onclick="markProPrayer('${p}','alone')" class="p-btn ${status === 'alone' ? 'alone active' : ''}">ALONE (+5)</button>
-                        </div>
-                    </div>`;
-            }).join('');
-        }
-
-        window.quickMark = (name, p) => {
-            db.prayerData[`${name}_${p}`] = true;
-            save();
+            if(page === 'tracker') loadTracker();
+            if(page === 'history') loadHistory();
         };
 
-        window.markProPrayer = (p, type) => {
-            if(db.prayerData[`user_${p}`]) return;
-            db.prayerData[`user_${p}`] = type;
-            db.points += (type === 'jamath' ? 10 : 5);
-            save();
-        };
+        // Auth Logic
+        onAuthStateChanged(auth, (user) => {
+            const authSec = document.getElementById('auth-section');
+            const infoSec = document.getElementById('user-info');
+            if (user) {
+                authSec.classList.add('hidden');
+                infoSec.classList.remove('hidden');
+                document.getElementById('user-display-email').innerText = user.email;
+            } else {
+                authSec.classList.remove('hidden');
+                infoSec.classList.add('hidden');
+            }
+        });
 
-        window.saveProProgress = () => {
-            const sc = parseInt(document.getElementById('swalath-count').value) || 0;
-            const qs = document.getElementById('quran-status').value;
-            if(db.quran === 'no' && qs === 'yes') db.points += 15;
-            db.swalath = sc; db.quran = qs;
-            alert("Saved!"); save();
-        };
+        window.handleLogin = () => signInWithEmailAndPassword(auth, email.value, password.value).catch(e => alert(e.message));
+        window.handleSignUp = () => createUserWithEmailAndPassword(auth, email.value, password.value).then(() => alert("Account Created!")).catch(e => alert(e.message));
+        window.handleLogout = () => signOut(auth);
+        window.forgotPassword = () => sendPasswordResetEmail(auth, email.value).then(() => alert("Reset link sent!"));
 
-        function save() {
-            localStorage.setItem('madrassa_multi_db', JSON.stringify(db));
-            if(!document.getElementById('home-page').classList.contains('hidden')) loadHomeUI();
-            else loadActivityUI();
+        // Tracker Logic
+        async function loadTracker() {
+            const container = document.getElementById('tracker-list');
+            container.innerHTML = "<p class='text-center text-xs py-10 opacity-50'>Fetching records...</p>";
+            
+            const q = query(collection(db, "prayers"), where("date", "==", today));
+            const snap = await getDocs(q);
+            const saved = {};
+            snap.forEach(d => saved[d.id] = d.data());
+
+            container.innerHTML = students.map(name => `
+                <div class="card">
+                    <p class="text-xs font-black mb-3 uppercase tracking-wider text-gray-700">${name}</p>
+                    <div class="grid grid-cols-5 gap-1">
+                        ${prayers.map(p => {
+                            const active = saved[`${name}_${today}`]?.[p];
+                            return `<button onclick="mark('${name}','${p}')" class="p-btn ${active ? 'active' : ''}">${active ? '✓' : p}</button>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('');
         }
 
-        loadHomeUI();
+        window.mark = async (name, prayer) => {
+            if(!auth.currentUser) return alert("Please Login to mark prayers!");
+            try {
+                await setDoc(doc(db, "prayers", `${name}_${today}`), { name, date: today, [prayer]: true }, { merge: true });
+                loadTracker();
+            } catch(e) { alert(e.message); }
+        };
+
+        // History Logic (Aggregation)
+        async function loadHistory() {
+            const container = document.getElementById('history-list');
+            container.innerHTML = "<p class='text-center text-xs py-10 opacity-50'>Calculating totals...</p>";
+            
+            const snap = await getDocs(collection(db, "prayers"));
+            const totals = {};
+            students.forEach(s => totals[s] = 0);
+
+            snap.forEach(d => {
+                const data = d.data();
+                if(totals[data.name] !== undefined) {
+                    prayers.forEach(p => { if(data[p]) totals[data.name]++; });
+                }
+            });
+
+            container.innerHTML = students.sort((a,b) => totals[b] - totals[a]).map((name, i) => `
+                <div class="card flex justify-between items-center py-4">
+                    <div class="flex items-center">
+                        <span class="text-[10px] font-black w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3 text-gray-400">${i+1}</span>
+                        <p class="text-sm font-bold uppercase tracking-tight">${name}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-black text-gray-400 uppercase">Total Prayers</p>
+                        <p class="text-lg font-black text-emerald-600">${totals[name]}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
     </script>
 </body>
 </html>
+
