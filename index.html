@@ -23,26 +23,25 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // നിങ്ങളുടെ Firebase Config വിവരങ്ങൾ
+        // നിങ്ങളുടെ Firebase Config കൃത്യമായി ഇവിടെ ചേർക്കുന്നു
         const firebaseConfig = {
             apiKey: "AIzaSyA39rBTDE8BpdJ4vfOnETJzvzYLV5ksTY0",
             authDomain: "hidayatul-islam-traker.firebaseapp.com",
             projectId: "hidayatul-islam-traker",
-            storageBucket: "hidayatul-islam-traker.appspot.com",
+            storageBucket: "hidayatul-islam-traker.firebasestorage.app",
             messagingSenderId: "82744495268",
-            appId: "1:82744495268:web:afc2f87d3d86884363ea31"
+            appId: "1:82744495268:web:afc2f87d3d86884363ea31",
+            measurementId: "G-5H67QCXYE7"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // UI എലമെന്റുകൾ
         const loginPage = document.getElementById('login-page');
         const mainContent = document.getElementById('main-content');
         const emailField = document.getElementById('email');
         const passwordField = document.getElementById('password');
 
-        // ലോഗിൻ സ്റ്റേറ്റ് പരിശോധന
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loginPage.classList.add('hidden');
@@ -54,15 +53,16 @@
             }
         });
 
-        // Functions
         window.handleLogin = () => {
+            if(!emailField.value || !passwordField.value) return alert("Email-ഉം Password-ഉം നൽകുക");
             signInWithEmailAndPassword(auth, emailField.value, passwordField.value)
-                .catch(err => alert("Email അല്ലെങ്കിൽ Password തെറ്റാണ്!"));
+                .catch(err => alert("Login Failed: " + err.message));
         };
 
         window.handleSignUp = () => {
+            if(!emailField.value || !passwordField.value) return alert("Email-ഉം Password-ഉം നൽകുക");
             createUserWithEmailAndPassword(auth, emailField.value, passwordField.value)
-                .then(() => alert("Account Created! ഇനി ലോഗിൻ ചെയ്യാം."))
+                .then(() => alert("അക്കൗണ്ട് റെഡിയായി! ഇനി ലോഗിൻ ചെയ്യാം."))
                 .catch(err => alert("Error: " + err.message));
         };
 
@@ -73,31 +73,30 @@
         };
 
         window.handleLogout = () => signOut(auth);
-
     </script>
 
     <div id="login-page" class="flex items-center justify-center min-h-screen">
         <div class="login-box text-center shadow-2xl">
-            <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase">Hidayatul Islam Login</h2>
-            <input type="email" id="email" placeholder="Email (Eg: parent1@gmail.com)" class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 text-white mb-3 outline-none focus:ring-2 focus:ring-emerald-500">
+            <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase tracking-widest">Login</h2>
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 text-white mb-3 outline-none focus:ring-2 focus:ring-emerald-500">
             <input type="password" id="password" placeholder="Password" class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 text-white mb-6 outline-none focus:ring-2 focus:ring-emerald-500">
             
-            <button onclick="handleLogin()" class="w-full bg-emerald-600 font-black py-4 rounded-xl mb-3 uppercase">Login</button>
-            <button onclick="handleSignUp()" class="w-full border border-emerald-600 text-emerald-500 font-bold py-3 rounded-xl mb-4 text-xs uppercase">Create New Account</button>
+            <button onclick="handleLogin()" class="w-full bg-emerald-600 font-black py-4 rounded-xl mb-3 uppercase shadow-lg">Login</button>
+            <button onclick="handleSignUp()" class="w-full border border-emerald-600 text-emerald-500 font-bold py-3 rounded-xl mb-4 text-xs uppercase">Create Account</button>
             
-            <p onclick="forgotPassword()" class="text-xs text-gray-500 cursor-pointer underline">Forgot Password?</p>
+            <p onclick="forgotPassword()" class="text-xs text-gray-400 cursor-pointer underline">Forgot Password?</p>
         </div>
     </div>
 
     <div id="main-content" class="hidden">
         <div class="main-card">
             <button onclick="handleLogout()" class="absolute top-4 right-4 text-[10px] bg-white/10 px-3 py-1 rounded-full border border-white/20 uppercase font-bold">Logout</button>
-            <h1 class="text-xl font-black uppercase text-emerald-50">Hidayatul Islam</h1>
+            <h1 class="text-xl font-black uppercase text-emerald-50">Hidayatul Islam Tracker</h1>
             <div class="timer-box">
                 <p id="next-label" class="text-[10px] text-emerald-300 uppercase font-black mb-1">അടുത്ത ബാങ്ക് സമയം</p>
                 <div id="timer" class="text-4xl font-black font-mono">00:00:00</div>
             </div>
-            <div class="grid grid-cols-5 gap-1 text-[9px] font-black uppercase">
+            <div class="grid grid-cols-5 gap-1 text-[10px] font-black uppercase tracking-tighter">
                 <div>Subhi<br><span class="text-yellow-400">05:15</span></div>
                 <div>Duhar<br><span>12:38</span></div>
                 <div>Asr<br><span>03:58</span></div>
@@ -105,11 +104,9 @@
                 <div>Isha<br><span>07:49</span></div>
             </div>
         </div>
-
         <div id="list" class="p-5"></div>
-
         <div class="p-6 text-center border-t border-gray-800 mt-10">
-            <p class="text-gray-400 text-sm">Technical Support:</p>
+            <p class="text-gray-400 text-xs">Technical Support:</p>
             <p class="font-bold text-emerald-500">Abdul Kareem Falili AL-jalali</p>
             <a href="https://wa.me/919113695271" class="text-xs text-emerald-400 underline">WhatsApp Support</a>
         </div>
