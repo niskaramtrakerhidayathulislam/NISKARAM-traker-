@@ -14,7 +14,9 @@
         .prayer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
         .p-btn { background: #21262d; border: 1px solid #30363d; padding: 12px 2px; border-radius: 10px; font-size: 10px; font-weight: 800; color: #c9d1d9; cursor: pointer; }
         .active { background: #10b981 !important; color: white !important; }
-        .login-box { background: #161b22; padding: 30px; border-radius: 25px; border: 1px solid #30363d; width: 95%; max-width: 400px; }
+        .login-box { background: #1f2937; padding: 30px; border-radius: 20px; border: 1px solid #374151; width: 90%; max-width: 380px; }
+        /* ഇൻപുട്ട് ബോക്സിനുള്ളിലെ അക്ഷരങ്ങൾ തെളിഞ്ഞു കാണാൻ */
+        .input-field { background-color: white !important; color: black !important; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -23,15 +25,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // നിങ്ങളുടെ Firebase Config കൃത്യമായി ഇവിടെ ചേർക്കുന്നു
+        // നിങ്ങൾ ഇപ്പോൾ അയച്ചുതന്ന ഏറ്റവും പുതിയ Config
         const firebaseConfig = {
-            apiKey: "AIzaSyA39rBTDE8BpdJ4vfOnETJzvzYLV5ksTY0",
+            apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0",
             authDomain: "hidayatul-islam-traker.firebaseapp.com",
             projectId: "hidayatul-islam-traker",
             storageBucket: "hidayatul-islam-traker.firebasestorage.app",
             messagingSenderId: "82744495268",
-            appId: "1:82744495268:web:afc2f87d3d86884363ea31",
-            measurementId: "G-5H67QCXYE7"
+            appId: "1:82744495268:web:afc2f87d3d06884363ea31",
+            measurementId: "G-5HG7QCXYE7"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -54,37 +56,52 @@
         });
 
         window.handleLogin = () => {
-            if(!emailField.value || !passwordField.value) return alert("Email-ഉം Password-ഉം നൽകുക");
+            if(!emailField.value || !passwordField.value) return alert("ദയവായി ഇമെയിലും പാസ്‌വേഡും ടൈപ്പ് ചെയ്യുക");
             signInWithEmailAndPassword(auth, emailField.value, passwordField.value)
-                .catch(err => alert("Login Failed: " + err.message));
+                .catch(err => alert("ലോഗിൻ പരാജയപ്പെട്ടു: " + err.message));
         };
 
         window.handleSignUp = () => {
-            if(!emailField.value || !passwordField.value) return alert("Email-ഉം Password-ഉം നൽകുക");
+            if(!emailField.value || !passwordField.value) return alert("വിവരങ്ങൾ നൽകിയ ശേഷം Create Account അമർത്തുക");
             createUserWithEmailAndPassword(auth, emailField.value, passwordField.value)
-                .then(() => alert("അക്കൗണ്ട് റെഡിയായി! ഇനി ലോഗിൻ ചെയ്യാം."))
-                .catch(err => alert("Error: " + err.message));
+                .then(() => alert("അക്കൗണ്ട് വിജയകരമായി നിർമ്മിച്ചു! ഇനി ലോഗിൻ ചെയ്യാം."))
+                .catch(err => alert("പിശക്: " + err.message));
         };
 
         window.forgotPassword = () => {
-            if(!emailField.value) return alert("Email നൽകുക!");
+            if(!emailField.value) return alert("നിങ്ങളുടെ ഇമെയിൽ നൽകുക!");
             sendPasswordResetEmail(auth, emailField.value)
-                .then(() => alert("Password മാറ്റാനുള്ള ലിങ്ക് ഇമെയിലിൽ അയച്ചിട്ടുണ്ട്."));
+                .then(() => alert("പാസ്‌വേഡ് മാറ്റാനുള്ള ലിങ്ക് ഇമെയിലിൽ അയച്ചിട്ടുണ്ട്."));
         };
 
         window.handleLogout = () => signOut(auth);
     </script>
 
-    <div id="login-page" class="flex items-center justify-center min-h-screen">
-        <div class="login-box text-center shadow-2xl">
-            <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase tracking-widest">Login</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 text-white mb-3 outline-none focus:ring-2 focus:ring-emerald-500">
-            <input type="password" id="password" placeholder="Password" class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 text-white mb-6 outline-none focus:ring-2 focus:ring-emerald-500">
+    <div id="login-page" class="flex items-center justify-center min-h-screen p-4">
+        <div class="login-box shadow-2xl text-center">
+            <h2 class="text-2xl font-black text-emerald-400 mb-6 uppercase tracking-wider">Hidayatul Islam</h2>
             
-            <button onclick="handleLogin()" class="w-full bg-emerald-600 font-black py-4 rounded-xl mb-3 uppercase shadow-lg">Login</button>
-            <button onclick="handleSignUp()" class="w-full border border-emerald-600 text-emerald-500 font-bold py-3 rounded-xl mb-4 text-xs uppercase">Create Account</button>
+            <div class="text-left mb-4">
+                <label class="text-xs text-gray-400 ml-1">Email Id</label>
+                <input type="email" id="email" placeholder="example@gmail.com" class="input-field w-full p-4 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+
+            <div class="text-left mb-6">
+                <label class="text-xs text-gray-400 ml-1">Password</label>
+                <input type="password" id="password" placeholder="******" class="input-field w-full p-4 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
             
-            <p onclick="forgotPassword()" class="text-xs text-gray-400 cursor-pointer underline">Forgot Password?</p>
+            <button onclick="handleLogin()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 rounded-xl mb-3 uppercase shadow-lg transition">Login</button>
+            
+            <div class="flex items-center my-4">
+                <hr class="flex-grow border-gray-700">
+                <span class="px-3 text-gray-500 text-xs">അല്ലെങ്കിൽ</span>
+                <hr class="flex-grow border-gray-700">
+            </div>
+
+            <button onclick="handleSignUp()" class="w-full border border-emerald-500 text-emerald-400 font-bold py-3 rounded-xl mb-4 text-xs uppercase hover:bg-emerald-500/10 transition">Create New Account</button>
+            
+            <p onclick="forgotPassword()" class="text-xs text-gray-400 cursor-pointer underline hover:text-white">Forgot Password?</p>
         </div>
     </div>
 
