@@ -18,67 +18,76 @@
         .azan-box { background: #f9fafb; padding: 10px; border-radius: 12px; border: 1px solid #f3f4f6; text-align: center; }
         .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
-        .input-box { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; margin-bottom: 15px; outline: none; }
+        .input-box { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; margin-bottom: 15px; outline: none; background: #f9fafb; }
     </style>
 </head>
 <body>
 
-    <div class="header-card">
+    <div id="app-header" class="header-card hidden">
         <h1 class="text-2xl font-black uppercase tracking-tight mb-1">Hidayatul Islam</h1>
         <p class="text-[10px] font-bold opacity-80 uppercase tracking-[4px]">Madrasa Achangi - Class 6</p>
     </div>
 
-    <div id="home-page" class="p-5">
-        <div class="card text-center">
-            <h3 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest">Azan Timings</h3>
-            <div class="grid grid-cols-5 gap-2">
-                <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">SUBHI</p><p class="text-sm font-black text-emerald-700">05:15</p></div>
-                <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">DUHAR</p><p class="text-sm font-black text-emerald-700">12:38</p></div>
-                <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">ASR</p><p class="text-sm font-black text-emerald-700">03:58</p></div>
-                <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">MAGHRIB</p><p class="text-sm font-black text-emerald-700">06:39</p></div>
-                <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">ISHA</p><p class="text-sm font-black text-emerald-700">07:49</p></div>
+    <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-black text-emerald-800 uppercase">Welcome</h1>
+            <p class="text-gray-500 text-xs font-bold uppercase mt-2">Login to access Madrasa Tracker</p>
+        </div>
+
+        <div id="login-section" class="card shadow-2xl border-emerald-100">
+            <h2 class="text-lg font-black text-emerald-700 mb-4 uppercase border-b pb-2">Login Account</h2>
+            <input type="email" id="login-email" placeholder="Email Address" class="input-box">
+            <input type="password" id="login-password" placeholder="Password" class="input-box">
+            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest">Login</button>
+            <p class="text-center text-xs mt-6 text-gray-500">Don't have an account? <span onclick="toggleAuth('signup')" class="text-emerald-700 font-bold cursor-pointer underline">Create Account</span></p>
+        </div>
+
+        <div id="signup-section" class="card shadow-2xl border-emerald-100 hidden">
+            <h2 class="text-lg font-black text-blue-700 mb-4 uppercase border-b pb-2">Create Account</h2>
+            <input type="email" id="signup-email" placeholder="New Email Address" class="input-box">
+            <input type="password" id="signup-password" placeholder="Create Password" class="input-box">
+            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest">Create Account</button>
+            <p class="text-center text-xs mt-6 text-gray-500">Already have an account? <span onclick="toggleAuth('login')" class="text-blue-700 font-bold cursor-pointer underline">Login Here</span></p>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden">
+        
+        <div id="home-page" class="p-5">
+            <div class="card text-center">
+                <h3 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest">Azan Timings</h3>
+                <div class="grid grid-cols-5 gap-2">
+                    <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">SUBHI</p><p class="text-sm font-black text-emerald-700">05:15</p></div>
+                    <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">DUHAR</p><p class="text-sm font-black text-emerald-700">12:38</p></div>
+                    <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">ASR</p><p class="text-sm font-black text-emerald-700">03:58</p></div>
+                    <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">MAGHRIB</p><p class="text-sm font-black text-emerald-700">06:39</p></div>
+                    <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">ISHA</p><p class="text-sm font-black text-emerald-700">07:49</p></div>
+                </div>
             </div>
         </div>
-        <div class="mt-10 text-center opacity-40">
-            <i class="fa-solid fa-mosque text-6xl"></i>
-            <p class="text-xs font-bold uppercase mt-4">Welcome to Madrasa Tracker</p>
+
+        <div id="tracker-page" class="p-5 hidden">
+            <div id="tracker-list"></div>
         </div>
-    </div>
 
-    <div id="tracker-page" class="p-5 hidden">
-        <h2 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest">Daily Prayer Log</h2>
-        <div id="tracker-list"></div>
-    </div>
+        <div id="history-page" class="p-5 hidden">
+            <div id="history-list"></div>
+        </div>
 
-    <div id="history-page" class="p-5 hidden">
-        <h2 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest">Overall Performance</h2>
-        <div id="history-list"></div>
-    </div>
-
-    <div id="profile-page" class="p-5 hidden">
-        <div id="auth-section">
-            <div class="card shadow-xl">
-                <h2 class="text-xl font-black text-emerald-700 mb-6 uppercase">Account Access</h2>
-                <input type="email" id="email" placeholder="Email Address" class="input-box">
-                <input type="password" id="password" placeholder="Password" class="input-box">
-                <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl mb-3">LOGIN</button>
-                <button onclick="handleSignUp()" class="w-full border-2 border-emerald-700 text-emerald-700 font-bold py-3 rounded-xl mb-4 text-xs">CREATE ACCOUNT</button>
+        <div id="profile-page" class="p-5 hidden">
+            <div class="card text-center py-10">
+                <i class="fa-solid fa-circle-user text-6xl text-emerald-700 mb-4"></i>
+                <p id="user-display-email" class="text-sm font-bold text-gray-600 mb-8"></p>
+                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-xl uppercase tracking-widest text-xs">Sign Out / Logout</button>
             </div>
         </div>
-        <div id="user-info" class="hidden text-center">
-            <div class="card py-10">
-                <i class="fa-solid fa-circle-user text-5xl text-emerald-700 mb-4"></i>
-                <p id="user-display-email" class="text-sm font-bold text-gray-600 mb-6"></p>
-                <button onclick="handleLogout()" class="text-red-600 font-black px-8 py-3 rounded-full border border-red-100 text-xs">LOGOUT</button>
-            </div>
-        </div>
-    </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house"></i>HOME</div>
-        <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-list"></i>TRACKER</div>
-        <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-chart-line"></i>HISTORY</div>
-        <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-circle-user"></i>PROFILE</div>
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house"></i>HOME</div>
+            <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-list"></i>TRACKER</div>
+            <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-chart-line"></i>HISTORY</div>
+            <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-circle-user"></i>PROFILE</div>
+        </div>
     </div>
 
     <script type="module">
@@ -103,6 +112,13 @@
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         const today = new Date().toISOString().split('T')[0];
 
+        // Auth Navigation
+        window.toggleAuth = (mode) => {
+            document.getElementById('login-section').classList.toggle('hidden', mode === 'signup');
+            document.getElementById('signup-section').classList.toggle('hidden', mode === 'login');
+        };
+
+        // Main Navigation
         window.navigate = (page, el) => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
@@ -111,19 +127,42 @@
             if(page === 'history') loadHistory();
         };
 
+        // Auth Monitor
         onAuthStateChanged(auth, (user) => {
-            document.getElementById('auth-section').classList.toggle('hidden', !!user);
-            document.getElementById('user-info').classList.toggle('hidden', !user);
-            if (user) document.getElementById('user-display-email').innerText = user.email;
+            const authPage = document.getElementById('auth-page');
+            const mainContent = document.getElementById('main-content');
+            const header = document.getElementById('app-header');
+            
+            if (user) {
+                authPage.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                header.classList.remove('hidden');
+                document.getElementById('user-display-email').innerText = user.email;
+            } else {
+                authPage.classList.remove('hidden');
+                mainContent.classList.add('hidden');
+                header.classList.add('hidden');
+            }
         });
 
-        window.handleLogin = () => signInWithEmailAndPassword(auth, email.value, password.value).catch(e => alert(e.message));
-        window.handleSignUp = () => createUserWithEmailAndPassword(auth, email.value, password.value).then(() => alert("Success!")).catch(e => alert(e.message));
+        window.handleLogin = () => {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            signInWithEmailAndPassword(auth, email, pass).catch(e => alert("Login Failed: " + e.message));
+        };
+
+        window.handleSignUp = () => {
+            const email = document.getElementById('signup-email').value;
+            const pass = document.getElementById('signup-password').value;
+            createUserWithEmailAndPassword(auth, email, pass).then(() => alert("Account Created!")).catch(e => alert("Error: " + e.message));
+        };
+
         window.handleLogout = () => signOut(auth);
 
+        // Data Logic
         async function loadTracker() {
             const container = document.getElementById('tracker-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50'>Loading...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50'>Loading Tracker...</p>";
             const snap = await getDocs(query(collection(db, "prayers"), where("date", "==", today)));
             const saved = {};
             snap.forEach(d => saved[d.id] = d.data());
@@ -141,14 +180,13 @@
         }
 
         window.mark = async (name, prayer) => {
-            if(!auth.currentUser) return alert("Please Login First!");
             await setDoc(doc(db, "prayers", `${name}_${today}`), { name, date: today, [prayer]: true }, { merge: true });
             loadTracker();
         };
 
         async function loadHistory() {
             const container = document.getElementById('history-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50'>Calculating...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50'>Loading History...</p>";
             const snap = await getDocs(collection(db, "prayers"));
             const totals = {};
             students.forEach(s => totals[s] = 0);
