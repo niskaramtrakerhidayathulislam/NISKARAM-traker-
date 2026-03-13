@@ -12,7 +12,7 @@
     <style>
         body { background-color: #f3f4f6; color: #1f2937; font-family: sans-serif; padding-bottom: 80px; }
         .hidden { display: none; }
-        .header-card { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 40px 20px; text-align: center; }
+        .header-card { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 30px 20px; text-align: center; }
         .bottom-nav { background: white; border-top: 1px solid #e5e7eb; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .nav-item { text-align: center; font-size: 11px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 600; }
         .nav-item.active { color: #065f46; }
@@ -22,35 +22,35 @@
         .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
         .input-box { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; margin-bottom: 15px; outline: none; background: #f9fafb; }
+        .date-display { font-size: 12px; font-weight: 800; color: #fbbf24; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
     <div id="app-header" class="header-card hidden">
-        <h1 class="text-2xl font-black uppercase tracking-tight mb-1">Hidayatul Islam</h1>
-        <p class="text-[10px] font-bold opacity-80 uppercase tracking-[4px]">Madrasa Achangi - Class 6</p>
+        <h1 class="text-2xl font-black uppercase tracking-tight">Hidayatul Islam</h1>
+        <p class="text-[9px] font-bold opacity-80 uppercase tracking-[2px]">Madrasa Achangi - Class 6</p>
+        <div id="display-date" class="date-display"></div>
     </div>
 
-    <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center">
-        <div class="text-center mb-10">
-            <h1 class="text-3xl font-black text-emerald-800 uppercase">Welcome</h1>
-            <p class="text-gray-500 text-xs font-bold uppercase mt-2">Login to access Madrasa Tracker</p>
-        </div>
+    <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
+        <h1 class="text-3xl font-black text-emerald-800 uppercase mb-2">Welcome</h1>
+        <p class="text-gray-500 text-xs font-bold uppercase mb-8">Login to access Madrasa Tracker</p>
 
         <div id="login-section" class="card shadow-2xl border-emerald-100">
-            <h2 class="text-lg font-black text-emerald-700 mb-4 uppercase border-b pb-2">Login Account</h2>
-            <input type="email" id="login-email" placeholder="Email Address" class="input-box">
+            <h2 class="text-lg font-black text-emerald-700 mb-4 uppercase border-b pb-2">Login</h2>
+            <input type="email" id="login-email" placeholder="Email" class="input-box">
             <input type="password" id="login-password" placeholder="Password" class="input-box">
-            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest">Login</button>
-            <p class="text-center text-xs mt-6 text-gray-500">Don't have an account? <span onclick="toggleAuth('signup')" class="text-emerald-700 font-bold cursor-pointer underline">Create Account</span></p>
+            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg uppercase">Login</button>
+            <p class="text-xs mt-6 text-gray-500">New User? <span onclick="toggleAuth('signup')" class="text-emerald-700 font-bold cursor-pointer underline">Create Account</span></p>
         </div>
 
         <div id="signup-section" class="card shadow-2xl border-emerald-100 hidden">
-            <h2 class="text-lg font-black text-blue-700 mb-4 uppercase border-b pb-2">Create Account</h2>
-            <input type="email" id="signup-email" placeholder="New Email Address" class="input-box">
-            <input type="password" id="signup-password" placeholder="Create Password" class="input-box">
-            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest">Create Account</button>
-            <p class="text-center text-xs mt-6 text-gray-500">Already have an account? <span onclick="toggleAuth('login')" class="text-blue-700 font-bold cursor-pointer underline">Login Here</span></p>
+            <h2 class="text-lg font-black text-blue-700 mb-4 uppercase border-b pb-2">Sign Up</h2>
+            <input type="email" id="signup-email" placeholder="Email" class="input-box">
+            <input type="password" id="signup-password" placeholder="Password" class="input-box">
+            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg uppercase">Create Account</button>
+            <p class="text-xs mt-6 text-gray-500">Already have account? <span onclick="toggleAuth('login')" class="text-blue-700 font-bold cursor-pointer underline">Login Here</span></p>
         </div>
     </div>
 
@@ -66,6 +66,10 @@
                     <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">ISHA</p><p class="text-sm font-black text-emerald-700">07:49</p></div>
                 </div>
             </div>
+            <div class="mt-10 text-center opacity-30">
+                <i class="fa-solid fa-calendar-day text-5xl"></i>
+                <p class="text-[10px] font-bold uppercase mt-2">Daily Automated Tracking</p>
+            </div>
         </div>
 
         <div id="tracker-page" class="p-5 hidden">
@@ -76,11 +80,11 @@
             <div id="history-list"></div>
         </div>
 
-        <div id="profile-page" class="p-5 hidden">
-            <div class="card text-center py-10">
+        <div id="profile-page" class="p-5 hidden text-center">
+            <div class="card py-10">
                 <i class="fa-solid fa-circle-user text-6xl text-emerald-700 mb-4"></i>
                 <p id="user-display-email" class="text-sm font-bold text-gray-600 mb-8"></p>
-                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-xl uppercase tracking-widest text-xs">Sign Out / Logout</button>
+                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-xl uppercase text-xs">Sign Out</button>
             </div>
         </div>
 
@@ -112,7 +116,12 @@
 
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
-        const today = new Date().toLocaleDateString('en-CA'); // കറക്റ്റ് ഡേറ്റ് കിട്ടാൻ
+        
+        // തിയതി സെറ്റ് ചെയ്യുന്നു
+        const now = new Date();
+        const today = now.toLocaleDateString('en-CA'); // YYYY-MM-DD format for DB
+        const displayDate = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+        document.getElementById('display-date').innerText = displayDate;
 
         window.toggleAuth = (mode) => {
             document.getElementById('login-section').classList.toggle('hidden', mode === 'signup');
@@ -128,38 +137,31 @@
         };
 
         onAuthStateChanged(auth, (user) => {
-            const authPage = document.getElementById('auth-page');
-            const mainContent = document.getElementById('main-content');
-            const header = document.getElementById('app-header');
             if (user) {
-                authPage.classList.add('hidden');
-                mainContent.classList.remove('hidden');
-                header.classList.remove('hidden');
+                document.getElementById('auth-page').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('app-header').classList.remove('hidden');
                 document.getElementById('user-display-email').innerText = user.email;
             } else {
-                authPage.classList.remove('hidden');
-                mainContent.classList.add('hidden');
-                header.classList.add('hidden');
+                document.getElementById('auth-page').classList.remove('hidden');
+                document.getElementById('main-content').classList.add('hidden');
+                document.getElementById('app-header').classList.add('hidden');
             }
         });
 
         window.handleLogin = () => {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-password').value;
-            signInWithEmailAndPassword(auth, email, pass).catch(e => alert("Login Failed: " + e.message));
+            signInWithEmailAndPassword(auth, login-email.value, login-password.value).catch(e => alert(e.message));
         };
 
         window.handleSignUp = () => {
-            const email = document.getElementById('signup-email').value;
-            const pass = document.getElementById('signup-password').value;
-            createUserWithEmailAndPassword(auth, email, pass).then(() => alert("Account Created!")).catch(e => alert("Error: " + e.message));
+            createUserWithEmailAndPassword(auth, signup-email.value, signup-password.value).then(() => alert("Account Created!")).catch(e => alert(e.message));
         };
 
         window.handleLogout = () => signOut(auth);
 
         async function loadTracker() {
             const container = document.getElementById('tracker-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold uppercase tracking-widest'>Syncing Data...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold'>SYNCING...</p>";
             const snap = await getDocs(query(collection(db, "prayers"), where("date", "==", today)));
             const saved = {};
             snap.forEach(d => saved[d.id] = d.data());
@@ -183,7 +185,7 @@
 
         async function loadHistory() {
             const container = document.getElementById('history-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold uppercase tracking-widest'>Loading History...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold'>CALCULATING...</p>";
             const snap = await getDocs(collection(db, "prayers"));
             const totals = {};
             students.forEach(s => totals[s] = 0);
