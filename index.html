@@ -21,8 +21,8 @@
         .azan-box { background: #f9fafb; padding: 10px; border-radius: 12px; border: 1px solid #f3f4f6; text-align: center; }
         .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
-        .input-box { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; margin-bottom: 15px; outline: none; background: #f9fafb; }
-        .date-display { font-size: 12px; font-weight: 800; color: #fbbf24; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .input-box { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; margin-bottom: 15px; outline: none; background: #f9fafb; font-weight: 600; }
+        .date-display { font-size: 14px; font-weight: 900; color: #fbbf24; margin-top: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
     </style>
 </head>
 <body>
@@ -37,19 +37,19 @@
         <h1 class="text-3xl font-black text-emerald-800 uppercase mb-2">Welcome</h1>
         <p class="text-gray-500 text-xs font-bold uppercase mb-8">Login to access Madrasa Tracker</p>
 
-        <div id="login-section" class="card shadow-2xl border-emerald-100">
-            <h2 class="text-lg font-black text-emerald-700 mb-4 uppercase border-b pb-2">Login</h2>
-            <input type="email" id="login-email" placeholder="Email" class="input-box">
+        <div id="login-section" class="card shadow-2xl">
+            <h2 class="text-lg font-black text-emerald-700 mb-4 uppercase">Login</h2>
+            <input type="email" id="login-email" placeholder="Email Address" class="input-box">
             <input type="password" id="login-password" placeholder="Password" class="input-box">
-            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg uppercase">Login</button>
+            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest">Login</button>
             <p class="text-xs mt-6 text-gray-500">New User? <span onclick="toggleAuth('signup')" class="text-emerald-700 font-bold cursor-pointer underline">Create Account</span></p>
         </div>
 
-        <div id="signup-section" class="card shadow-2xl border-emerald-100 hidden">
-            <h2 class="text-lg font-black text-blue-700 mb-4 uppercase border-b pb-2">Sign Up</h2>
-            <input type="email" id="signup-email" placeholder="Email" class="input-box">
-            <input type="password" id="signup-password" placeholder="Password" class="input-box">
-            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg uppercase">Create Account</button>
+        <div id="signup-section" class="card shadow-2xl hidden">
+            <h2 class="text-lg font-black text-blue-700 mb-4 uppercase">Create Account</h2>
+            <input type="email" id="signup-email" placeholder="Email Address" class="input-box">
+            <input type="password" id="signup-password" placeholder="Create Password" class="input-box">
+            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest">Sign Up</button>
             <p class="text-xs mt-6 text-gray-500">Already have account? <span onclick="toggleAuth('login')" class="text-blue-700 font-bold cursor-pointer underline">Login Here</span></p>
         </div>
     </div>
@@ -66,25 +66,15 @@
                     <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">ISHA</p><p class="text-sm font-black text-emerald-700">07:49</p></div>
                 </div>
             </div>
-            <div class="mt-10 text-center opacity-30">
-                <i class="fa-solid fa-calendar-day text-5xl"></i>
-                <p class="text-[10px] font-bold uppercase mt-2">Daily Automated Tracking</p>
-            </div>
         </div>
 
-        <div id="tracker-page" class="p-5 hidden">
-            <div id="tracker-list"></div>
-        </div>
-
-        <div id="history-page" class="p-5 hidden">
-            <div id="history-list"></div>
-        </div>
-
+        <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
+        <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
         <div id="profile-page" class="p-5 hidden text-center">
             <div class="card py-10">
                 <i class="fa-solid fa-circle-user text-6xl text-emerald-700 mb-4"></i>
                 <p id="user-display-email" class="text-sm font-bold text-gray-600 mb-8"></p>
-                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-xl uppercase text-xs">Sign Out</button>
+                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-xl uppercase text-xs">Logout</button>
             </div>
         </div>
 
@@ -117,75 +107,73 @@
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         
-        // തിയതി സെറ്റ് ചെയ്യുന്നു
         const now = new Date();
-        const today = now.toLocaleDateString('en-CA'); // YYYY-MM-DD format for DB
+        const today = now.toLocaleDateString('en-CA'); 
         const displayDate = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
         document.getElementById('display-date').innerText = displayDate;
 
-        window.toggleAuth = (mode) => {
-            document.getElementById('login-section').classList.toggle('hidden', mode === 'signup');
-            document.getElementById('signup-section').classList.toggle('hidden', mode === 'login');
+        window.toggleAuth = (m) => {
+            document.getElementById('login-section').classList.toggle('hidden', m === 'signup');
+            document.getElementById('signup-section').classList.toggle('hidden', m === 'login');
         };
 
-        window.navigate = (page, el) => {
+        window.navigate = (p, el) => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
-            ['home', 'tracker', 'history', 'profile'].forEach(p => document.getElementById(p+'-page').classList.toggle('hidden', p !== page));
-            if(page === 'tracker') loadTracker();
-            if(page === 'history') loadHistory();
+            ['home', 'tracker', 'history', 'profile'].forEach(pg => document.getElementById(pg+'-page').classList.toggle('hidden', pg !== p));
+            if(p === 'tracker') loadTracker();
+            if(p === 'history') loadHistory();
         };
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('auth-page').classList.add('hidden');
-                document.getElementById('main-content').classList.remove('hidden');
-                document.getElementById('app-header').classList.remove('hidden');
-                document.getElementById('user-display-email').innerText = user.email;
-            } else {
-                document.getElementById('auth-page').classList.remove('hidden');
-                document.getElementById('main-content').classList.add('hidden');
-                document.getElementById('app-header').classList.add('hidden');
-            }
+        onAuthStateChanged(auth, (u) => {
+            document.getElementById('auth-page').classList.toggle('hidden', !!u);
+            document.getElementById('main-content').classList.toggle('hidden', !u);
+            document.getElementById('app-header').classList.toggle('hidden', !u);
+            if(u) document.getElementById('user-display-email').innerText = u.email;
         });
 
         window.handleLogin = () => {
-            signInWithEmailAndPassword(auth, login-email.value, login-password.value).catch(e => alert(e.message));
+            const e = document.getElementById('login-email').value;
+            const p = document.getElementById('login-password').value;
+            if(!e || !p) return alert("Please fill all fields");
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
         };
 
         window.handleSignUp = () => {
-            createUserWithEmailAndPassword(auth, signup-email.value, signup-password.value).then(() => alert("Account Created!")).catch(e => alert(e.message));
+            const e = document.getElementById('signup-email').value;
+            const p = document.getElementById('signup-password').value;
+            if(!e || !p) return alert("Please fill all fields");
+            createUserWithEmailAndPassword(auth, e, p).then(() => alert("Success!")).catch(err => alert(err.message));
         };
 
         window.handleLogout = () => signOut(auth);
 
         async function loadTracker() {
             const container = document.getElementById('tracker-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold'>SYNCING...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50'>Loading...</p>";
             const snap = await getDocs(query(collection(db, "prayers"), where("date", "==", today)));
             const saved = {};
             snap.forEach(d => saved[d.id] = d.data());
-
-            container.innerHTML = students.map(name => `
+            container.innerHTML = students.map(n => `
                 <div class="card">
-                    <p class="text-xs font-black mb-3 uppercase text-gray-700 tracking-wider">${name}</p>
+                    <p class="text-xs font-black mb-3 uppercase text-gray-700 tracking-wider">${n}</p>
                     <div class="grid grid-cols-5 gap-1">
                         ${prayers.map(p => {
-                            const active = saved[`${name}_${today}`]?.[p];
-                            return `<button onclick="mark('${name}','${p}')" class="p-btn ${active ? 'active' : ''}">${active ? '✓' : p}</button>`;
+                            const ok = saved[n+'_'+today]?.[p];
+                            return `<button onclick="mark('${n}','${p}')" class="p-btn ${ok ? 'active' : ''}">${ok ? '✓' : p}</button>`;
                         }).join('')}
                     </div>
                 </div>`).join('');
         }
 
-        window.mark = async (name, prayer) => {
-            await setDoc(doc(db, "prayers", `${name}_${today}`), { name, date: today, [prayer]: true }, { merge: true });
+        window.mark = async (n, p) => {
+            await setDoc(doc(db, "prayers", n+'_'+today), { name: n, date: today, [p]: true }, { merge: true });
             loadTracker();
         };
 
         async function loadHistory() {
             const container = document.getElementById('history-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold'>CALCULATING...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50'>Calculating History...</p>";
             const snap = await getDocs(collection(db, "prayers"));
             const totals = {};
             students.forEach(s => totals[s] = 0);
@@ -193,16 +181,12 @@
                 const data = d.data();
                 if(totals[data.name] !== undefined) prayers.forEach(p => { if(data[p]) totals[data.name]++; });
             });
-            container.innerHTML = students.sort((a,b) => totals[b] - totals[a]).map((name, i) => `
+            container.innerHTML = students.sort((a,b) => totals[b] - totals[a]).map((n, i) => `
                 <div class="card flex justify-between items-center py-4">
-                    <p class="text-sm font-bold uppercase">${name}</p>
-                    <div class="text-right">
-                        <p class="text-[9px] font-bold text-gray-400">TOTAL</p>
-                        <p class="text-lg font-black text-emerald-600 leading-none">${totals[name]}</p>
-                    </div>
+                    <p class="text-sm font-bold uppercase">${n}</p>
+                    <p class="text-lg font-black text-emerald-600">${totals[n]}</p>
                 </div>`).join('');
         }
     </script>
 </body>
 </html>
-
