@@ -7,111 +7,153 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0d1117; color: white; font-family: sans-serif; }
-        .main-card { background: linear-gradient(180deg, #064e3b 0%, #065f46 100%); border-radius: 0 0 40px 40px; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .hidden { display: none; }
+        .main-card { background: linear-gradient(180deg, #064e3b 0%, #065f46 100%); border-radius: 0 0 40px 40px; padding: 30px 20px; text-align: center; position: relative; }
         .timer-box { background: rgba(0,0,0,0.4); border-radius: 20px; padding: 20px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); }
         .student-card { background: #161b22; border-radius: 18px; padding: 18px; margin-bottom: 16px; border: 1px solid #30363d; }
         .prayer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
-        .p-btn { background: #21262d; border: 1px solid #30363d; padding: 12px 2px; border-radius: 10px; font-size: 10px; font-weight: 800; cursor: pointer; color: #c9d1d9; }
-        .p-btn.active { background: #10b981 !important; color: white !important; border-color: #10b981 !important; box-shadow: 0 0 15px rgba(16,185,129,0.3); }
-        .ramadan-tag { background: #d97706; color: white; padding: 6px 15px; border-radius: 50px; font-size: 12px; font-weight: 900; display: inline-block; }
-        .footer-contact { margin-top: 30px; padding: 30px 20px; border-top: 1px solid #30363d; text-align: center; font-size: 13px; color: #8b949e; background: #0d1117; }
-        .whatsapp-link { color: #10b981; font-weight: bold; text-decoration: none; display: block; margin-top: 8px; border: 1px solid #10b981; padding: 10px; border-radius: 10px; transition: 0.3s; }
-        .whatsapp-link:active { background: #10b981; color: white; }
+        .p-btn { background: #21262d; border: 1px solid #30363d; padding: 12px 2px; border-radius: 10px; font-size: 10px; font-weight: 800; color: #c9d1d9; cursor: pointer; }
+        .active { background: #10b981 !important; color: white !important; }
+        .login-box { background: #161b22; padding: 30px; border-radius: 25px; border: 1px solid #30363d; width: 95%; max-width: 400px; }
     </style>
 </head>
-<body class="pb-10">
+<body>
 
-    <div class="main-card">
-        <h1 class="text-xl font-black uppercase tracking-widest text-emerald-50">Hidayatul Islam</h1>
-        <div class="ramadan-tag mt-4">റമദാൻ 23, 1447 ഹിജ്റ</div>
-        
-        <div class="timer-box">
-            <p id="next-label" class="text-[10px] text-emerald-300 uppercase font-black mb-2 tracking-widest">അടുത്ത ബാങ്ക് സമയം</p>
-            <div id="timer" class="text-5xl font-black font-mono tracking-tighter text-white">00:00:00</div>
-        </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        <div class="grid grid-cols-5 gap-1 text-[10px] font-black opacity-90 mt-4 uppercase tracking-tighter">
-            <div>Subhi<br><span class="text-yellow-400 text-xs">05:15</span></div>
-            <div>Duhar<br><span class="text-xs">12:38</span></div>
-            <div>Asr<br><span class="text-xs">03:58</span></div>
-            <div>Maghrib<br><span class="text-xs">06:39</span></div>
-            <div>Isha<br><span class="text-xs">07:49</span></div>
+        // നിങ്ങളുടെ Firebase Config വിവരങ്ങൾ
+        const firebaseConfig = {
+            apiKey: "AIzaSyA39rBTDE8BpdJ4vfOnETJzvzYLV5ksTY0",
+            authDomain: "hidayatul-islam-traker.firebaseapp.com",
+            projectId: "hidayatul-islam-traker",
+            storageBucket: "hidayatul-islam-traker.appspot.com",
+            messagingSenderId: "82744495268",
+            appId: "1:82744495268:web:afc2f87d3d86884363ea31"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // UI എലമെന്റുകൾ
+        const loginPage = document.getElementById('login-page');
+        const mainContent = document.getElementById('main-content');
+        const emailField = document.getElementById('email');
+        const passwordField = document.getElementById('password');
+
+        // ലോഗിൻ സ്റ്റേറ്റ് പരിശോധന
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginPage.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                loadTracker();
+            } else {
+                loginPage.classList.remove('hidden');
+                mainContent.classList.add('hidden');
+            }
+        });
+
+        // Functions
+        window.handleLogin = () => {
+            signInWithEmailAndPassword(auth, emailField.value, passwordField.value)
+                .catch(err => alert("Email അല്ലെങ്കിൽ Password തെറ്റാണ്!"));
+        };
+
+        window.handleSignUp = () => {
+            createUserWithEmailAndPassword(auth, emailField.value, passwordField.value)
+                .then(() => alert("Account Created! ഇനി ലോഗിൻ ചെയ്യാം."))
+                .catch(err => alert("Error: " + err.message));
+        };
+
+        window.forgotPassword = () => {
+            if(!emailField.value) return alert("Email നൽകുക!");
+            sendPasswordResetEmail(auth, emailField.value)
+                .then(() => alert("Password മാറ്റാനുള്ള ലിങ്ക് ഇമെയിലിൽ അയച്ചിട്ടുണ്ട്."));
+        };
+
+        window.handleLogout = () => signOut(auth);
+
+    </script>
+
+    <div id="login-page" class="flex items-center justify-center min-h-screen">
+        <div class="login-box text-center shadow-2xl">
+            <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase">Hidayatul Islam Login</h2>
+            <input type="email" id="email" placeholder="Email (Eg: parent1@gmail.com)" class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 text-white mb-3 outline-none focus:ring-2 focus:ring-emerald-500">
+            <input type="password" id="password" placeholder="Password" class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 text-white mb-6 outline-none focus:ring-2 focus:ring-emerald-500">
+            
+            <button onclick="handleLogin()" class="w-full bg-emerald-600 font-black py-4 rounded-xl mb-3 uppercase">Login</button>
+            <button onclick="handleSignUp()" class="w-full border border-emerald-600 text-emerald-500 font-bold py-3 rounded-xl mb-4 text-xs uppercase">Create New Account</button>
+            
+            <p onclick="forgotPassword()" class="text-xs text-gray-500 cursor-pointer underline">Forgot Password?</p>
         </div>
     </div>
 
-    <div class="p-5" id="list"></div>
+    <div id="main-content" class="hidden">
+        <div class="main-card">
+            <button onclick="handleLogout()" class="absolute top-4 right-4 text-[10px] bg-white/10 px-3 py-1 rounded-full border border-white/20 uppercase font-bold">Logout</button>
+            <h1 class="text-xl font-black uppercase text-emerald-50">Hidayatul Islam</h1>
+            <div class="timer-box">
+                <p id="next-label" class="text-[10px] text-emerald-300 uppercase font-black mb-1">അടുത്ത ബാങ്ക് സമയം</p>
+                <div id="timer" class="text-4xl font-black font-mono">00:00:00</div>
+            </div>
+            <div class="grid grid-cols-5 gap-1 text-[9px] font-black uppercase">
+                <div>Subhi<br><span class="text-yellow-400">05:15</span></div>
+                <div>Duhar<br><span>12:38</span></div>
+                <div>Asr<br><span>03:58</span></div>
+                <div>Maghrib<br><span>06:39</span></div>
+                <div>Isha<br><span>07:49</span></div>
+            </div>
+        </div>
 
-    <div class="footer-contact">
-        <p class="uppercase tracking-widest text-[10px] mb-2">Technical Support</p>
-        <p class="text-gray-200 font-bold text-lg">Abdul Kareem Falili AL-jalali</p>
-        <p class="text-sm mt-1">Contact for any technical issues:</p>
-        <a href="https://wa.me/919113695271" class="whatsapp-link">
-            💬 Chat on WhatsApp
-        </a>
-        <p class="mt-4 text-[10px] opacity-50">© 2026 Hidayatul Islam Madrasa</p>
+        <div id="list" class="p-5"></div>
+
+        <div class="p-6 text-center border-t border-gray-800 mt-10">
+            <p class="text-gray-400 text-sm">Technical Support:</p>
+            <p class="font-bold text-emerald-500">Abdul Kareem Falili AL-jalali</p>
+            <a href="https://wa.me/919113695271" class="text-xs text-emerald-400 underline">WhatsApp Support</a>
+        </div>
     </div>
 
     <script>
         const PRAYER_TIMES = [
-            { id: 'Subhi', h: 5, m: 15 },
-            { id: 'Duhar', h: 12, m: 38 },
-            { id: 'Asr', h: 15, m: 58 },
-            { id: 'Maghrib', h: 18, m: 39 },
-            { id: 'Isha', h: 19, m: 49 }
+            { id: 'Subhi', h: 5, m: 15 }, { id: 'Duhar', h: 12, m: 38 },
+            { id: 'Asr', h: 15, m: 58 }, { id: 'Maghrib', h: 18, m: 39 }, { id: 'Isha', h: 19, m: 49 }
         ];
 
-        function updateTimer() {
-            const now = new Date();
-            let target = null;
-            let name = "";
-
-            for (let p of PRAYER_TIMES) {
-                let t = new Date();
-                t.setHours(p.h, p.m, 0);
-                if (t > now) { target = t; name = p.id; break; }
-            }
-
-            if (!target) {
-                target = new Date();
-                target.setDate(target.getDate() + 1);
-                target.setHours(PRAYER_TIMES[0].h, PRAYER_TIMES[0].m, 0);
-                name = PRAYER_TIMES[0].id;
-            }
-
-            const diff = target - now;
-            const hh = Math.floor(diff / 3600000);
-            const mm = Math.floor((diff % 3600000) / 60000);
-            const ss = Math.floor((diff % 60000) / 1000);
-
-            document.getElementById('timer').innerText = 
-                `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
-            document.getElementById('next-label').innerText = `അടുത്ത ബാങ്ക് (${name}) ഇനി:`;
-        }
-
-        setInterval(updateTimer, 1000);
-        updateTimer();
-
-        function loadStudents() {
-            // നിങ്ങൾ നൽകിയ കൃത്യമായ ക്രമം (Order)
-            const students = [
-                "Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", 
-                "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", 
-                "Shakira", "Suhaiba", "Rifa"
-            ];
-            
+        function loadTracker() {
+            startTimer();
+            const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
             const listDiv = document.getElementById('list');
-            const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
-
+            listDiv.innerHTML = "";
             students.forEach(name => {
                 listDiv.innerHTML += `
                     <div class="student-card">
-                        <h3 class="font-black text-gray-100 text-lg uppercase tracking-tight">${name}</h3>
+                        <h3 class="font-black text-gray-100 uppercase mb-2 text-lg">${name}</h3>
                         <div class="prayer-grid">
-                            ${prayers.map(p => `<button onclick="submitP('${name}','${p}',this)" class="p-btn">${p}</button>`).join('')}
+                            ${["Subhi", "Duhar", "Asr", "Maghrib", "Isha"].map(p => `<button onclick="submitP('${name}','${p}',this)" class="p-btn">${p}</button>`).join('')}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
+        }
+
+        function startTimer() {
+            setInterval(() => {
+                const now = new Date();
+                let target = null; let name = "";
+                for (let p of PRAYER_TIMES) {
+                    let t = new Date(); t.setHours(p.h, p.m, 0);
+                    if (t > now) { target = t; name = p.id; break; }
+                }
+                if (!target) {
+                    target = new Date(); target.setDate(target.getDate() + 1);
+                    target.setHours(PRAYER_TIMES[0].h, PRAYER_TIMES[0].m, 0); name = PRAYER_TIMES[0].id;
+                }
+                const diff = target - now;
+                const hh = Math.floor(diff/3600000); const mm = Math.floor((diff%3600000)/60000); const ss = Math.floor((diff%60000)/1000);
+                document.getElementById('timer').innerText = `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+                document.getElementById('next-label').innerText = `അടുത്ത ബാങ്ക് (${name}) ഇനി:`;
+            }, 1000);
         }
 
         function submitP(n, p, b) {
@@ -120,14 +162,10 @@
             const formData = new FormData();
             formData.append("entry.877237437", n);
             formData.append("entry.330346532", p);
-
             fetch(FORM_URL, { method: "POST", body: formData, mode: "no-cors" }).then(() => {
                 b.classList.add('active'); b.innerText = "✓ " + p;
-                alert(`${n}: ${p} രേഖപ്പെടുത്തി!`);
-            }).catch(() => alert("Error: Check internet connection."));
+            });
         }
-
-        window.onload = loadStudents;
     </script>
 </body>
 </html>
