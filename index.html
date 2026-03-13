@@ -14,6 +14,9 @@
         .p-btn { background: #21262d; border: 1px solid #30363d; padding: 12px 2px; border-radius: 10px; font-size: 10px; font-weight: 800; cursor: pointer; color: #c9d1d9; }
         .p-btn.active { background: #10b981 !important; color: white !important; border-color: #10b981 !important; box-shadow: 0 0 15px rgba(16,185,129,0.3); }
         .ramadan-tag { background: #d97706; color: white; padding: 6px 15px; border-radius: 50px; font-size: 12px; font-weight: 900; display: inline-block; }
+        .footer-contact { margin-top: 30px; padding: 30px 20px; border-top: 1px solid #30363d; text-align: center; font-size: 13px; color: #8b949e; background: #0d1117; }
+        .whatsapp-link { color: #10b981; font-weight: bold; text-decoration: none; display: block; margin-top: 8px; border: 1px solid #10b981; padding: 10px; border-radius: 10px; transition: 0.3s; }
+        .whatsapp-link:active { background: #10b981; color: white; }
     </style>
 </head>
 <body class="pb-10">
@@ -38,8 +41,17 @@
 
     <div class="p-5" id="list"></div>
 
+    <div class="footer-contact">
+        <p class="uppercase tracking-widest text-[10px] mb-2">Technical Support</p>
+        <p class="text-gray-200 font-bold text-lg">Abdul Kareem Falili AL-jalali</p>
+        <p class="text-sm mt-1">Contact for any technical issues:</p>
+        <a href="https://wa.me/919113695271" class="whatsapp-link">
+            💬 Chat on WhatsApp
+        </a>
+        <p class="mt-4 text-[10px] opacity-50">© 2026 Hidayatul Islam Madrasa</p>
+    </div>
+
     <script>
-        // ടൈമർ കണക്കാക്കാൻ 24hr ഫോർമാറ്റ്
         const PRAYER_TIMES = [
             { id: 'Subhi', h: 5, m: 15 },
             { id: 'Duhar', h: 12, m: 38 },
@@ -80,7 +92,7 @@
         updateTimer();
 
         function loadStudents() {
-            // നിങ്ങൾ നൽകിയ കൃത്യമായ ക്രമം ഇവിടെയുണ്ട്
+            // നിങ്ങൾ നൽകിയ കൃത്യമായ ക്രമം (Order)
             const students = [
                 "Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", 
                 "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", 
@@ -112,7 +124,7 @@
             fetch(FORM_URL, { method: "POST", body: formData, mode: "no-cors" }).then(() => {
                 b.classList.add('active'); b.innerText = "✓ " + p;
                 alert(`${n}: ${p} രേഖപ്പെടുത്തി!`);
-            }).catch(() => alert("ഇന്റർനെറ്റ് പരിശോധിക്കുക."));
+            }).catch(() => alert("Error: Check internet connection."));
         }
 
         window.onload = loadStudents;
