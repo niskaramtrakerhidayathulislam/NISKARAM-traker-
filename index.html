@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hidayatul Islam Madrasa Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -52,7 +55,6 @@
     </div>
 
     <div id="main-content" class="hidden">
-        
         <div id="home-page" class="p-5">
             <div class="card text-center">
                 <h3 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest">Azan Timings</h3>
@@ -110,15 +112,13 @@
 
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toLocaleDateString('en-CA'); // കറക്റ്റ് ഡേറ്റ് കിട്ടാൻ
 
-        // Auth Navigation
         window.toggleAuth = (mode) => {
             document.getElementById('login-section').classList.toggle('hidden', mode === 'signup');
             document.getElementById('signup-section').classList.toggle('hidden', mode === 'login');
         };
 
-        // Main Navigation
         window.navigate = (page, el) => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
@@ -127,12 +127,10 @@
             if(page === 'history') loadHistory();
         };
 
-        // Auth Monitor
         onAuthStateChanged(auth, (user) => {
             const authPage = document.getElementById('auth-page');
             const mainContent = document.getElementById('main-content');
             const header = document.getElementById('app-header');
-            
             if (user) {
                 authPage.classList.add('hidden');
                 mainContent.classList.remove('hidden');
@@ -159,17 +157,16 @@
 
         window.handleLogout = () => signOut(auth);
 
-        // Data Logic
         async function loadTracker() {
             const container = document.getElementById('tracker-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50'>Loading Tracker...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold uppercase tracking-widest'>Syncing Data...</p>";
             const snap = await getDocs(query(collection(db, "prayers"), where("date", "==", today)));
             const saved = {};
             snap.forEach(d => saved[d.id] = d.data());
 
             container.innerHTML = students.map(name => `
                 <div class="card">
-                    <p class="text-xs font-black mb-3 uppercase text-gray-700">${name}</p>
+                    <p class="text-xs font-black mb-3 uppercase text-gray-700 tracking-wider">${name}</p>
                     <div class="grid grid-cols-5 gap-1">
                         ${prayers.map(p => {
                             const active = saved[`${name}_${today}`]?.[p];
@@ -186,7 +183,7 @@
 
         async function loadHistory() {
             const container = document.getElementById('history-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50'>Loading History...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold uppercase tracking-widest'>Loading History...</p>";
             const snap = await getDocs(collection(db, "prayers"));
             const totals = {};
             students.forEach(s => totals[s] = 0);
@@ -197,7 +194,10 @@
             container.innerHTML = students.sort((a,b) => totals[b] - totals[a]).map((name, i) => `
                 <div class="card flex justify-between items-center py-4">
                     <p class="text-sm font-bold uppercase">${name}</p>
-                    <p class="text-lg font-black text-emerald-600">${totals[name]}</p>
+                    <div class="text-right">
+                        <p class="text-[9px] font-bold text-gray-400">TOTAL</p>
+                        <p class="text-lg font-black text-emerald-600 leading-none">${totals[name]}</p>
+                    </div>
                 </div>`).join('');
         }
     </script>
