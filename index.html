@@ -18,13 +18,11 @@
         .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; width: 100%; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
         
-        /* Attendance 3 Colors */
-        .att-btn { padding: 10px 0; border-radius: 10px; font-size: 10px; font-weight: 900; flex: 1; text-align: center; border: 1px solid #eee; background: #f9fafb; color: #6b7280; }
-        .att-p { background: #059669 !important; color: white !important; }
-        .att-a { background: #dc2626 !important; color: white !important; }
-        .att-l { background: #2563eb !important; color: white !important; }
-
-        .notice-badge { background: #fbbf24; color: #000; padding: 15px; border-radius: 15px; font-size: 13px; font-weight: 800; margin-bottom: 20px; border: 2px solid #000; }
+        /* Attendance Button Colors */
+        .att-btn { padding: 12px 0; border-radius: 10px; font-size: 10px; font-weight: 900; flex: 1; text-align: center; border: 1px solid #eee; background: #f9fafb; color: #6b7280; }
+        .att-p { background: #059669 !important; color: white !important; border: none; }
+        .att-a { background: #dc2626 !important; color: white !important; border: none; }
+        .att-l { background: #2563eb !important; color: white !important; border: none; }
     </style>
 </head>
 <body>
@@ -41,38 +39,29 @@
             <input type="email" id="email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none bg-gray-50">
             <input type="password" id="pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 outline-none bg-gray-50">
             <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl">LOGIN</button>
+            <p class="text-[10px] mt-4 text-gray-400 uppercase font-bold">Please use your registered email</p>
         </div>
     </div>
 
     <div id="main-content" class="hidden">
-        
         <div id="home-page" class="p-5">
-            <div id="notice-display" class="notice-badge hidden"></div>
-            
-            <div id="admin-notice-box" class="card hidden border-emerald-200">
-                <textarea id="notice-input" class="w-full p-2 border rounded text-sm" placeholder="Post a notice..."></textarea>
-                <button onclick="saveNotice()" class="mt-2 bg-emerald-700 text-white px-4 py-2 rounded font-bold text-xs uppercase">Post Notice</button>
-            </div>
-
             <div class="card text-center">
-                <h3 class="text-xs font-black text-gray-400 mb-4">AZAN TIMINGS</h3>
-                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold">
+                <h3 class="text-xs font-black text-gray-400 mb-4 uppercase">Azan Timings</h3>
+                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase">
                     <div>SUBHI<br>05:15</div><div>DUHAR<br>12:38</div><div>ASR<br>03:58</div><div>MAGH<br>06:39</div><div>ISHA<br>07:49</div>
                 </div>
             </div>
         </div>
 
         <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
-
         <div id="attendance-page" class="p-5 hidden"><div id="attendance-list"></div></div>
-
         <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
-
+        
         <div id="profile-page" class="p-5 hidden text-center">
             <div class="card py-10">
                 <i class="fa-solid fa-circle-user text-5xl text-emerald-700 mb-4"></i>
                 <p id="user-email-text" class="text-sm font-bold text-gray-500 mb-8"></p>
-                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-bold py-3 rounded-xl uppercase text-xs">Logout</button>
+                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-bold py-3 rounded-xl uppercase text-xs">Sign Out</button>
             </div>
         </div>
 
@@ -103,11 +92,9 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const ADMIN = "Kereemk81@gmail.com";
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         const today = new Date().toLocaleDateString('en-CA');
-
         document.getElementById('display-date').innerText = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'long', year:'numeric' });
 
         window.navigate = (p, el) => {
@@ -123,20 +110,9 @@
             document.getElementById('auth-page').classList.toggle('hidden', !!u);
             document.getElementById('main-content').classList.toggle('hidden', !u);
             document.getElementById('app-header').classList.toggle('hidden', !u);
-            if(u) {
-                document.getElementById('user-email-text').innerText = u.email;
-                document.getElementById('admin-notice-box').classList.toggle('hidden', u.email !== ADMIN);
-            }
+            if(u) document.getElementById('user-email-text').innerText = u.email;
         });
 
-        // Notice Board Sync
-        onSnapshot(doc(db, "settings", "notice"), (d) => {
-            const b = document.getElementById('notice-display');
-            if(d.exists() && d.data().text) { b.innerText = "📢 " + d.data().text; b.classList.remove('hidden'); }
-            else b.classList.add('hidden');
-        });
-
-        window.saveNotice = () => setDoc(doc(db, "settings", "notice"), { text: document.getElementById('notice-input').value });
         window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
         window.handleLogout = () => signOut(auth);
 
@@ -156,17 +132,16 @@
         window.toggleP = (n, p, cur) => setDoc(doc(db, "daily", n + "_" + today), { name: n, date: today, [p]: !cur }, { merge: true });
 
         async function loadAttendance() {
-            const isAdmin = auth.currentUser.email === ADMIN;
             const container = document.getElementById('attendance-list');
             onSnapshot(query(collection(db, "daily"), where("date", "==", today)), (snap) => {
                 const data = {}; snap.forEach(d => data[d.id] = d.data());
                 container.innerHTML = students.map(s => {
                     const d = data[s + "_" + today] || {};
-                    return `<div class="card"><p class="text-[11px] font-black uppercase mb-3">${s}</p>
+                    return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p>
                         <div class="flex gap-2">
-                            <button onclick="${isAdmin ? `setA('${s}','P')` : ''}" class="att-btn ${d.status === 'P' ? 'att-p' : ''}">PRESENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','A')` : ''}" class="att-btn ${d.status === 'A' ? 'att-a' : ''}">ABSENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','L')` : ''}" class="att-btn ${d.status === 'L' ? 'att-l' : ''}">LEAVE</button>
+                            <button onclick="setA('${s}','P')" class="att-btn ${d.status === 'P' ? 'att-p' : ''}">PRESENT</button>
+                            <button onclick="setA('${s}','A')" class="att-btn ${d.status === 'A' ? 'att-a' : ''}">ABSENT</button>
+                            <button onclick="setA('${s}','L')" class="att-btn ${d.status === 'L' ? 'att-l' : ''}">LEAVE</button>
                         </div>
                     </div>`;
                 }).join('');
@@ -180,8 +155,10 @@
             const scores = {}; students.forEach(s => scores[s] = 0);
             snap.forEach(d => { const doc = d.data(); if(scores[doc.name] !== undefined) prayers.forEach(p => { if(doc[p]) scores[doc.name]++; }); });
             document.getElementById('history-list').innerHTML = students.sort((a,b) => scores[b]-scores[a]).map(s => `
-                <div class="card flex justify-between uppercase font-bold text-sm"><span>${s}</span><span class="text-emerald-600">${scores[s]}</span></div>
-            `).join('');
+                <div class="card flex justify-between items-center py-5 shadow-sm">
+                    <span class="font-black text-sm uppercase">${s}</span>
+                    <span class="font-black text-lg text-emerald-600">${scores[s]}</span>
+                </div>`).join('');
         }
     </script>
 </body>
