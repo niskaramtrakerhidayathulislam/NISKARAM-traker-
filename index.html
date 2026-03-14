@@ -31,7 +31,7 @@
     <div id="app-header" class="header-card hidden">
         <h1 class="text-2xl font-black uppercase">Hidayatul Islam</h1>
         <p class="text-[9px] font-bold opacity-80 mb-3 uppercase">Class 6 - Achangi</p>
-        <input type="date" id="global-date" class="bg-[#047857] text-white font-bold p-1 rounded-lg text-xs outline-none">
+        <input type="date" id="global-date" class="bg-[#047857] text-white font-bold p-1 rounded-lg text-xs outline-none" onchange="changeDate(this.value)">
     </div>
 
     <div id="main-content" class="hidden">
@@ -40,8 +40,9 @@
                 <p id="holiday-reason-text"></p>
             </div>
             <div id="admin-holiday-tool" class="card hidden border-emerald-300 bg-emerald-50">
-                <textarea id="h-reason-input" class="w-full p-3 border rounded-xl text-xs mb-3 outline-none" placeholder="Leave Reason..."></textarea>
-                <button id="h-notice-btn" class="w-full py-3 rounded-xl text-xs font-black uppercase text-white shadow-md"></button>
+                <p class="text-[10px] font-black text-emerald-800 uppercase mb-3 text-center">Post Leave Notice</p>
+                <textarea id="h-reason-input" class="w-full p-3 border rounded-xl text-xs mb-3 outline-none" placeholder="Type reason..."></textarea>
+                <button id="h-notice-btn" onclick="toggleGlobalHoliday()" class="w-full py-3 rounded-xl text-xs font-black uppercase text-white shadow-md"></button>
             </div>
             
             <div class="card mt-2 text-center">
@@ -70,8 +71,8 @@
         <div id="attendance-page" class="p-5 hidden"><div id="attendance-list"></div></div>
         
         <div id="results-page" class="p-5 hidden">
-            <h2 class="text-center font-black text-emerald-800 uppercase mb-4 text-sm tracking-widest">Public Exam Results 2026</h2>
-            <input type="text" id="res-srch" onkeyup="searchStudent()" placeholder="Search name..." class="w-full p-4 mb-4 rounded-xl border outline-none text-sm shadow-sm bg-gray-50">
+            <h2 class="text-center font-black text-emerald-800 uppercase mb-4 text-sm tracking-widest">Public Results 2026</h2>
+            <input type="text" id="res-srch" onkeyup="searchStudent()" placeholder="Search student name..." class="w-full p-4 mb-4 rounded-xl border outline-none text-sm shadow-sm bg-gray-50">
             <div id="results-list"></div>
         </div>
 
@@ -80,7 +81,7 @@
         <div id="profile-page" class="p-5 hidden">
             <div class="card text-center mb-4">
                 <p id="profile-email" class="text-xs font-bold text-emerald-700 mb-4"></p>
-                <button onclick="signOutFinal()" class="w-full border border-red-500 text-red-500 py-2 rounded-xl text-[10px] font-bold uppercase">Sign Out</button>
+                <button onclick="handleLogout()" class="w-full border border-red-500 text-red-500 py-2 rounded-xl text-[10px] font-bold uppercase">Sign Out</button>
             </div>
             <div class="card p-4">
                 <h3 class="text-xs font-black text-gray-500 uppercase mb-4 border-b pb-2">Community Chat</h3>
@@ -104,19 +105,19 @@
 
     <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
         <div id="login-box" class="card shadow-2xl">
-            <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase tracking-widest">Login</h2>
-            <input type="email" id="email-l" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm border-none shadow-inner">
-            <input type="password" id="pass-l" placeholder="Password" class="w-full p-4 rounded-xl mb-2 bg-gray-100 outline-none text-sm border-none shadow-inner">
-            <div class="text-right mb-6"><span onclick="forgotPass()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer uppercase">Forgot Password?</span></div>
-            <button onclick="loginFinal()" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-4 uppercase shadow-lg">Login</button>
-            <p class="text-xs font-bold text-gray-400 uppercase">New? <span onclick="toggleAuth(true)" class="text-emerald-700 underline cursor-pointer">Register</span></p>
+            <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase">Login</h2>
+            <input type="email" id="email-in" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm border-none shadow-inner">
+            <input type="password" id="pass-in" placeholder="Password" class="w-full p-4 rounded-xl mb-2 bg-gray-100 outline-none text-sm border-none shadow-inner">
+            <div class="text-right mb-6"><span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer uppercase">Forgot Password?</span></div>
+            <button onclick="handleLogin()" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-4 uppercase shadow-lg">Login</button>
+            <p class="text-xs font-bold text-gray-400">New? <span onclick="toggleAuth(true)" class="text-emerald-700 underline cursor-pointer">Register</span></p>
         </div>
         <div id="signup-box" class="card hidden shadow-2xl">
-            <h2 class="text-xl font-black text-blue-800 mb-8 uppercase tracking-widest">Register</h2>
-            <input type="email" id="email-s" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none">
-            <input type="password" id="pass-s" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-gray-100 outline-none">
-            <button onclick="signupFinal()" class="w-full bg-blue-800 text-white font-black py-4 rounded-xl mb-4 uppercase">Sign Up</button>
-            <p onclick="toggleAuth(false)" class="text-xs font-bold text-gray-400 underline cursor-pointer uppercase">Back to Login</p>
+            <h2 class="text-xl font-black text-blue-800 mb-8 uppercase">Register</h2>
+            <input type="email" id="s-email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm">
+            <input type="password" id="s-pass" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-gray-100 outline-none text-sm">
+            <button onclick="handleSignUp()" class="w-full bg-blue-800 text-white font-black py-4 rounded-xl mb-4 uppercase shadow-lg">Sign Up</button>
+            <p onclick="toggleAuth(false)" class="text-xs font-bold text-gray-400 underline cursor-pointer uppercase text-center">Back to Login</p>
         </div>
     </div>
 
@@ -125,13 +126,23 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, getDocs, where, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0", authDomain: "hidayatul-islam-traker.firebaseapp.com", projectId: "hidayatul-islam-traker", storageBucket: "hidayatul-islam-traker.firebasestorage.app", messagingSenderId: "82744495268", appId: "1:82744495268:web:afc2f87d3d06884363ea31" };
+        // Updated Config from your screenshot
+        const firebaseConfig = {
+            apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0",
+            authDomain: "hidayatul-islam-traker.firebaseapp.com",
+            projectId: "hidayatul-islam-traker",
+            storageBucket: "hidayatul-islam-traker.firebasestorage.app",
+            messagingSenderId: "82744495268",
+            appId: "1:82744495268:web:afc2f87d3d06884363ea31",
+            measurementId: "G-5HG7QCXYE7"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         const ADMIN_EMAIL = "kereemk81@gmail.com";
-        const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "RAseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
+        const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         let selectedDate = new Date().toLocaleDateString('en-CA');
         let globalHoliday = false;
 
@@ -154,10 +165,24 @@
         ];
 
         window.toggleAuth = (s) => { document.getElementById('login-box').classList.toggle('hidden', s); document.getElementById('signup-box').classList.toggle('hidden', !s); };
-        window.loginFinal = () => signInWithEmailAndPassword(auth, document.getElementById('email-l').value, document.getElementById('pass-l').value).catch(e => alert(e.message));
-        window.signupFinal = () => createUserWithEmailAndPassword(auth, document.getElementById('email-s').value, document.getElementById('pass-s').value).then(() => alert("Success!")).catch(e => alert(e.message));
-        window.forgotPass = () => { const e = document.getElementById('email-l').value; if(!e) return alert("Enter Email"); sendPasswordResetEmail(auth, e).then(() => alert("Link Sent")); };
-        window.signOutFinal = () => signOut(auth);
+        window.handleLogin = () => {
+            const e = document.getElementById('email-in').value;
+            const p = document.getElementById('pass-in').value;
+            if(!e || !p) return alert("Enter email and password");
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Error: " + err.message));
+        };
+        window.handleSignUp = () => {
+            const e = document.getElementById('s-email').value;
+            const p = document.getElementById('s-pass').value;
+            if(!e || !p) return alert("Fill all fields");
+            createUserWithEmailAndPassword(auth, e, p).then(() => alert("Success!")).catch(err => alert(err.message));
+        };
+        window.handleResetPassword = () => {
+            const e = document.getElementById('email-in').value;
+            if(!e) return alert("Enter email in the box first!");
+            sendPasswordResetEmail(auth, e).then(() => alert("Link Sent!")).catch(err => alert(err.message));
+        };
+        window.handleLogout = () => signOut(auth);
 
         onAuthStateChanged(auth, (u) => {
             document.getElementById('auth-page').classList.toggle('hidden', !!u);
@@ -169,6 +194,8 @@
                 document.getElementById('admin-holiday-tool').classList.toggle('hidden', !isAdmin);
                 document.getElementById('admin-azan-tool').classList.toggle('hidden', !isAdmin);
                 syncHoliday(); loadAzan(); loadChat();
+                document.getElementById('global-date').value = selectedDate;
+                navigate('home', document.querySelector('.nav-item'));
             }
         });
 
@@ -186,7 +213,7 @@
                         <p class="text-lg font-black text-emerald-800">${r.total}/600</p>
                     </div>
                     <div id="m-${i}" class="hidden subject-grid">
-                        ${Object.entries(r.scores).map(([k,v]) => `<div class="sub-box"><p class="text-gray-400 text-[7px] uppercase">${k}</p><p class="font-bold">${v}</p></div>`).join('')}
+                        ${Object.entries(r.scores).map(([k,v]) => `<div class="sub-box"><p class="text-gray-400 uppercase text-[7px]">${k}</p><p class="font-bold">${v}</p></div>`).join('')}
                     </div>
                 </div>`).join('');
         };
@@ -230,14 +257,4 @@
         function loadAttendance() {
             const isAdmin = auth.currentUser?.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
             onSnapshot(query(collection(db, "daily"), where("date", "==", selectedDate)), (snap) => {
-                const data = {}; snap.forEach(d => data[d.id] = d.data());
-                document.getElementById('attendance-list').innerHTML = students.map(s => {
-                    const d = data[s + "_" + selectedDate] || {};
-                    if(globalHoliday) return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="p-3 bg-blue-600 text-white rounded-lg text-center font-bold">LEAVE</div></div>`;
-                    return `<div class="card"><p class="text-xs font-black mb-3 uppercase">${s}</p><div class="flex gap-2"><button onclick="${isAdmin?`setA('${s}','P')`:'alert(\'Usthad only\')'}" class="att-btn ${d.status==='P'?'p-active':''}">PRESENT</button><button onclick="${isAdmin?`setA('${s}','A')`:'alert(\'Usthad only\')'}" class="att-btn ${d.status==='A'?'a-active':''}">ABSENT</button></div></div>`;
-                }).join('');
-            });
-        }
-
-        function loadTracker() {
-        
+                const data = {}; 
