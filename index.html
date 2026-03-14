@@ -2,62 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam Madrasa Tracker</title>
+    <title>Hidayatul Islam Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f3f4f6; color: #1f2937; font-family: sans-serif; padding-bottom: 80px; }
+        body { background-color: #f3f4f6; color: #1f2937; font-family: sans-serif; padding-bottom: 90px; }
         .hidden { display: none; }
         .header-card { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 30px 20px; text-align: center; }
         .bottom-nav { background: white; border-top: 1px solid #e5e7eb; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-        .nav-item { text-align: center; font-size: 11px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 600; }
+        .nav-item { text-align: center; font-size: 10px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 800; }
         .nav-item.active { color: #065f46; }
-        .nav-item i { font-size: 24px; display: block; margin-bottom: 4px; }
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #e5e7eb; }
-        .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
+        .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; width: 100%; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
         
-        /* Attendance Buttons Styling */
+        /* Attendance 3 Colors */
         .att-btn { padding: 10px 0; border-radius: 10px; font-size: 10px; font-weight: 900; flex: 1; text-align: center; border: 1px solid #eee; background: #f9fafb; color: #6b7280; }
-        .p-active { background: #059669 !important; color: white !important; border: none; }
-        .a-active { background: #dc2626 !important; color: white !important; border: none; }
-        .l-active { background: #2563eb !important; color: white !important; border: none; }
+        .att-p { background: #059669 !important; color: white !important; }
+        .att-a { background: #dc2626 !important; color: white !important; }
+        .att-l { background: #2563eb !important; color: white !important; }
+
+        .notice-badge { background: #fbbf24; color: #000; padding: 15px; border-radius: 15px; font-size: 13px; font-weight: 800; margin-bottom: 20px; border: 2px solid #000; }
     </style>
 </head>
 <body>
 
     <div id="app-header" class="header-card hidden">
-        <h1 class="text-2xl font-black uppercase tracking-tight">Hidayatul Islam</h1>
-        <p class="text-[9px] font-bold opacity-80 uppercase tracking-[2px]">Madrasa Achangi - Class 6</p>
-        <div id="display-date" class="text-xs font-bold text-amber-400 mt-2"></div>
+        <h1 class="text-2xl font-black uppercase">Hidayatul Islam</h1>
+        <p class="text-[9px] font-bold opacity-80 uppercase tracking-widest">Class 6 - Achangi</p>
+        <div id="display-date" class="text-xs font-bold text-amber-400 mt-2 uppercase"></div>
     </div>
 
     <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
-        <div id="login-section" class="card shadow-2xl">
+        <div class="card shadow-2xl">
             <h2 class="text-lg font-black text-emerald-700 mb-4 uppercase">Login</h2>
-            <input type="email" id="login-email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none bg-gray-50">
-            <input type="password" id="login-password" placeholder="Password" class="w-full p-4 border rounded-xl mb-4 outline-none bg-gray-50">
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none bg-gray-50">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 outline-none bg-gray-50">
             <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl">LOGIN</button>
-            <p class="text-xs mt-6">New? <span onclick="toggleAuth('signup')" class="text-emerald-700 font-bold cursor-pointer underline">Sign Up</span></p>
-        </div>
-        <div id="signup-section" class="card shadow-2xl hidden">
-            <input type="email" id="signup-email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4">
-            <input type="password" id="signup-password" placeholder="Password" class="w-full p-4 border rounded-xl mb-4">
-            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl">CREATE</button>
         </div>
     </div>
 
     <div id="main-content" class="hidden">
+        
         <div id="home-page" class="p-5">
-            <div id="notice-board" class="bg-amber-100 p-4 rounded-xl border-l-4 border-amber-500 mb-4 font-bold text-sm hidden text-amber-900"></div>
-            <div id="admin-notice" class="card hidden">
-                <textarea id="notice-text" class="w-full p-2 border rounded-lg text-xs mb-2" placeholder="Post a notice..."></textarea>
-                <button onclick="updateNotice()" class="bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold">POST</button>
+            <div id="notice-display" class="notice-badge hidden"></div>
+            
+            <div id="admin-notice-box" class="card hidden border-emerald-200">
+                <textarea id="notice-input" class="w-full p-2 border rounded text-sm" placeholder="Post a notice..."></textarea>
+                <button onclick="saveNotice()" class="mt-2 bg-emerald-700 text-white px-4 py-2 rounded font-bold text-xs uppercase">Post Notice</button>
             </div>
+
             <div class="card text-center">
-                <h3 class="text-xs font-black text-gray-400 mb-4 uppercase">Azan Timings</h3>
+                <h3 class="text-xs font-black text-gray-400 mb-4">AZAN TIMINGS</h3>
                 <div class="grid grid-cols-5 gap-1 text-[9px] font-bold">
                     <div>SUBHI<br>05:15</div><div>DUHAR<br>12:38</div><div>ASR<br>03:58</div><div>MAGH<br>06:39</div><div>ISHA<br>07:49</div>
                 </div>
@@ -65,27 +63,31 @@
         </div>
 
         <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
+
         <div id="attendance-page" class="p-5 hidden"><div id="attendance-list"></div></div>
+
         <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
+
         <div id="profile-page" class="p-5 hidden text-center">
             <div class="card py-10">
-                <p id="user-display-email" class="text-sm font-bold text-gray-600 mb-8"></p>
-                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-xl uppercase text-xs">Sign Out</button>
+                <i class="fa-solid fa-circle-user text-5xl text-emerald-700 mb-4"></i>
+                <p id="user-email-text" class="text-sm font-bold text-gray-500 mb-8"></p>
+                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-bold py-3 rounded-xl uppercase text-xs">Logout</button>
             </div>
         </div>
 
         <div class="bottom-nav">
             <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house"></i>HOME</div>
-            <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-list"></i>TRACKER</div>
+            <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-check"></i>TRACKER</div>
             <div class="nav-item" onclick="navigate('attendance', this)"><i class="fa-solid fa-user-check"></i>ATTEND</div>
-            <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-chart-line"></i>STATS</div>
-            <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-circle-user"></i>ME</div>
+            <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-medal"></i>STATS</div>
+            <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-user-circle"></i>ME</div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, query, where, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -101,10 +103,11 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const USTHAD = "Kereemk81@gmail.com";
+        const ADMIN = "Kereemk81@gmail.com";
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         const today = new Date().toLocaleDateString('en-CA');
+
         document.getElementById('display-date').innerText = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'long', year:'numeric' });
 
         window.navigate = (p, el) => {
@@ -121,22 +124,21 @@
             document.getElementById('main-content').classList.toggle('hidden', !u);
             document.getElementById('app-header').classList.toggle('hidden', !u);
             if(u) {
-                document.getElementById('user-display-email').innerText = u.email;
-                document.getElementById('admin-notice').classList.toggle('hidden', u.email !== USTHAD);
+                document.getElementById('user-email-text').innerText = u.email;
+                document.getElementById('admin-notice-box').classList.toggle('hidden', u.email !== ADMIN);
             }
         });
 
+        // Notice Board Sync
         onSnapshot(doc(db, "settings", "notice"), (d) => {
-            const b = document.getElementById('notice-board');
+            const b = document.getElementById('notice-display');
             if(d.exists() && d.data().text) { b.innerText = "📢 " + d.data().text; b.classList.remove('hidden'); }
             else b.classList.add('hidden');
         });
 
-        window.updateNotice = () => setDoc(doc(db, "settings", "notice"), { text: document.getElementById('notice-text').value });
-        window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value);
-        window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-password').value);
+        window.saveNotice = () => setDoc(doc(db, "settings", "notice"), { text: document.getElementById('notice-input').value });
+        window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
         window.handleLogout = () => signOut(auth);
-        window.toggleAuth = (m) => { document.getElementById('login-section').classList.toggle('hidden'); document.getElementById('signup-section').classList.toggle('hidden'); };
 
         async function loadTracker() {
             const container = document.getElementById('tracker-list');
@@ -154,17 +156,17 @@
         window.toggleP = (n, p, cur) => setDoc(doc(db, "daily", n + "_" + today), { name: n, date: today, [p]: !cur }, { merge: true });
 
         async function loadAttendance() {
-            const isAdmin = auth.currentUser.email === USTHAD;
+            const isAdmin = auth.currentUser.email === ADMIN;
             const container = document.getElementById('attendance-list');
             onSnapshot(query(collection(db, "daily"), where("date", "==", today)), (snap) => {
                 const data = {}; snap.forEach(d => data[d.id] = d.data());
                 container.innerHTML = students.map(s => {
                     const d = data[s + "_" + today] || {};
-                    return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p>
+                    return `<div class="card"><p class="text-[11px] font-black uppercase mb-3">${s}</p>
                         <div class="flex gap-2">
-                            <button onclick="${isAdmin ? `setA('${s}','P')` : ''}" class="att-btn ${d.status === 'P' ? 'p-active' : ''}">PRESENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','A')` : ''}" class="att-btn ${d.status === 'A' ? 'a-active' : ''}">ABSENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','L')` : ''}" class="att-btn ${d.status === 'L' ? 'l-active' : ''}">LEAVE</button>
+                            <button onclick="${isAdmin ? `setA('${s}','P')` : ''}" class="att-btn ${d.status === 'P' ? 'att-p' : ''}">PRESENT</button>
+                            <button onclick="${isAdmin ? `setA('${s}','A')` : ''}" class="att-btn ${d.status === 'A' ? 'att-a' : ''}">ABSENT</button>
+                            <button onclick="${isAdmin ? `setA('${s}','L')` : ''}" class="att-btn ${d.status === 'L' ? 'att-l' : ''}">LEAVE</button>
                         </div>
                     </div>`;
                 }).join('');
