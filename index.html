@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f3f4f6; padding-bottom: 90px; font-family: sans-serif; overflow-x: hidden; }
+        body { background-color: #f3f4f6; padding-bottom: 90px; font-family: sans-serif; }
         .hidden { display: none !important; }
         .header-card { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 25px 20px; text-align: center; position: sticky; top: 0; z-index: 100; }
         .bottom-nav { background: white; border-top: 1px solid #e5e7eb; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
@@ -16,10 +16,10 @@
         .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
         .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; border: 1px solid #e5e7eb; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .att-btn { padding: 12px 0; border-radius: 10px; font-size: 11px; font-weight: 900; flex: 1; text-align: center; background: #f9fafb; color: #6b7280; border: 1px solid #eee; }
-        .p-active { background: #059669 !important; color: white !important; border: none; }
-        .a-active { background: #dc2626 !important; color: white !important; border: none; }
+        .p-active { background: #059669 !important; color: white !important; }
+        .a-active { background: #dc2626 !important; color: white !important; }
         .chat-container { height: 350px; overflow-y: auto; background: #f9fafb; padding: 10px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 10px; display: flex; flex-direction: column; }
-        .msg { margin-bottom: 10px; max-width: 80%; padding: 10px; border-radius: 15px; font-size: 13px; position: relative; }
+        .msg { margin-bottom: 10px; max-width: 80%; padding: 10px; border-radius: 15px; font-size: 13px; }
         .msg-own { background: #dcf8c6; align-self: flex-end; border-bottom-right-radius: 2px; }
         .msg-other { background: white; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #eee; }
         .subject-grid { display: grid; grid-template-cols: repeat(2, 1fr); gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ddd; }
@@ -31,7 +31,7 @@
     <div id="app-header" class="header-card hidden">
         <h1 class="text-2xl font-black uppercase">Hidayatul Islam</h1>
         <p class="text-[9px] font-bold opacity-80 mb-3 uppercase">Class 6 - Achangi</p>
-        <input type="date" id="global-date" class="bg-[#047857] text-white font-bold p-1 rounded-lg text-xs outline-none" onchange="changeDate(this.value)">
+        <input type="date" id="global-date" class="bg-[#047857] text-white font-bold p-1 rounded-lg text-xs outline-none">
     </div>
 
     <div id="main-content" class="hidden">
@@ -40,13 +40,12 @@
                 <p id="holiday-reason-text"></p>
             </div>
             <div id="admin-holiday-tool" class="card hidden border-emerald-300 bg-emerald-50">
-                <p class="text-[10px] font-black text-emerald-800 uppercase mb-3 text-center">Post Leave Notice</p>
-                <textarea id="holiday-reason-input" class="w-full p-3 border rounded-xl text-xs mb-3 outline-none" placeholder="Type leave reason..."></textarea>
-                <button onclick="toggleGlobalHoliday()" id="holiday-toggle-btn" class="w-full py-3 rounded-xl text-xs font-black uppercase text-white shadow-md"></button>
+                <p class="text-[10px] font-black text-emerald-800 uppercase mb-3 text-center">Admin: Leave Notice</p>
+                <textarea id="h-reason-input" class="w-full p-3 border rounded-xl text-xs mb-3 outline-none" placeholder="Reason..."></textarea>
+                <button id="h-notice-btn" class="w-full py-3 rounded-xl text-xs font-black uppercase text-white shadow-md"></button>
             </div>
-            
             <div class="card mt-2 text-center">
-                <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Azan Timings</p>
+                <p class="text-[10px] font-black text-gray-400 uppercase mb-3 text-center">Azan Timings</p>
                 <div id="azan-list" class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase mb-4">
                     <div class="bg-gray-50 p-2 rounded-lg">SUBHI<br><span id="t-subhi" class="text-emerald-700">-</span></div>
                     <div class="bg-gray-50 p-2 rounded-lg">DUHAR<br><span id="t-duhar" class="text-emerald-700">-</span></div>
@@ -56,67 +55,65 @@
                 </div>
                 <div id="admin-azan-tool" class="hidden border-t mt-4 pt-4">
                     <div class="grid grid-cols-5 gap-1 mb-3">
-                        <input type="text" id="up-subhi" placeholder="Sub" class="p-1 border rounded text-[9px]">
-                        <input type="text" id="up-duhar" placeholder="Duh" class="p-1 border rounded text-[9px]">
+                        <input type="text" id="up-sub" placeholder="Sub" class="p-1 border rounded text-[9px]">
+                        <input type="text" id="up-duh" placeholder="Duh" class="p-1 border rounded text-[9px]">
                         <input type="text" id="up-asr" placeholder="Asr" class="p-1 border rounded text-[9px]">
-                        <input type="text" id="up-magh" placeholder="Mag" class="p-1 border rounded text-[9px]">
-                        <input type="text" id="up-isha" placeholder="Ish" class="p-1 border rounded text-[9px]">
+                        <input type="text" id="up-mag" placeholder="Mag" class="p-1 border rounded text-[9px]">
+                        <input type="text" id="up-ish" placeholder="Ish" class="p-1 border rounded text-[9px]">
                     </div>
-                    <button onclick="updateAzanTimes()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-[10px] font-black uppercase">Update Timings</button>
+                    <button id="up-azan-btn" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-[10px] font-black uppercase">Update Timings</button>
                 </div>
             </div>
         </div>
 
-        <div id="results-page" class="p-5 hidden">
-            <h2 class="text-center font-black text-emerald-800 uppercase mb-4 text-sm tracking-widest">Public Exam Results 2026</h2>
-            <input type="text" id="search-results" onkeyup="searchStudent()" placeholder="Search student name..." class="w-full p-3 mb-4 rounded-xl border outline-none text-sm shadow-inner bg-gray-50">
-            <div id="results-list"></div>
-        </div>
-
         <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
         <div id="attendance-page" class="p-5 hidden"><div id="attendance-list"></div></div>
+        <div id="results-page" class="p-5 hidden">
+            <input type="text" id="res-srch" placeholder="Search name..." class="w-full p-4 mb-4 rounded-xl border outline-none text-sm shadow-sm">
+            <div id="results-list"></div>
+        </div>
         <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
 
         <div id="profile-page" class="p-5 hidden">
             <div class="card text-center mb-4">
-                <p id="user-email-text" class="text-xs font-bold text-emerald-700 mb-4"></p>
-                <button id="btn-logout" class="w-full border border-red-500 text-red-500 py-2 rounded-xl text-[10px] font-bold uppercase">Sign Out</button>
+                <p id="profile-email" class="text-xs font-bold text-gray-500 mb-4"></p>
+                <button id="logout-final" class="w-full border border-red-500 text-red-500 py-2 rounded-xl text-[10px] font-bold uppercase">Sign Out</button>
             </div>
             <div class="card p-4">
-                <h3 class="text-xs font-black text-gray-500 uppercase mb-4 border-b pb-2">Community Chat</h3>
-                <div id="chat-messages" class="chat-container"></div>
+                <h3 class="text-xs font-black text-gray-500 uppercase mb-4 border-b pb-2">Live Chat</h3>
+                <div id="chat-box-main" class="chat-container"></div>
                 <div class="flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Message..." class="flex-1 p-2 bg-gray-100 rounded-lg text-sm outline-none border-none">
-                    <button id="btn-send" class="bg-emerald-700 text-white px-4 rounded-lg"><i class="fa-solid fa-paper-plane"></i></button>
+                    <input type="text" id="chat-msg-input" placeholder="Message..." class="flex-1 p-2 bg-gray-100 rounded-lg text-sm outline-none">
+                    <button id="send-chat-btn" class="bg-emerald-700 text-white px-4 rounded-lg"><i class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house"></i>HOME</div>
-            <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-check"></i>TRACKER</div>
-            <div class="nav-item" onclick="navigate('attendance', this)"><i class="fa-solid fa-user-check"></i>ATTEND</div>
-            <div class="nav-item" onclick="navigate('results', this)"><i class="fa-solid fa-scroll"></i>RESULTS</div>
-            <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-medal"></i>STATS</div>
-            <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-comments"></i>CHAT</div>
+            <div class="nav-item active" data-pg="home"><i class="fa-solid fa-house"></i>HOME</div>
+            <div class="nav-item" data-pg="tracker"><i class="fa-solid fa-clipboard-check"></i>TRACKER</div>
+            <div class="nav-item" data-pg="attendance"><i class="fa-solid fa-user-check"></i>ATTEND</div>
+            <div class="nav-item" data-pg="results"><i class="fa-solid fa-scroll"></i>RESULTS</div>
+            <div class="nav-item" data-pg="history"><i class="fa-solid fa-medal"></i>STATS</div>
+            <div class="nav-item" data-pg="profile"><i class="fa-solid fa-comments"></i>CHAT</div>
         </div>
     </div>
 
     <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
         <div id="login-box" class="card shadow-2xl">
             <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase">Login</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm border-none shadow-inner">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl mb-2 bg-gray-100 outline-none text-sm border-none shadow-inner">
-            <div class="text-right mb-6"><span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer uppercase">Forgot Password?</span></div>
-            <button id="btn-login" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-4 uppercase shadow-lg">Login</button>
-            <p class="text-xs font-bold text-gray-400 uppercase">New parent? <span onclick="toggleAuth(true)" class="text-emerald-700 underline cursor-pointer">Create Account</span></p>
+            <input type="email" id="l-email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm border-none">
+            <input type="password" id="l-pass" placeholder="Password" class="w-full p-4 rounded-xl mb-2 bg-gray-100 outline-none text-sm border-none">
+            <p id="forgot-btn" class="text-right text-[10px] text-gray-500 underline mb-6 cursor-pointer uppercase">Forgot Password?</p>
+            <button id="login-final-btn" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-4 uppercase">Login</button>
+            <p class="text-xs font-bold text-gray-400">New? <span id="to-signup" class="text-emerald-700 underline cursor-pointer">Register</span></p>
         </div>
         <div id="signup-box" class="card hidden shadow-2xl">
             <h2 class="text-xl font-black text-blue-800 mb-8 uppercase">Register</h2>
-            <input type="email" id="s-email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 border-none outline-none">
-            <input type="password" id="s-pass" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-gray-100 border-none outline-none">
-            <button id="btn-signup" class="w-full bg-blue-800 text-white font-black py-4 rounded-xl mb-4 uppercase">Sign Up</button>
-            <p onclick="toggleAuth(false)" class="text-xs font-bold text-gray-400 underline cursor-pointer uppercase text-center">Back to Login</p>
+            <input type="email" id="s-email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm">
+            <input type="password" id="s-pass" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-gray-100 outline-none text-sm">
+            <button id="signup-final-btn" class="w-full bg-blue-800 text-white font-black py-4 rounded-xl mb-4 uppercase">Create Account</button>
+            <p id="to-login" class="text-xs font-bold text-gray-400 underline cursor-pointer uppercase">Back to Login</p>
         </div>
     </div>
 
@@ -153,92 +150,114 @@
             { name: "FATHIMATH FIDA", reg: "550225", scores: { "Dur-1": "79 B+", "Fiq": "77 B+", "Taj": "80 B+", "Dur-2": "64 B", "Quran": "73 B+", "Prac": "99 A++" }, total: 472, remark: "PASSED" }
         ];
 
+        // --- AUTH ---
+        document.getElementById('to-signup').onclick = () => { document.getElementById('login-box').classList.add('hidden'); document.getElementById('signup-box').classList.remove('hidden'); };
+        document.getElementById('to-login').onclick = () => { document.getElementById('signup-box').classList.add('hidden'); document.getElementById('login-box').classList.remove('hidden'); };
+        
+        document.getElementById('login-final-btn').onclick = () => {
+            const e = document.getElementById('l-email').value;
+            const p = document.getElementById('l-pass').value;
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Error: " + err.message));
+        };
+
+        document.getElementById('signup-final-btn').onclick = () => {
+            const e = document.getElementById('s-email').value;
+            const p = document.getElementById('s-pass').value;
+            createUserWithEmailAndPassword(auth, e, p).then(() => alert("Success!")).catch(err => alert(err.message));
+        };
+
+        document.getElementById('forgot-btn').onclick = () => {
+            const e = document.getElementById('l-email').value;
+            if(!e) return alert("Type Email first!");
+            sendPasswordResetEmail(auth, e).then(() => alert("Link Sent!")).catch(err => alert(err.message));
+        };
+
+        document.getElementById('logout-final').onclick = () => signOut(auth);
+
         onAuthStateChanged(auth, (u) => {
             document.getElementById('auth-page').classList.toggle('hidden', !!u);
             document.getElementById('main-content').classList.toggle('hidden', !u);
             document.getElementById('app-header').classList.toggle('hidden', !u);
             if(u) {
-                document.getElementById('user-email-text').innerText = u.email;
+                document.getElementById('profile-email').innerText = u.email;
                 const isAdmin = u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
                 document.getElementById('admin-holiday-tool').classList.toggle('hidden', !isAdmin);
                 document.getElementById('admin-azan-tool').classList.toggle('hidden', !isAdmin);
-                syncHoliday();
-                loadAzanTimes();
-                loadChat();
-                navigate('home', document.querySelector('.nav-item'));
+                syncHoliday(); loadAzan(); loadChat();
+                document.getElementById('global-date').value = selectedDate;
             }
         });
 
-        // AZAN UPDATE
-        window.updateAzanTimes = () => {
-            const data = {
-                subhi: document.getElementById('up-subhi').value || document.getElementById('t-subhi').innerText,
-                duhar: document.getElementById('up-duhar').value || document.getElementById('t-duhar').innerText,
-                asr: document.getElementById('up-asr').value || document.getElementById('t-asr').innerText,
-                magh: document.getElementById('up-magh').value || document.getElementById('t-magh').innerText,
-                isha: document.getElementById('up-isha').value || document.getElementById('t-isha').innerText
-            };
-            setDoc(doc(db, "settings", "timings"), data, {merge: true}).then(() => alert("Timings Updated!"));
+        // --- AZAN ---
+        document.getElementById('up-azan-btn').onclick = () => {
+            const d = { subhi: document.getElementById('up-sub').value, duhar: document.getElementById('up-duh').value, asr: document.getElementById('up-asr').value, magh: document.getElementById('up-mag').value, isha: document.getElementById('up-ish').value };
+            setDoc(doc(db, "settings", "timings"), d, {merge: true}).then(() => alert("Updated!"));
         };
 
-        function loadAzanTimes() {
+        function loadAzan() {
             onSnapshot(doc(db, "settings", "timings"), (snap) => {
-                if(snap.exists()){
+                if(snap.exists()) {
                     const d = snap.data();
-                    ['subhi', 'duhar', 'asr', 'magh', 'isha'].forEach(k => {
-                        if(d[k]) document.getElementById('t-' + k).innerText = d[k];
-                    });
+                    ['subhi', 'duhar', 'asr', 'magh', 'isha'].forEach(k => { if(d[k]) document.getElementById('t-' + k).innerText = d[k]; });
                 }
             });
         }
 
-        // CHAT & LOGOUT CLICK FIX
-        document.getElementById('btn-login').onclick = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
-        document.getElementById('btn-signup').onclick = () => createUserWithEmailAndPassword(auth, document.getElementById('s-email').value, document.getElementById('s-pass').value).then(() => alert("Created!"));
-        document.getElementById('btn-logout').onclick = () => signOut(auth);
-        document.getElementById('btn-send').onclick = async () => {
-            const text = document.getElementById('chat-input').value;
-            if(!text.trim()) return;
-            await addDoc(collection(db, "chats"), { sender: auth.currentUser.email, text: text, time: Timestamp.now() });
-            document.getElementById('chat-input').value = "";
+        // --- CHAT ---
+        document.getElementById('send-chat-btn').onclick = async () => {
+            const t = document.getElementById('chat-msg-input').value;
+            if(!t.trim()) return;
+            await addDoc(collection(db, "chats"), { sender: auth.currentUser.email, text: t, time: Timestamp.now() });
+            document.getElementById('chat-msg-input').value = "";
         };
 
         function loadChat() {
             onSnapshot(query(collection(db, "chats"), orderBy("time", "desc"), limit(50)), (snap) => {
-                const box = document.getElementById('chat-messages'); box.innerHTML = "";
+                const b = document.getElementById('chat-box-main'); b.innerHTML = "";
                 snap.forEach(d => {
                     const m = d.data(); const isOwn = m.sender === auth.currentUser.email;
-                    box.innerHTML += `<div class="msg ${isOwn ? 'msg-own' : 'msg-other'}"><p class="text-[8px] font-bold opacity-60">${m.sender.split('@')[0]}</p><p>${m.text}</p></div>`;
+                    b.innerHTML += `<div class="msg ${isOwn ? 'msg-own' : 'msg-other'}"><p class="text-[8px] font-bold opacity-60">${m.sender.split('@')[0]}</p><p>${m.text}</p></div>`;
                 });
-                box.scrollTop = box.scrollHeight;
+                b.scrollTop = b.scrollHeight;
             });
         }
 
-        // NAVIGATION & CORE FUNCTIONS
-        window.navigate = (p, el) => {
-            if(el) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); }
-            ['home', 'tracker', 'attendance', 'results', 'history', 'profile'].forEach(pg => document.getElementById(pg+'-page').classList.toggle('hidden', pg !== p));
-            if(p === 'results') loadResults(); if(p === 'tracker') loadTracker(); if(p === 'attendance') loadAttendance(); if(p === 'history') loadHistory();
+        // --- NAVIGATION ---
+        window.navigate = (page, el) => {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(el) el.classList.add('active');
+            ['home', 'tracker', 'attendance', 'results', 'history', 'profile'].forEach(pg => document.getElementById(pg + '-page').classList.toggle('hidden', pg !== page));
+            if(page === 'results') loadResults();
+            if(page === 'tracker') loadTracker();
+            if(page === 'attendance') loadAttendance();
+            if(page === 'history') loadHistory();
         };
 
+        document.querySelectorAll('.nav-item').forEach(ni => { ni.onclick = () => navigate(ni.getAttribute('data-pg'), ni); });
+
+        // --- RESULTS & CORE ---
         window.loadResults = () => {
-            const container = document.getElementById('results-list');
-            container.innerHTML = fullResults.map((r, i) => `
-                <div class="card result-item" onclick="document.getElementById('marks-${i}').classList.toggle('hidden')">
+            const list = document.getElementById('results-list');
+            list.innerHTML = fullResults.map((r, i) => `
+                <div class="card result-item" onclick="document.getElementById('mks-${i}').classList.toggle('hidden')">
                     <div class="flex justify-between items-center">
-                        <div><p class="student-name text-[10px] font-black uppercase text-gray-800">${r.name}</p><p class="text-[8px] font-bold ${r.remark==='DISTINCTION'?'text-emerald-600':'text-gray-400'}">${r.remark}</p></div>
-                        <div class="text-right"><p class="text-lg font-black text-emerald-800">${r.total}/600</p></div>
+                        <div><p class="name text-[10px] font-black uppercase">${r.name}</p><p class="text-[8px] font-bold ${r.remark === 'DISTINCTION' ? 'text-emerald-600' : 'text-gray-400'}">${r.remark}</p></div>
+                        <p class="text-lg font-black text-emerald-800">${r.total}/600</p>
                     </div>
-                    <div id="marks-${i}" class="hidden subject-grid">
+                    <div id="mks-${i}" class="hidden subject-grid">
                         ${Object.entries(r.scores).map(([k,v]) => `<div class="sub-box"><p class="text-gray-400 uppercase text-[7px]">${k}</p><p class="font-bold">${v}</p></div>`).join('')}
                     </div>
                 </div>`).join('');
         };
 
+        window.searchStudent = () => {
+            let val = document.getElementById('res-srch').value.toLowerCase();
+            document.querySelectorAll('.result-item').forEach(item => {
+                let n = item.querySelector('.name').innerText.toLowerCase();
+                item.style.display = n.includes(val) ? "" : "none";
+            });
+        };
+
         function loadAttendance() {
             const isAdmin = auth.currentUser?.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-            onSnapshot(query(collection(db, "daily"), where("date", "==", selectedDate)), (snap) => {
-                const data = {}; snap.forEach(d => data[d.id] = d.data());
-                document.getElementById('attendance-list').innerHTML = students.map(s => {
-                    const d = data[s + "_" + selectedDate] || {};
-                    if(globalHoliday) return `<div class="card"><p class="text-xs font-black mb-3 
+ 
