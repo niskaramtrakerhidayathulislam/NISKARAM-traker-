@@ -21,6 +21,7 @@
         .p-active { background: #059669 !important; color: white !important; }
         .a-active { background: #dc2626 !important; color: white !important; }
         .status-leave { background: #2563eb; color: white; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 900; text-align: center; }
+        .notice-card { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -33,17 +34,17 @@
 
     <div id="main-content" class="hidden">
         <div id="home-page" class="p-5">
-            <div id="admin-holiday-tool" class="card hidden border-emerald-300 bg-emerald-50">
-                <p class="text-[10px] font-black text-emerald-800 uppercase mb-3 text-center">Admin Controls</p>
-                <button id="holiday-toggle-btn" onclick="toggleGlobalHoliday()" class="w-full py-3 rounded-xl text-xs font-black uppercase transition-all shadow-md"></button>
-                <p class="text-[9px] text-gray-500 mt-2 text-center">അവധി തുടങ്ങുമ്പോഴും അവസാനിക്കുമ്പോഴും ഇത് ഉപയോഗിക്കുക.</p>
-            </div>
-            
-            <div id="holiday-banner" class="card bg-blue-50 border-blue-100 text-center hidden">
-                <p class="font-black text-blue-800 uppercase text-xs">Madrasa Leave</p>
-                <p class="text-[10px] font-bold text-blue-600 mt-1">ഇപ്പോൾ മദ്‌റസ അവധിയിലാണ്</p>
+            <div id="holiday-banner" class="notice-card hidden">
+                <p class="font-black text-amber-800 uppercase text-[10px] mb-1">📢 മദ്‌റസ അറിയിപ്പ്</p>
+                <p id="holiday-reason-text" class="text-sm font-bold text-amber-900"></p>
             </div>
 
+            <div id="admin-holiday-tool" class="card hidden border-emerald-300 bg-emerald-50">
+                <p class="text-[10px] font-black text-emerald-800 uppercase mb-3 text-center">അവധി അറിയിപ്പ് നൽകുക</p>
+                <textarea id="holiday-reason-input" class="w-full p-3 border rounded-xl text-xs mb-3 outline-none" placeholder="അവധിയുടെ കാരണം ഇവിടെ എഴുതുക..."></textarea>
+                <button id="holiday-toggle-btn" onclick="toggleGlobalHoliday()" class="w-full py-3 rounded-xl text-xs font-black uppercase transition-all shadow-md"></button>
+            </div>
+            
             <div class="card mt-4">
                 <h3 class="text-[10px] font-black text-gray-400 mb-4 uppercase">Azan Timings</h3>
                 <div id="azan-list" class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase text-center">
@@ -83,7 +84,12 @@
         <div id="login-box" class="card">
             <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase">Login</h2>
             <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-[#f0f4f8] outline-none text-sm">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-[#f0f4f8] outline-none text-sm">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl mb-2 bg-[#f0f4f8] outline-none text-sm">
+            
+            <div class="text-right mb-6">
+                <span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer uppercase">Forgot Password?</span>
+            </div>
+
             <button onclick="handleLogin()" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-4 uppercase">Login</button>
             <p class="text-xs font-bold text-gray-400">New user? <span onclick="toggleAuth(true)" class="text-emerald-700 underline cursor-pointer">Create Account</span></p>
         </div>
@@ -98,7 +104,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, query, where, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0", authDomain: "hidayatul-islam-traker.firebaseapp.com", projectId: "hidayatul-islam-traker", storageBucket: "hidayatul-islam-traker.firebasestorage.app", messagingSenderId: "82744495268", appId: "1:82744495268:web:afc2f87d3d06884363ea31" };
@@ -126,18 +132,45 @@
 
         function syncHoliday() {
             onSnapshot(doc(db, "settings", "madrasa_status"), (snap) => {
-                globalHoliday = snap.exists() ? snap.data().isHoliday : false;
-                document.getElementById('holiday-banner').classList.toggle('hidden', !globalHoliday);
+                const data = snap.exists() ? snap.data() : { isHoliday: false, reason: "" };
+                globalHoliday = data.isHoliday;
+                
+                const banner = document.getElementById('holiday-banner');
+                const reasonText = document.getElementById('holiday-reason-text');
+                
+                if(globalHoliday) {
+                    banner.classList.remove('hidden');
+                    reasonText.innerText = data.reason || "ഇന്ന് മദ്‌റസ അവധിയാണ്.";
+                } else {
+                    banner.classList.add('hidden');
+                }
+
                 const btn = document.getElementById('holiday-toggle-btn');
-                btn.innerText = globalHoliday ? "മദ്‌റസ തുറന്നു (End Leave)" : "മദ്‌റസ അവധി തുടങ്ങുക (Start Leave)";
+                btn.innerText = globalHoliday ? "അവധി അവസാനിപ്പിക്കുക" : "അവധി അറിയിപ്പ് നൽകുക";
                 btn.className = globalHoliday ? "w-full py-3 rounded-xl text-xs font-black uppercase bg-red-600 text-white shadow-md" : "w-full py-3 rounded-xl text-xs font-black uppercase bg-blue-600 text-white shadow-md";
-                navigate('home', null);
             });
         }
 
         window.toggleGlobalHoliday = () => {
-            const confirmMsg = globalHoliday ? "മദ്‌റസ അവധി അവസാനിപ്പിക്കണോ?" : "മദ്‌റസ അവധി തുടങ്ങണോ?";
-            if(confirm(confirmMsg)) setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: !globalHoliday });
+            const reason = document.getElementById('holiday-reason-input').value;
+            if(!globalHoliday && !reason) {
+                alert("അവധിയുടെ കാരണം എഴുതുക!");
+                return;
+            }
+            const confirmMsg = globalHoliday ? "മദ്‌റസ അവധി അവസാനിപ്പിക്കണോ?" : "ഈ അറിയിപ്പ് നൽകണോ?";
+            if(confirm(confirmMsg)) {
+                setDoc(doc(db, "settings", "madrasa_status"), { 
+                    isHoliday: !globalHoliday,
+                    reason: !globalHoliday ? reason : ""
+                });
+                document.getElementById('holiday-reason-input').value = "";
+            }
+        };
+
+        window.handleResetPassword = () => {
+            const email = document.getElementById('email').value;
+            if(!email) { alert("ഇമെയിൽ ടൈപ്പ് ചെയ്യുക!"); return; }
+            sendPasswordResetEmail(auth, email).then(() => alert("പാസ്‌വേഡ് മാറ്റാനുള്ള ലിങ്ക് ഇമെയിലിലേക്ക് അയച്ചിട്ടുണ്ട്.")).catch(e => alert(e.message));
         };
 
         window.changeDate = (val) => { selectedDate = val; navigate(document.querySelector('.nav-item.active').innerText.toLowerCase(), null); };
@@ -159,8 +192,8 @@
                     const d = data[s + "_" + selectedDate] || {};
                     if(globalHoliday) return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="status-leave">LEAVE</div></div>`;
                     return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="flex gap-2">
-                        <button onclick="${isAdmin ? `setA('${s}','P')` : 'alert(\'Only Usthad\')'}" class="att-btn ${d.status === 'P' ? 'p-active text-white bg-emerald-600' : ''}">PRESENT</button>
-                        <button onclick="${isAdmin ? `setA('${s}','A')` : 'alert(\'Only Usthad\')'}" class="att-btn ${d.status === 'A' ? 'a-active text-white bg-red-600' : ''}">ABSENT</button>
+                        <button onclick="${isAdmin ? `setA('${s}','P')` : 'alert(\'ഉസ്താദിന് മാത്രമേ അനുവാദമുള്ളൂ!\')'}" class="att-btn ${d.status === 'P' ? 'p-active text-white bg-emerald-600' : ''}">PRESENT</button>
+                        <button onclick="${isAdmin ? `setA('${s}','A')` : 'alert(\'ഉസ്താദിന് മാത്രമേ അനുവാദമുള്ളൂ!\')'}" class="att-btn ${d.status === 'A' ? 'a-active text-white bg-red-600' : ''}">ABSENT</button>
                     </div></div>`;
                 }).join('');
             });
