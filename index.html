@@ -17,10 +17,12 @@
         .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
         .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px 0; border-radius: 12px; font-size: 10px; font-weight: 800; width: 100%; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
+        
+        /* Attendance 3 Colors - Open for Everyone */
         .att-btn { padding: 12px 0; border-radius: 10px; font-size: 10px; font-weight: 900; flex: 1; text-align: center; background: #f9fafb; color: #6b7280; border: 1px solid #eee; }
-        .att-p { background: #059669 !important; color: white !important; border: none; }
-        .att-a { background: #dc2626 !important; color: white !important; border: none; }
-        .att-l { background: #2563eb !important; color: white !important; border: none; }
+        .p-active { background: #059669 !important; color: white !important; border: none; }
+        .a-active { background: #dc2626 !important; color: white !important; border: none; }
+        .l-active { background: #2563eb !important; color: white !important; border: none; }
     </style>
 </head>
 <body>
@@ -41,7 +43,7 @@
 
     <div id="main-content" class="hidden">
         <div id="home-page" class="p-5 text-center">
-            <div class="card"><p class="text-xs font-bold text-gray-400">Welcome to Madrasa Tracker</p></div>
+            <div class="card"><p class="text-xs font-bold text-gray-400 uppercase">Welcome</p></div>
         </div>
 
         <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
@@ -82,8 +84,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // രണ്ട് ഇമെയിലിനും അഡ്മിൻ പവർ നൽകി
-        const ADMINS = ["Kereemk81@gmail.com", "multicall9@gmail.com"]; 
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         const today = new Date().toLocaleDateString('en-CA');
@@ -123,7 +123,6 @@
         window.toggleP = (n, p, cur) => setDoc(doc(db, "daily", n + "_" + today), { name: n, date: today, [p]: !cur }, { merge: true });
 
         function loadAttendance() {
-            const isAdmin = ADMINS.includes(auth.currentUser?.email);
             const container = document.getElementById('attendance-list');
             onSnapshot(query(collection(db, "daily"), where("date", "==", today)), (snap) => {
                 const data = {}; snap.forEach(d => data[d.id] = d.data());
@@ -131,9 +130,9 @@
                     const d = data[s + "_" + today] || {};
                     return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p>
                         <div class="flex gap-2">
-                            <button onclick="${isAdmin ? `setA('${s}','P')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'P' ? 'att-p' : ''}">PRESENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','A')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'A' ? 'att-a' : ''}">ABSENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','L')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'L' ? 'att-l' : ''}">LEAVE</button>
+                            <button onclick="setA('${s}','P')" class="att-btn ${d.status === 'P' ? 'p-active' : ''}">PRESENT</button>
+                            <button onclick="setA('${s}','A')" class="att-btn ${d.status === 'A' ? 'a-active' : ''}">ABSENT</button>
+                            <button onclick="setA('${s}','L')" class="att-btn ${d.status === 'L' ? 'l-active' : ''}">LEAVE</button>
                         </div>
                     </div>`;
                 }).join('');
