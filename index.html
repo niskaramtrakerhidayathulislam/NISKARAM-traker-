@@ -2,80 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam Tracker</title>
+    <title>Hidayatul Islam Madrasa Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f3f4f6; padding-bottom: 90px; font-family: sans-serif; }
-        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
-        .p-btn { background: #f9fafb; border: 1px solid #ddd; padding: 12px 0; border-radius: 12px; font-size: 11px; font-weight: 800; width: 100%; color: #374151; }
-        .p-btn.active { background: #10b981 !important; color: white !important; border-color: #059669; }
-        
-        /* Attendance Buttons */
-        .att-btn { padding: 10px 0; border-radius: 10px; font-size: 11px; font-weight: 900; flex: 1; text-align: center; border: 1px solid #eee; background: #f9fafb; color: #6b7280; }
-        .att-btn.p-active { background: #059669 !important; color: white !important; border: none; }
-        .att-btn.a-active { background: #dc2626 !important; color: white !important; border: none; }
-        .att-btn.l-active { background: #2563eb !important; color: white !important; border: none; }
-
-        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; border-top: 1px solid #e5e7eb; z-index: 1000; padding: 10px 0; }
-        .nav-item { flex: 1; text-align: center; font-size: 10px; font-weight: 800; color: #9ca3af; cursor: pointer; }
-        .nav-item.active { color: #065f46; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+        body { background-color: #f3f4f6; color: #1f2937; font-family: sans-serif; padding-bottom: 80px; }
         .hidden { display: none; }
-        .header-bg { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 30px 20px; text-align: center; }
+        .header-card { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 30px 20px; text-align: center; }
+        .bottom-nav { background: white; border-top: 1px solid #e5e7eb; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item { text-align: center; font-size: 11px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 600; }
+        .nav-item.active { color: #065f46; }
+        .nav-item i { font-size: 24px; display: block; margin-bottom: 4px; }
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #e5e7eb; }
+        .azan-box { background: #f9fafb; padding: 10px; border-radius: 12px; border: 1px solid #f3f4f6; text-align: center; }
+        .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; }
+        .p-btn.active { background: #10b981 !important; color: white !important; }
+        .input-box { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; margin-bottom: 15px; outline: none; background: #f9fafb; font-weight: 600; }
+        .date-display { font-size: 14px; font-weight: 900; color: #fbbf24; margin-top: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
     </style>
 </head>
 <body>
 
-    <div id="app-ui" class="hidden">
-        <div class="header-bg">
-            <h1 class="text-2xl font-black uppercase">Hidayatul Islam</h1>
-            <p id="top-date" class="text-xs font-bold text-amber-400 mt-2"></p>
+    <div id="app-header" class="header-card hidden">
+        <h1 class="text-2xl font-black uppercase tracking-tight">Hidayatul Islam</h1>
+        <p class="text-[9px] font-bold opacity-80 uppercase tracking-[2px]">Madrasa Achangi - Class 6</p>
+        <div id="display-date" class="date-display"></div>
+    </div>
+
+    <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
+        <h1 class="text-3xl font-black text-emerald-800 uppercase mb-2">Welcome</h1>
+        <p class="text-gray-500 text-xs font-bold uppercase mb-8">Login to access Madrasa Tracker</p>
+
+        <div id="login-section" class="card shadow-2xl">
+            <h2 class="text-lg font-black text-emerald-700 mb-4 uppercase">Login</h2>
+            <input type="email" id="login-email" placeholder="Email Address" class="input-box">
+            <input type="password" id="login-password" placeholder="Password" class="input-box">
+            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest">Login</button>
+            <p class="text-xs mt-6 text-gray-500">New User? <span onclick="toggleAuth('signup')" class="text-emerald-700 font-bold cursor-pointer underline">Create Account</span></p>
         </div>
 
-        <div class="p-4">
-            <div id="tracker-page">
-                <div id="tracker-list"></div>
-            </div>
+        <div id="signup-section" class="card shadow-2xl hidden">
+            <h2 class="text-lg font-black text-blue-700 mb-4 uppercase">Create Account</h2>
+            <input type="email" id="signup-email" placeholder="Email Address" class="input-box">
+            <input type="password" id="signup-password" placeholder="Create Password" class="input-box">
+            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest">Sign Up</button>
+            <p class="text-xs mt-6 text-gray-500">Already have account? <span onclick="toggleAuth('login')" class="text-blue-700 font-bold cursor-pointer underline">Login Here</span></p>
+        </div>
+    </div>
 
-            <div id="attend-page" class="hidden">
-                <div id="attend-list"></div>
-            </div>
-
-            <div id="stats-page" class="hidden">
-                <div id="stats-list"></div>
-            </div>
-
-            <div id="profile-page" class="hidden text-center">
-                <div class="card py-12">
-                    <p id="user-display-email" class="text-sm font-black text-gray-600 mb-8"></p>
-                    <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-2xl uppercase text-xs">Logout</button>
+    <div id="main-content" class="hidden">
+        <div id="home-page" class="p-5">
+            <div class="card text-center">
+                <h3 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest">Azan Timings</h3>
+                <div class="grid grid-cols-5 gap-2">
+                    <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">SUBHI</p><p class="text-sm font-black text-emerald-700">05:15</p></div>
+                    <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">DUHAR</p><p class="text-sm font-black text-emerald-700">12:38</p></div>
+                    <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">ASR</p><p class="text-sm font-black text-emerald-700">03:58</p></div>
+                    <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">MAGHRIB</p><p class="text-sm font-black text-emerald-700">06:39</p></div>
+                    <div class="azan-box"><p class="text-[9px] font-bold text-gray-400">ISHA</p><p class="text-sm font-black text-emerald-700">07:49</p></div>
                 </div>
             </div>
         </div>
 
-        <div class="bottom-nav">
-            <div class="nav-item active" onclick="showPage('tracker', this)"><i class="fa fa-clipboard-check"></i>TRACKER</div>
-            <div class="nav-item" onclick="showPage('attend', this)"><i class="fa fa-user-clock"></i>ATTEND</div>
-            <div class="nav-item" onclick="showPage('stats', this)"><i class="fa fa-medal"></i>STATS</div>
-            <div class="nav-item" onclick="showPage('profile', this)"><i class="fa fa-circle-user"></i>ME</div>
+        <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
+        <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
+        <div id="profile-page" class="p-5 hidden text-center">
+            <div class="card py-10">
+                <i class="fa-solid fa-circle-user text-6xl text-emerald-700 mb-4"></i>
+                <p id="user-display-email" class="text-sm font-bold text-gray-600 mb-8"></p>
+                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-xl uppercase text-xs">Logout</button>
+            </div>
         </div>
-    </div>
 
-    <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center bg-gray-50">
-        <div class="card shadow-2xl border-none p-8 text-center">
-            <h2 class="text-2xl font-black text-emerald-800 mb-6">LOGIN</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none bg-gray-50">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 outline-none bg-gray-50">
-            <button onclick="handleAuth('login')" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl">ENTER</button>
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house"></i>HOME</div>
+            <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-list"></i>TRACKER</div>
+            <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-chart-line"></i>HISTORY</div>
+            <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-circle-user"></i>PROFILE</div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0",
@@ -90,101 +104,88 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const USTHAD = "Kereemk81@gmail.com";
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
-        const today = new Date().toLocaleDateString('en-CA');
+        
+        const now = new Date();
+        const today = now.toLocaleDateString('en-CA'); 
+        const displayDate = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+        document.getElementById('display-date').innerText = displayDate;
 
-        document.getElementById('top-date').innerText = new Date().toDateString().toUpperCase();
+        window.toggleAuth = (m) => {
+            document.getElementById('login-section').classList.toggle('hidden', m === 'signup');
+            document.getElementById('signup-section').classList.toggle('hidden', m === 'login');
+        };
+
+        window.navigate = (p, el) => {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            ['home', 'tracker', 'history', 'profile'].forEach(pg => document.getElementById(pg+'-page').classList.toggle('hidden', pg !== p));
+            if(p === 'tracker') loadTracker();
+            if(p === 'history') loadHistory();
+        };
 
         onAuthStateChanged(auth, (u) => {
             document.getElementById('auth-page').classList.toggle('hidden', !!u);
-            document.getElementById('app-ui').classList.toggle('hidden', !u);
-            if(u) {
-                document.getElementById('user-display-email').innerText = u.email;
-                loadTracker();
-            }
+            document.getElementById('main-content').classList.toggle('hidden', !u);
+            document.getElementById('app-header').classList.toggle('hidden', !u);
+            if(u) document.getElementById('user-display-email').innerText = u.email;
         });
 
-        window.handleAuth = (type) => {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('pass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Login Failed: " + err.message));
+        window.handleLogin = () => {
+            const e = document.getElementById('login-email').value;
+            const p = document.getElementById('login-password').value;
+            if(!e || !p) return alert("Please fill all fields");
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+        };
+
+        window.handleSignUp = () => {
+            const e = document.getElementById('signup-email').value;
+            const p = document.getElementById('signup-password').value;
+            if(!e || !p) return alert("Please fill all fields");
+            createUserWithEmailAndPassword(auth, e, p).then(() => alert("Success!")).catch(err => alert(err.message));
         };
 
         window.handleLogout = () => signOut(auth);
 
-        window.showPage = (p, el) => {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            ['tracker', 'attend', 'stats', 'profile'].forEach(id => document.getElementById(id+'-page').classList.toggle('hidden', id !== p));
-            if(p === 'tracker') loadTracker();
-            if(p === 'attend') loadAttend();
-            if(p === 'stats') loadStats();
-        };
-
-        function loadTracker() {
+        async function loadTracker() {
             const container = document.getElementById('tracker-list');
-            onSnapshot(query(collection(db, "daily"), where("date", "==", today)), (snap) => {
-                const data = {}; snap.forEach(d => data[d.id] = d.data());
-                container.innerHTML = students.map(s => {
-                    const sData = data[s + "_" + today] || {};
-                    return `<div class="card">
-                        <p class="font-black text-xs mb-3 uppercase text-emerald-900">${s}</p>
-                        <div class="grid grid-cols-5 gap-1">
-                            ${prayers.map(p => `<button onclick="toggleP('${s}','${p}',${!!sData[p]})" class="p-btn ${sData[p] ? 'active' : ''}">${sData[p] ? '✓' : p}</button>`).join('')}
-                        </div>
-                    </div>`;
-                }).join('');
-            });
+            container.innerHTML = "<p class='text-center py-10 opacity-50'>Loading...</p>";
+            const snap = await getDocs(query(collection(db, "prayers"), where("date", "==", today)));
+            const saved = {};
+            snap.forEach(d => saved[d.id] = d.data());
+            container.innerHTML = students.map(n => `
+                <div class="card">
+                    <p class="text-xs font-black mb-3 uppercase text-gray-700 tracking-wider">${n}</p>
+                    <div class="grid grid-cols-5 gap-1">
+                        ${prayers.map(p => {
+                            const ok = saved[n+'_'+today]?.[p];
+                            return `<button onclick="mark('${n}','${p}')" class="p-btn ${ok ? 'active' : ''}">${ok ? '✓' : p}</button>`;
+                        }).join('')}
+                    </div>
+                </div>`).join('');
         }
 
-        window.toggleP = async (name, prayer, current) => {
-            await setDoc(doc(db, "daily", name + "_" + today), { name, date: today, [prayer]: !current }, { merge: true });
+        window.mark = async (n, p) => {
+            await setDoc(doc(db, "prayers", n+'_'+today), { name: n, date: today, [p]: true }, { merge: true });
+            loadTracker();
         };
 
-        async function loadAttend() {
-            const isAdmin = auth.currentUser.email === USTHAD;
-            const container = document.getElementById('attend-list');
-            container.innerHTML = "<p class='text-center py-5'>Loading Attendance...</p>";
-            
-            onSnapshot(query(collection(db, "daily"), where("date", "==", today)), (snap) => {
-                const data = {}; snap.forEach(d => data[d.id] = d.data());
-                container.innerHTML = students.map(s => {
-                    const sData = data[s + "_" + today] || {};
-                    return `<div class="card">
-                        <div class="flex justify-between items-center mb-3">
-                            <p class="font-black text-xs uppercase">${s}</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="${isAdmin ? `setA('${s}','P')` : ''}" class="att-btn ${sData.status === 'P' ? 'p-active' : ''}">PRESENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','A')` : ''}" class="att-btn ${sData.status === 'A' ? 'a-active' : ''}">ABSENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','L')` : ''}" class="att-btn ${sData.status === 'L' ? 'l-active' : ''}">LEAVE</button>
-                        </div>
-                    </div>`;
-                }).join('');
-            });
-        }
-
-        window.setA = async (name, status) => {
-            await setDoc(doc(db, "daily", name + "_" + today), { name, date: today, status: status }, { merge: true });
-        };
-
-        async function loadStats() {
-            const container = document.getElementById('stats-list');
-            container.innerHTML = "<p class='text-center py-5 text-xs font-bold'>CALCULATING SCORES...</p>";
-            const snap = await getDocs(collection(db, "daily"));
-            const scores = {}; students.forEach(s => scores[s] = 0);
+        async function loadHistory() {
+            const container = document.getElementById('history-list');
+            container.innerHTML = "<p class='text-center py-10 opacity-50'>Calculating History...</p>";
+            const snap = await getDocs(collection(db, "prayers"));
+            const totals = {};
+            students.forEach(s => totals[s] = 0);
             snap.forEach(d => {
-                const doc = d.data();
-                if(scores[doc.name] !== undefined) prayers.forEach(p => { if(doc[p]) scores[doc.name]++; });
+                const data = d.data();
+                if(totals[data.name] !== undefined) prayers.forEach(p => { if(data[p]) totals[data.name]++; });
             });
-            container.innerHTML = students.sort((a,b) => scores[b]-scores[a]).map(s => `
-                <div class="card flex justify-between items-center py-5">
-                    <span class="font-black text-sm uppercase">${s}</span>
-                    <span class="font-black text-lg text-emerald-600">${scores[s]}</span>
-                </div>
-            `).join('');
+            container.innerHTML = students.sort((a,b) => totals[b] - totals[a]).map((n, i) => `
+                <div class="card flex justify-between items-center py-4">
+                    <p class="text-sm font-bold uppercase">${n}</p>
+                    <p class="text-lg font-black text-emerald-600">${totals[n]}</p>
+                </div>`).join('');
         }
     </script>
 </body>
