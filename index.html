@@ -14,7 +14,8 @@
         .nav-item { text-align: center; font-size: 10px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 800; }
         .nav-item.active { color: #065f46; }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
-        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .input-style { w-full p-4 border rounded-xl mb-4 outline-none bg-[#f0f4f8] border-none text-sm; }
         .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px 0; border-radius: 12px; font-size: 10px; font-weight: 800; width: 100%; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
         .att-btn { padding: 12px 0; border-radius: 10px; font-size: 10px; font-weight: 900; flex: 1; text-align: center; background: #f9fafb; color: #6b7280; border: 1px solid #eee; }
@@ -33,11 +34,27 @@
     </div>
 
     <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
-        <div id="login-box" class="card shadow-2xl">
-            <h2 class="text-lg font-black text-emerald-700 mb-6 uppercase">Login</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none bg-gray-50">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 outline-none bg-gray-50">
-            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl mb-4 shadow-lg">LOGIN</button>
+        <div id="login-box" class="card">
+            <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase tracking-widest">Login</h2>
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-[#f0f4f8] outline-none text-sm">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-[#f0f4f8] outline-none text-sm">
+            
+            <button onclick="handleLogin()" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-6 shadow-lg uppercase tracking-widest">Login</button>
+            
+            <div class="flex flex-col gap-3">
+                <p class="text-xs font-bold text-gray-500">New user? <span onclick="toggleAuth(true)" class="text-emerald-700 underline cursor-pointer">Create Account</span></p>
+                <p onclick="handleResetPassword()" class="text-[10px] text-gray-400 font-bold underline cursor-pointer uppercase tracking-tighter">Forgot Password?</p>
+            </div>
+        </div>
+
+        <div id="signup-box" class="card hidden">
+            <h2 class="text-xl font-black text-blue-800 mb-8 uppercase tracking-widest">Register</h2>
+            <input type="email" id="s-email" placeholder="Enter Email" class="w-full p-4 rounded-xl mb-4 bg-[#f0f4f8] outline-none text-sm">
+            <input type="password" id="s-pass" placeholder="Create Password" class="w-full p-4 rounded-xl mb-6 bg-[#f0f4f8] outline-none text-sm">
+            
+            <button onclick="handleSignUp()" class="w-full bg-blue-800 text-white font-black py-4 rounded-xl mb-6 shadow-lg uppercase tracking-widest">Create Account</button>
+            
+            <p onclick="toggleAuth(false)" class="text-xs font-bold text-gray-500 underline cursor-pointer uppercase">Back to Login</p>
         </div>
     </div>
 
@@ -61,7 +78,6 @@
 
         <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
         <div id="attendance-page" class="p-5 hidden"><div id="attendance-list"></div></div>
-        
         <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
         
         <div id="profile-page" class="p-5 hidden text-center">
@@ -82,7 +98,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, query, where, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0", authDomain: "hidayatul-islam-traker.firebaseapp.com", projectId: "hidayatul-islam-traker", storageBucket: "hidayatul-islam-traker.firebasestorage.app", messagingSenderId: "82744495268", appId: "1:82744495268:web:afc2f87d3d06884363ea31" };
@@ -103,6 +119,20 @@
             document.getElementById('app-header').classList.toggle('hidden', !u);
             if(u) document.getElementById('user-email-text').innerText = u.email;
         });
+
+        window.toggleAuth = (showSignup) => {
+            document.getElementById('login-box').classList.toggle('hidden', showSignup);
+            document.getElementById('signup-box').classList.toggle('hidden', !showSignup);
+        };
+
+        window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
+        window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('s-email').value, document.getElementById('s-pass').value).then(() => alert("Success!")).catch(e => alert(e.message));
+        window.handleLogout = () => signOut(auth);
+        window.handleResetPassword = () => {
+            const email = document.getElementById('email').value;
+            if(!email) return alert("Enter email!");
+            sendPasswordResetEmail(auth, email).then(() => alert("Reset link sent to email!")).catch(e => alert(e.message));
+        };
 
         window.navigate = (p, el) => {
             if(el) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); }
@@ -167,8 +197,6 @@
 
         window.toggleP = (n, p, cur) => setDoc(doc(db, "daily", n + "_" + selectedDate), { name: n, date: selectedDate, [p]: !cur }, { merge: true });
         window.setA = (n, s) => setDoc(doc(db, "daily", n + "_" + selectedDate), { name: n, date: selectedDate, status: s }, { merge: true });
-        window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
-        window.handleLogout = () => signOut(auth);
     </script>
 </body>
 </html>
