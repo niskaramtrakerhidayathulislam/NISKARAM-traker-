@@ -41,7 +41,7 @@
                 <span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer">Forgot Password?</span>
             </div>
 
-            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl mb-4">LOGIN</button>
+            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl mb-4 shadow-lg">LOGIN</button>
             <p class="text-xs">New user? <span onclick="toggleAuth(true)" class="text-emerald-700 font-bold underline cursor-pointer">Create Account</span></p>
         </div>
 
@@ -49,8 +49,8 @@
             <h2 class="text-lg font-black text-blue-700 mb-4 uppercase">Create Account</h2>
             <input type="email" id="s-email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none">
             <input type="password" id="s-pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 outline-none">
-            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl mb-4">SIGN UP</button>
-            <p class="text-xs" onclick="toggleAuth(false)">Back to Login</p>
+            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl mb-4 shadow-lg">SIGN UP</button>
+            <p class="text-xs font-bold text-gray-500" onclick="toggleAuth(false)">Back to Login</p>
         </div>
     </div>
 
@@ -107,7 +107,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const ADMIN = "Kereemk81@gmail.com";
+        // ഉസ്താദിന്റെ ഇമെയിൽ ഇവിടെ മാറ്റിയിട്ടുണ്ട്
+        const ADMIN = "kereemk81@gmail.com";
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         const today = new Date().toLocaleDateString('en-CA');
@@ -138,13 +139,10 @@
         window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('s-email').value, document.getElementById('s-pass').value).then(() => alert("Success!")).catch(e => alert(e.message));
         window.handleLogout = () => signOut(auth);
 
-        // Forgot Password Function
         window.handleResetPassword = () => {
             const email = document.getElementById('email').value;
-            if(!email) { alert("Please enter your email address first!"); return; }
-            sendPasswordResetEmail(auth, email)
-                .then(() => alert("Password reset link sent to your email!"))
-                .catch(e => alert(e.message));
+            if(!email) { alert("Please enter email first!"); return; }
+            sendPasswordResetEmail(auth, email).then(() => alert("Reset link sent!")).catch(e => alert(e.message));
         };
 
         function loadTracker() {
@@ -163,7 +161,7 @@
         window.toggleP = (n, p, cur) => setDoc(doc(db, "daily", n + "_" + today), { name: n, date: today, [p]: !cur }, { merge: true });
 
         function loadAttendance() {
-            const isAdmin = auth.currentUser?.email === ADMIN || auth.currentUser?.email === "multicall9@gmail.com";
+            const isAdmin = auth.currentUser?.email.toLowerCase() === ADMIN.toLowerCase();
             const container = document.getElementById('attendance-list');
             onSnapshot(query(collection(db, "daily"), where("date", "==", today)), (snap) => {
                 const data = {}; snap.forEach(d => data[d.id] = d.data());
@@ -172,13 +170,16 @@
                     return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p>
                         <div class="flex gap-2">
                             <button onclick="${isAdmin ? `setA('${s}','P')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'P' ? 'p-active' : ''}">PRESENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','A')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'A' ? 'a-active' : ''}">ABSENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','L')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'L' ? 'l-active' : ''}">LEAVE</button>
+                            <button onclick="${isAdmin ? `setA('${s}','A')` : 'att_a_error()'}" class="att-btn ${d.status === 'A' ? 'a-active' : ''}">ABSENT</button>
+                            <button onclick="${isAdmin ? `setA('${s}','L')` : 'att_l_error()'}" class="att-btn ${d.status === 'L' ? 'l-active' : ''}">LEAVE</button>
                         </div>
                     </div>`;
                 }).join('');
             });
         }
+        
+        window.att_a_error = () => alert('Usthad only');
+        window.att_l_error = () => alert('Usthad only');
 
         window.setA = (n, s) => setDoc(doc(db, "daily", n + "_" + today), { name: n, date: today, status: s }, { merge: true });
 
@@ -187,7 +188,7 @@
             const scores = {}; students.forEach(s => scores[s] = 0);
             snap.forEach(d => { const doc = d.data(); if(scores[doc.name] !== undefined) prayers.forEach(p => { if(doc[p]) scores[doc.name]++; }); });
             document.getElementById('history-list').innerHTML = students.sort((a,b) => scores[b]-scores[a]).map(s => `
-                <div class="card flex justify-between items-center py-5">
+                <div class="card flex justify-between items-center py-5 shadow-sm">
                     <span class="font-black text-sm uppercase">${s}</span>
                     <span class="font-black text-lg text-emerald-600">${scores[s]}</span>
                 </div>`).join('');
