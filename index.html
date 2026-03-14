@@ -12,14 +12,13 @@
         .hidden { display: none; }
         .header-card { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 30px 20px; text-align: center; }
         .bottom-nav { background: white; border-top: 1px solid #e5e7eb; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
-        .nav-item { text-align: center; font-size: 11px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 600; }
+        .nav-item { text-align: center; font-size: 10px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 600; }
         .nav-item.active { color: #065f46; }
-        .nav-item i { font-size: 24px; display: block; margin-bottom: 4px; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
         .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #e5e7eb; }
         .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
         .notice-badge { background: #fef3c7; color: #92400e; padding: 12px; border-radius: 12px; border-left: 4px solid #f59e0b; font-size: 12px; font-weight: 600; margin-bottom: 15px; }
-        .star-gold { color: #fbbf24; }
     </style>
 </head>
 <body>
@@ -35,16 +34,15 @@
             <h2 class="text-lg font-black text-emerald-700 mb-4 uppercase">Login</h2>
             <input type="email" id="login-email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none">
             <input type="password" id="login-password" placeholder="Password" class="w-full p-4 border rounded-xl mb-4 outline-none">
-            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl uppercase">Login</button>
-            <p class="text-xs mt-6">New user? <span onclick="toggleAuth('signup')" class="text-emerald-700 font-bold cursor-pointer underline">Create Account</span></p>
+            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl">LOGIN</button>
+            <p class="text-xs mt-6">New? <span onclick="toggleAuth('signup')" class="text-emerald-700 font-bold cursor-pointer underline">Create Account</span></p>
         </div>
-
         <div id="signup-section" class="card shadow-2xl hidden">
-            <h2 class="text-lg font-black text-blue-700 mb-4 uppercase">Create Account</h2>
-            <input type="email" id="signup-email" placeholder="Email" class="input-box w-full p-4 border rounded-xl mb-4 outline-none">
-            <input type="password" id="signup-password" placeholder="Password" class="input-box w-full p-4 border rounded-xl mb-4 outline-none">
-            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl uppercase">Sign Up</button>
-            <p class="text-xs mt-6">Already have account? <span onclick="toggleAuth('login')" class="text-blue-700 font-bold cursor-pointer underline">Login</span></p>
+            <h2 class="text-lg font-black text-blue-700 mb-4 uppercase">Sign Up</h2>
+            <input type="email" id="signup-email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none">
+            <input type="password" id="signup-password" placeholder="Password" class="w-full p-4 border rounded-xl mb-4 outline-none">
+            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl">CREATE</button>
+            <p class="text-xs mt-6"><span onclick="toggleAuth('login')" class="underline">Back to Login</span></p>
         </div>
     </div>
 
@@ -52,12 +50,11 @@
         <div id="home-page" class="p-5">
             <div id="notice-board" class="notice-badge hidden"></div>
             <div id="admin-notice-input" class="card hidden">
-                <p class="text-[10px] font-bold mb-2">UPDATE NOTICE BOARD (Usthad)</p>
-                <textarea id="notice-text" class="w-full p-2 border rounded-lg text-sm" placeholder="Write message..."></textarea>
-                <button onclick="updateNotice()" class="mt-2 bg-emerald-700 text-white text-[10px] px-4 py-2 rounded-lg font-bold">POST</button>
+                <textarea id="notice-text" class="w-full p-2 border rounded-lg text-sm" placeholder="Post an announcement..."></textarea>
+                <button onclick="updateNotice()" class="mt-2 bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold text-xs">POST NOTICE</button>
             </div>
-            <div class="card text-center mt-4">
-                <h3 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest">Azan Timings</h3>
+            <div class="card text-center">
+                <h3 class="text-xs font-black text-gray-400 uppercase mb-4">Azan Timings</h3>
                 <div class="grid grid-cols-5 gap-2 text-[10px] font-bold">
                     <div>SUBHI<br><span class="text-emerald-700">05:15</span></div>
                     <div>DUHAR<br><span class="text-emerald-700">12:38</span></div>
@@ -69,6 +66,7 @@
         </div>
 
         <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
+        <div id="attendance-page" class="p-5 hidden"><div id="attendance-list"></div></div>
         <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
         <div id="profile-page" class="p-5 hidden text-center">
             <div class="card py-10">
@@ -80,8 +78,9 @@
         <div class="bottom-nav">
             <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house"></i>HOME</div>
             <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-check"></i>TRACKER</div>
-            <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-medal"></i>HISTORY</div>
-            <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-user"></i>PROFILE</div>
+            <div class="nav-item" onclick="navigate('attendance', this)"><i class="fa-solid fa-user-check"></i>ATTEND</div>
+            <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-medal"></i>STATS</div>
+            <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-user"></i>ME</div>
         </div>
     </div>
 
@@ -103,24 +102,18 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // പുതിയ ഇമെയിൽ ഐഡി ഇവിടെ അപ്ഡേറ്റ് ചെയ്തു
         const ADMIN_EMAIL = "Kereemk81@gmail.com"; 
-        
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         const today = new Date().toLocaleDateString('en-CA');
         document.getElementById('display-date').innerText = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'long', year:'numeric' });
 
-        window.toggleAuth = (m) => {
-            document.getElementById('login-section').classList.toggle('hidden', m === 'signup');
-            document.getElementById('signup-section').classList.toggle('hidden', m === 'login');
-        };
-
         window.navigate = (p, el) => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
-            ['home', 'tracker', 'history', 'profile'].forEach(pg => document.getElementById(pg+'-page').classList.toggle('hidden', pg !== p));
+            ['home', 'tracker', 'attendance', 'history', 'profile'].forEach(pg => document.getElementById(pg+'-page').classList.toggle('hidden', pg !== p));
             if(p === 'tracker') loadTracker();
+            if(p === 'attendance') loadAttendance();
             if(p === 'history') loadHistory();
         };
 
@@ -130,16 +123,15 @@
             document.getElementById('app-header').classList.toggle('hidden', !u);
             if(u) {
                 document.getElementById('admin-notice-input').classList.toggle('hidden', u.email !== ADMIN_EMAIL);
-                document.getElementById('user-display-email').innerText = u.email + (u.email === ADMIN_EMAIL ? " (Usthad)" : "");
+                document.getElementById('user-display-email').innerText = u.email;
             }
         });
 
+        // Notice System
         onSnapshot(doc(db, "settings", "notice"), (d) => {
             const box = document.getElementById('notice-board');
-            if(d.exists() && d.data().text) {
-                box.innerText = "📢 " + d.data().text;
-                box.classList.remove('hidden');
-            } else { box.classList.add('hidden'); }
+            if(d.exists() && d.data().text) { box.innerText = "📢 " + d.data().text; box.classList.remove('hidden'); }
+            else { box.classList.add('hidden'); }
         });
 
         window.updateNotice = async () => {
@@ -152,9 +144,8 @@
         window.handleLogout = () => signOut(auth);
 
         async function loadTracker() {
-            const isAdmin = auth.currentUser.email === ADMIN_EMAIL;
             const container = document.getElementById('tracker-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50'>LOADING...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50'>Loading Tracker...</p>";
             const snap = await getDocs(query(collection(db, "daily"), where("date", "==", today)));
             const saved = {};
             snap.forEach(d => saved[d.id] = d.data());
@@ -163,18 +154,7 @@
                 const data = saved[n+'_'+today] || {};
                 return `
                 <div class="card">
-                    <div class="flex justify-between items-center mb-4">
-                        <p class="text-xs font-black uppercase">${n}</p>
-                        <div class="flex gap-2">
-                            <button onclick="${isAdmin ? `markAtt('${n}','present')` : ''}" class="p-1 px-3 rounded-lg text-[9px] font-bold ${data.present ? 'bg-emerald-600 text-white' : 'bg-gray-100'}">PRESENT</button>
-                            <button onclick="${isAdmin ? `markAtt('${n}','absent')` : ''}" class="p-1 px-3 rounded-lg text-[9px] font-bold ${data.absent ? 'bg-red-600 text-white' : 'bg-gray-100'}">ABSENT</button>
-                        </div>
-                    </div>
-                    ${data.absent ? `
-                        <div class="bg-red-50 p-2 rounded-lg mb-3">
-                            <input type="text" onchange="updateReason('${n}', this.value)" placeholder="Why absent?" class="w-full p-2 text-[11px] border rounded outline-none" value="${data.reason || ''}">
-                        </div>
-                    ` : ''}
+                    <p class="text-xs font-black uppercase mb-3">${n}</p>
                     <div class="grid grid-cols-5 gap-1">
                         ${prayers.map(p => `<button onclick="markPrayer('${n}','${p}')" class="p-btn ${data[p] ? 'active' : ''}">${data[p] ? '✓' : p}</button>`).join('')}
                     </div>
@@ -182,21 +162,45 @@
             }).join('');
         }
 
-        window.markAtt = async (n, t) => {
-            await setDoc(doc(db, "daily", n+'_'+today), { name: n, date: today, present: t==='present', absent: t==='absent' }, { merge: true });
-            loadTracker();
-        };
+        async function loadAttendance() {
+            const isAdmin = auth.currentUser.email === ADMIN_EMAIL;
+            const container = document.getElementById('attendance-list');
+            container.innerHTML = "<p class='text-center py-10 opacity-50'>Loading Attendance...</p>";
+            const snap = await getDocs(query(collection(db, "daily"), where("date", "==", today)));
+            const saved = {};
+            snap.forEach(d => saved[d.id] = d.data());
 
-        window.updateReason = async (n, tx) => await setDoc(doc(db, "daily", n+'_'+today), { reason: tx }, { merge: true });
+            container.innerHTML = students.map(n => {
+                const data = saved[n+'_'+today] || {};
+                return `
+                <div class="card">
+                    <div class="flex justify-between items-center mb-2">
+                        <p class="text-xs font-black uppercase">${n}</p>
+                        <div class="flex gap-2">
+                            <button onclick="${isAdmin ? `markAtt('${n}','present')` : ''}" class="px-3 py-1 rounded-lg text-[10px] font-bold ${data.present ? 'bg-emerald-600 text-white' : 'bg-gray-100'}">PRESENT</button>
+                            <button onclick="${isAdmin ? `markAtt('${n}','absent')` : ''}" class="px-3 py-1 rounded-lg text-[10px] font-bold ${data.absent ? 'bg-red-600 text-white' : 'bg-gray-100'}">ABSENT</button>
+                        </div>
+                    </div>
+                    ${data.absent ? `<input type="text" onchange="updateReason('${n}', this.value)" placeholder="Reason for absence..." class="w-full p-2 text-[11px] border rounded mt-2 outline-none" value="${data.reason || ''}">` : ''}
+                </div>`;
+            }).join('');
+        }
 
         window.markPrayer = async (n, p) => {
             await setDoc(doc(db, "daily", n+'_'+today), { [p]: true }, { merge: true });
             loadTracker();
         };
 
+        window.markAtt = async (n, t) => {
+            await setDoc(doc(db, "daily", n+'_'+today), { name: n, date: today, present: t==='present', absent: t==='absent' }, { merge: true });
+            loadAttendance();
+        };
+
+        window.updateReason = async (n, tx) => await setDoc(doc(db, "daily", n+'_'+today), { reason: tx }, { merge: true });
+
         async function loadHistory() {
             const container = document.getElementById('history-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold'>Ranking...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold uppercase'>Ranking...</p>";
             const snap = await getDocs(collection(db, "daily"));
             const totals = {};
             students.forEach(s => totals[s] = 0);
@@ -204,17 +208,20 @@
                 const data = d.data();
                 if(totals[data.name] !== undefined) prayers.forEach(p => { if(data[p]) totals[data.name]++; });
             });
-            container.innerHTML = students.sort((a,b) => totals[b] - totals[a]).map(n => {
-                let stars = "";
-                if(totals[n] > 5) stars = '<i class="fa-solid fa-star star-gold"></i>';
-                if(totals[n] > 10) stars += '<i class="fa-solid fa-star star-gold"></i>';
-                return `
+            container.innerHTML = students.sort((a,b) => totals[b] - totals[a]).map(n => `
                 <div class="card flex justify-between items-center py-4">
-                    <div><p class="text-sm font-bold uppercase">${n}</p><div class="flex gap-1 mt-1">${stars}</div></div>
-                    <div class="text-right"><p class="text-[9px] font-black text-gray-400">PRAYERS</p><p class="text-lg font-black text-emerald-600 leading-none">${totals[n]}</p></div>
-                </div>`;
-            }).join('');
+                    <p class="text-sm font-bold uppercase">${n}</p>
+                    <div class="text-right">
+                        <p class="text-[9px] font-black text-gray-400">POINTS</p>
+                        <p class="text-lg font-black text-emerald-600 leading-none">${totals[n]}</p>
+                    </div>
+                </div>`).join('');
         }
+
+        window.toggleAuth = (m) => {
+            document.getElementById('login-section').classList.toggle('hidden', m === 'signup');
+            document.getElementById('signup-section').classList.toggle('hidden', m === 'login');
+        };
     </script>
 </body>
 </html>
