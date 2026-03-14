@@ -41,7 +41,7 @@
             <div class="card bg-emerald-50 border-emerald-200">
                 <p class="text-[10px] font-black text-emerald-800 uppercase mb-2">Notice Board & Settings</p>
                 <textarea id="h-reason-input" class="w-full p-2 border rounded-xl text-xs mb-2 outline-none" placeholder="Reason for leave..."></textarea>
-                <button id="h-notice-btn" onclick="toggleGlobalHoliday()" class="w-full py-2 rounded-xl text-[10px] font-black uppercase text-white mb-4"></button>
+                <button id="h-notice-btn" onclick="toggleGlobalHoliday()" class="w-full py-2 rounded-xl text-[10px] font-black uppercase text-white mb-4 shadow-md"></button>
                 
                 <div class="border-t pt-3">
                     <p class="text-[9px] font-bold text-gray-500 uppercase mb-2">Edit Azan Timings</p>
@@ -52,13 +52,13 @@
                         <input type="text" id="up-magh" placeholder="Mag" class="p-1 border rounded text-[8px] text-center">
                         <input type="text" id="up-isha" placeholder="Ish" class="p-1 border rounded text-[8px] text-center">
                     </div>
-                    <button onclick="updateAzanTimes()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-[9px] font-black uppercase">Update Timings</button>
+                    <button onclick="updateAzanTimes()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-[9px] font-black uppercase shadow-md">Update Timings</button>
                 </div>
             </div>
 
             <div class="card text-center">
                 <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Current Azan Timings</p>
-                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase">
+                <div id="azan-list" class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase">
                     <div class="bg-gray-50 p-2 rounded-lg">SUBHI<br><span id="t-subhi" class="text-emerald-700">-</span></div>
                     <div class="bg-gray-50 p-2 rounded-lg">DUHAR<br><span id="t-duhar" class="text-emerald-700">-</span></div>
                     <div class="bg-gray-50 p-2 rounded-lg">ASR<br><span id="t-asr" class="text-emerald-700">-</span></div>
@@ -76,14 +76,12 @@
             <div id="results-list"></div>
         </div>
         <div id="history-page" class="hidden"><div id="history-list"></div></div>
-        
         <div id="chat-page" class="hidden">
             <div class="card p-4">
-                <h3 class="text-xs font-black text-gray-500 uppercase mb-4 border-b pb-2">Community Chat</h3>
                 <div id="chat-box" class="chat-container"></div>
                 <div class="flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Your name: Message..." class="flex-1 p-2 bg-gray-100 rounded-lg text-sm outline-none">
-                    <button onclick="sendMessage()" class="bg-emerald-700 text-white px-4 rounded-lg"><i class="fa-solid fa-paper-plane"></i></button>
+                    <input type="text" id="chat-input" placeholder="Message..." class="flex-1 p-2 bg-gray-100 rounded-lg text-sm outline-none">
+                    <button onclick="sendMessage()" class="bg-emerald-700 text-white px-4 rounded-lg shadow-md"><i class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
@@ -128,43 +126,48 @@
             { name: "FATHIMATH FIDA", scores: { "Dur-1": "79 B+", "Fiq": "77 B+", "Taj": "80 B+", "Dur-2": "64 B", "Quran": "73 B+", "Prac": "99 A++" }, total: 472, remark: "PASSED" }
         ];
 
-        // INIT
-        syncHoliday(); loadAzan(); loadChat();
+        // INITIAL LOAD
         document.getElementById('global-date').value = selectedDate;
+        syncHoliday();
+        loadAzan();
+        loadChat();
 
-        // AZAN
-        window.updateAzanTimes = () => {
-            const d = { subhi: document.getElementById('up-subhi').value, duhar: document.getElementById('up-duhar').value, asr: document.getElementById('up-asr').value, magh: document.getElementById('up-magh').value, isha: document.getElementById('up-isha').value };
-            setDoc(doc(db, "settings", "timings"), d, {merge: true}).then(() => alert("Updated!"));
+        // FUNCTIONS
+        window.navigate = (p, el) => {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            ['home', 'tracker', 'attendance', 'results', 'history', 'chat'].forEach(pg => {
+                const element = document.getElementById(pg + (pg==='home'?'':'-page'));
+                if(element) element.classList.toggle('hidden', pg !== p);
+            });
+            if(p === 'results') loadResults();
+            if(p === 'tracker') loadTracker();
+            if(p === 'attendance') loadAttendance();
+            if(p === 'history') loadHistory();
         };
+
         function loadAzan() {
             onSnapshot(doc(db, "settings", "timings"), (s) => {
                 if(s.exists()){
                     const d = s.data();
-                    ['subhi', 'duhar', 'asr', 'magh', 'isha'].forEach(k => { if(d[k]) document.getElementById('t-' + k).innerText = d[k]; });
+                    ['subhi', 'duhar', 'asr', 'magh', 'isha'].forEach(k => {
+                        if(d[k]) document.getElementById('t-' + k).innerText = d[k];
+                    });
                 }
             });
         }
 
-        // CHAT (No login required)
-        window.sendMessage = async () => {
-            const t = document.getElementById('chat-input').value;
-            if(!t.trim()) return;
-            await addDoc(collection(db, "chats"), { sender: "User", text: t, time: Timestamp.now() });
-            document.getElementById('chat-input').value = "";
+        window.updateAzanTimes = () => {
+            const d = { 
+                subhi: document.getElementById('up-subhi').value || document.getElementById('t-subhi').innerText, 
+                duhar: document.getElementById('up-duhar').value || document.getElementById('t-duhar').innerText, 
+                asr: document.getElementById('up-asr').value || document.getElementById('t-asr').innerText, 
+                magh: document.getElementById('up-magh').value || document.getElementById('t-magh').innerText, 
+                isha: document.getElementById('up-isha').value || document.getElementById('t-isha').innerText 
+            };
+            setDoc(doc(db, "settings", "timings"), d, {merge: true}).then(() => alert("Timings Updated!"));
         };
-        function loadChat() {
-            onSnapshot(query(collection(db, "chats"), orderBy("time", "desc"), limit(50)), (snap) => {
-                const b = document.getElementById('chat-box'); b.innerHTML = "";
-                snap.forEach(d => {
-                    const m = d.data();
-                    b.innerHTML += `<div class="msg"><p>${m.text}</p></div>`;
-                });
-                b.scrollTop = b.scrollHeight;
-            });
-        }
 
-        // RESULTS
         window.loadResults = () => {
             document.getElementById('results-list').innerHTML = resultsData.map((r, i) => `
                 <div class="card result-item" onclick="document.getElementById('mks-${i}').classList.toggle('hidden')">
@@ -177,19 +180,12 @@
                     </div>
                 </div>`).join('');
         };
+
         window.searchStudent = () => {
             let v = document.getElementById('res-srch').value.toLowerCase();
             document.querySelectorAll('.result-item').forEach(it => { it.style.display = it.querySelector('.nm').innerText.toLowerCase().includes(v) ? "" : "none"; });
         };
 
-        // NAVIGATION
-        window.navigate = (p, el) => {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active');
-            ['home', 'tracker', 'attendance', 'results', 'history', 'chat'].forEach(pg => document.getElementById(pg + (pg==='home'?'':'-page')).classList.toggle('hidden', pg !== p));
-            if(p === 'results') loadResults(); if(p === 'tracker') loadTracker(); if(p === 'attendance') loadAttendance(); if(p === 'history') loadHistory();
-        };
-
-        // CORE
         function loadAttendance() {
             onSnapshot(query(collection(db, "daily"), where("date", "==", selectedDate)), (snap) => {
                 const data = {}; snap.forEach(d => data[d.id] = d.data());
@@ -200,6 +196,7 @@
                 }).join('');
             });
         }
+
         function loadTracker() {
             onSnapshot(query(collection(db, "daily"), where("date", "==", selectedDate)), (snap) => {
                 const data = {}; snap.forEach(d => data[d.id] = d.data());
@@ -209,25 +206,50 @@
                 }).join('');
             });
         }
+
         async function loadHistory() {
             const snap = await getDocs(collection(db, "daily")); const st = {}; students.forEach(s => st[s] = { p:0, a:0, pr:0 });
             snap.forEach(d => { const doc = d.data(); if(st[doc.name]) { ["Subhi","Duhar","Asr","Maghrib","Isha"].forEach(p => { if(doc[p]) st[doc.name].pr++; }); if(doc.status === 'P') st[doc.name].p++; if(doc.status === 'A') st[doc.name].a++; } });
             document.getElementById('history-list').innerHTML = students.map(s => `<div class="card"><p class="font-black text-sm uppercase mb-2">${s}</p><div class="flex justify-between text-[10px] font-bold"><span class="text-emerald-600">PRAYERS: ${st[s].pr}</span><span class="text-blue-600">PRESENT: ${st[s].p}</span><span class="text-red-600">ABSENT: ${st[s].a}</span></div></div>`).join('');
         }
+
         function syncHoliday() {
             onSnapshot(doc(db, "settings", "madrasa_status"), (snap) => {
                 const d = snap.exists() ? snap.data() : { isHoliday: false, reason: "" }; globalHoliday = d.isHoliday;
                 document.getElementById('holiday-banner').classList.toggle('hidden', !globalHoliday);
                 if(globalHoliday) document.getElementById('holiday-reason-text').innerText = d.reason;
                 const btn = document.getElementById('h-notice-btn'); btn.innerText = globalHoliday ? "STOP LEAVE" : "POST LEAVE NOTICE";
-                btn.className = globalHoliday ? "w-full py-2 rounded-xl text-[10px] font-black uppercase bg-red-600" : "w-full py-2 rounded-xl text-[10px] font-black uppercase bg-blue-600";
+                btn.className = globalHoliday ? "w-full py-2 rounded-xl text-[10px] font-black uppercase bg-red-600 shadow-md text-white" : "w-full py-2 rounded-xl text-[10px] font-black uppercase bg-blue-600 shadow-md text-white";
                 loadAttendance();
             });
         }
-        window.toggleGlobalHoliday = () => { const r = document.getElementById('h-reason-input').value; setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: !globalHoliday, reason: r }); document.getElementById('h-reason-input').value = ""; };
+
+        window.toggleGlobalHoliday = () => {
+            const r = document.getElementById('h-reason-input').value;
+            setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: !globalHoliday, reason: r || "Madrasa is on leave." });
+            document.getElementById('h-reason-input').value = "";
+        };
+
+        window.sendMessage = async () => {
+            const t = document.getElementById('chat-input').value; if(!t.trim()) return;
+            await addDoc(collection(db, "chats"), { sender: "User", text: t, time: Timestamp.now() });
+            document.getElementById('chat-input').value = "";
+        };
+
+        function loadChat() {
+            onSnapshot(query(collection(db, "chats"), orderBy("time", "desc"), limit(30)), (snap) => {
+                const b = document.getElementById('chat-box'); b.innerHTML = "";
+                snap.forEach(d => {
+                    const m = d.data();
+                    b.innerHTML += `<div class="msg"><p>${m.text}</p></div>`;
+                });
+                b.scrollTop = b.scrollHeight;
+            });
+        }
+
         window.toggleP = (n, p, cur) => setDoc(doc(db, "daily", n + "_" + selectedDate), { name: n, date: selectedDate, [p]: !cur }, { merge: true });
         window.setA = (n, s) => setDoc(doc(db, "daily", n + "_" + selectedDate), { name: n, date: selectedDate, status: s }, { merge: true });
-        window.changeDate = (v) => { selectedDate = v; navigate('home', document.querySelector('.nav-item')); };
+        window.changeDate = (v) => { selectedDate = v; navigate('home', document.querySelector('.nav-item.active')); };
     </script>
 </body>
 </html>
