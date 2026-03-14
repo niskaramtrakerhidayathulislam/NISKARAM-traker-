@@ -21,7 +21,7 @@
         .azan-box { background: #f9fafb; padding: 10px; border-radius: 12px; border: 1px solid #f3f4f6; text-align: center; }
         .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
-        .input-box { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; margin-bottom: 15px; outline: none; background: #f9fafb; font-weight: 600; }
+        .input-box { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; margin-bottom: 15px; outline: none; background: #f9fafb; }
         .date-display { font-size: 14px; font-weight: 900; color: #fbbf24; margin-top: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
     </style>
 </head>
@@ -39,18 +39,18 @@
 
         <div id="login-section" class="card shadow-2xl">
             <h2 class="text-lg font-black text-emerald-700 mb-4 uppercase">Login</h2>
-            <input type="email" id="login-email" placeholder="Email Address" class="input-box">
+            <input type="email" id="login-email" placeholder="Email" class="input-box">
             <input type="password" id="login-password" placeholder="Password" class="input-box">
-            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest">Login</button>
-            <p class="text-xs mt-6 text-gray-500">New User? <span onclick="toggleAuth('signup')" class="text-emerald-700 font-bold cursor-pointer underline">Create Account</span></p>
+            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg">LOGIN</button>
+            <p class="text-xs mt-6">New user? <span onclick="toggleAuth('signup')" class="text-emerald-700 font-bold cursor-pointer underline">Create Account</span></p>
         </div>
 
         <div id="signup-section" class="card shadow-2xl hidden">
-            <h2 class="text-lg font-black text-blue-700 mb-4 uppercase">Create Account</h2>
-            <input type="email" id="signup-email" placeholder="Email Address" class="input-box">
-            <input type="password" id="signup-password" placeholder="Create Password" class="input-box">
-            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest">Sign Up</button>
-            <p class="text-xs mt-6 text-gray-500">Already have account? <span onclick="toggleAuth('login')" class="text-blue-700 font-bold cursor-pointer underline">Login Here</span></p>
+            <h2 class="text-lg font-black text-blue-700 mb-4 uppercase">Sign Up</h2>
+            <input type="email" id="signup-email" placeholder="Email" class="input-box">
+            <input type="password" id="signup-password" placeholder="Password" class="input-box">
+            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg">CREATE ACCOUNT</button>
+            <p class="text-xs mt-6 text-gray-500">Already have account? <span onclick="toggleAuth('login')" class="text-blue-700 font-bold cursor-pointer underline">Login</span></p>
         </div>
     </div>
 
@@ -74,7 +74,7 @@
             <div class="card py-10">
                 <i class="fa-solid fa-circle-user text-6xl text-emerald-700 mb-4"></i>
                 <p id="user-display-email" class="text-sm font-bold text-gray-600 mb-8"></p>
-                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-xl uppercase text-xs">Logout</button>
+                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-xl uppercase text-xs">Sign Out</button>
             </div>
         </div>
 
@@ -132,20 +132,8 @@
             if(u) document.getElementById('user-display-email').innerText = u.email;
         });
 
-        window.handleLogin = () => {
-            const e = document.getElementById('login-email').value;
-            const p = document.getElementById('login-password').value;
-            if(!e || !p) return alert("Please fill all fields");
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
-        };
-
-        window.handleSignUp = () => {
-            const e = document.getElementById('signup-email').value;
-            const p = document.getElementById('signup-password').value;
-            if(!e || !p) return alert("Please fill all fields");
-            createUserWithEmailAndPassword(auth, e, p).then(() => alert("Success!")).catch(err => alert(err.message));
-        };
-
+        window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value).catch(e => alert(e.message));
+        window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-password').value).then(() => alert("Success")).catch(e => alert(e.message));
         window.handleLogout = () => signOut(auth);
 
         async function loadTracker() {
@@ -173,7 +161,7 @@
 
         async function loadHistory() {
             const container = document.getElementById('history-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50'>Calculating History...</p>";
+            container.innerHTML = "<p class='text-center py-10 opacity-50'>Calculating...</p>";
             const snap = await getDocs(collection(db, "prayers"));
             const totals = {};
             students.forEach(s => totals[s] = 0);
