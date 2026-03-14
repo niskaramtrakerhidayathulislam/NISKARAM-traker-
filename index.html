@@ -21,6 +21,7 @@
         .p-active { background: #059669 !important; color: white !important; border: none; }
         .a-active { background: #dc2626 !important; color: white !important; border: none; }
         .l-active { background: #2563eb !important; color: white !important; border: none; }
+        .reason-box { background: #fff1f2; border: 1px solid #fecaca; padding: 10px; border-radius: 10px; margin-top: 10px; font-size: 11px; color: #991b1b; }
     </style>
 </head>
 <body>
@@ -86,7 +87,6 @@
             <div class="card">
                 <i class="fa-solid fa-circle-user text-5xl text-emerald-700 mb-2"></i>
                 <p id="user-email-text" class="text-xs font-bold text-gray-500 mb-6"></p>
-                
                 <div id="admin-panel" class="hidden border-t pt-4 text-left">
                     <p class="text-[10px] font-black text-gray-400 uppercase mb-4">Update Timings (Usthad Only)</p>
                     <div class="grid grid-cols-2 gap-2 mb-4">
@@ -98,7 +98,6 @@
                     </div>
                     <button onclick="updateAzanTimes()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-xs font-bold mb-4">UPDATE AZAN TIME</button>
                 </div>
-
                 <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-bold py-3 rounded-xl uppercase text-[10px]">Sign Out</button>
             </div>
         </div>
@@ -115,7 +114,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, query, where, onSnapshot, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, collection, query, where, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0",
@@ -149,7 +148,6 @@
             loadSettings();
         });
 
-        // Load Azan and Madrasa Times from Firestore
         function loadSettings() {
             onSnapshot(doc(db, "settings", "times"), (snap) => {
                 if(snap.exists()){
@@ -177,11 +175,9 @@
         };
 
         window.editMadrasaTime = () => {
-            const start = prompt("Enter Madrasa Start Time (e.g. 07:30 AM):");
-            const end = prompt("Enter Madrasa End Time (e.g. 09:30 AM):");
-            if(start && end) {
-                setDoc(doc(db, "settings", "times"), { mStart: start, mEnd: end }, { merge: true });
-            }
+            const start = prompt("Start Time:");
+            const end = prompt("End Time:");
+            if(start && end) setDoc(doc(db, "settings", "times"), { mStart: start, mEnd: end }, { merge: true });
         };
 
         window.navigate = (p, el) => {
@@ -196,12 +192,12 @@
         };
 
         window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
-        window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('s-email').value, document.getElementById('s-pass').value).then(() => alert("Success!")).catch(e => alert(e.message));
+        window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('s-email').value, document.getElementById('s-pass').value).catch(e => alert(e.message));
         window.handleLogout = () => signOut(auth);
         window.handleResetPassword = () => {
             const email = document.getElementById('email').value;
-            if(!email) { alert("Enter email!"); return; }
-            sendPasswordResetEmail(auth, email).then(() => alert("Reset link sent!")).catch(e => alert(e.message));
+            if(!email) return alert("Enter email!");
+            sendPasswordResetEmail(auth, email).then(() => alert("Link sent!"));
         };
 
         function loadTracker() {
@@ -232,12 +228,20 @@
                             <button onclick="${isAdmin ? `setA('${s}','A')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'A' ? 'a-active' : ''}">ABSENT</button>
                             <button onclick="${isAdmin ? `setA('${s}','L')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'L' ? 'l-active' : ''}">LEAVE</button>
                         </div>
+                        ${d.status === 'A' ? `
+                            <div class="mt-2">
+                                <input type="text" placeholder="Parent: Write reason here..." class="w-full p-2 text-xs border rounded outline-none bg-red-50" 
+                                       value="${d.reason || ''}" onchange="updateReason('${s}', this.value)">
+                                ${isAdmin && d.reason ? `<div class="reason-box">Reason: ${d.reason}</div>` : ''}
+                            </div>
+                        ` : ''}
                     </div>`;
                 }).join('');
             });
         }
 
         window.setA = (n, s) => setDoc(doc(db, "daily", n + "_" + today), { name: n, date: today, status: s }, { merge: true });
+        window.updateReason = (n, text) => setDoc(doc(db, "daily", n + "_" + today), { reason: text }, { merge: true });
 
         async function loadHistory() {
             const snap = await getDocs(collection(db, "daily"));
