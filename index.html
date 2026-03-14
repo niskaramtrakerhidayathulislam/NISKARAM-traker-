@@ -18,47 +18,51 @@
         .att-btn { padding: 12px 0; border-radius: 10px; font-size: 11px; font-weight: 900; flex: 1; text-align: center; background: #f9fafb; color: #6b7280; border: 1px solid #eee; }
         .p-active { background: #059669 !important; color: white !important; border: none; }
         .a-active { background: #dc2626 !important; color: white !important; border: none; }
-        .chat-container { height: 350px; overflow-y: auto; background: #f9fafb; padding: 10px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 10px; display: flex; flex-direction: column; }
-        .msg { margin-bottom: 10px; max-width: 80%; padding: 10px; border-radius: 15px; font-size: 13px; background: white; border: 1px solid #eee; }
+        .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px 0; border-radius: 12px; font-size: 10px; font-weight: 800; width: 100%; }
+        .p-btn.active { background: #10b981 !important; color: white !important; }
+        .chat-container { height: 300px; overflow-y: auto; background: #f9fafb; padding: 10px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 10px; display: flex; flex-direction: column; }
+        .msg { margin-bottom: 8px; max-width: 80%; padding: 10px; border-radius: 15px; font-size: 12px; background: white; border: 1px solid #eee; }
+        .msg-own { background: #dcf8c6; align-self: flex-end; border-bottom-right-radius: 2px; }
         .subject-grid { display: grid; grid-template-cols: repeat(2, 1fr); gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ddd; }
         .sub-box { background: #f1f5f9; padding: 6px; border-radius: 8px; text-align: center; font-size: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="header-card">
+    <div id="app-header" class="header-card hidden">
         <h1 class="text-2xl font-black uppercase">Hidayatul Islam</h1>
         <p class="text-[9px] font-bold opacity-80 mb-3 uppercase">Class 6 - Achangi</p>
-        <input type="date" id="global-date" class="bg-[#047857] text-white font-bold p-1 rounded-lg text-xs outline-none border-none shadow-lg" onchange="changeDate(this.value)">
+        <input type="date" id="global-date" class="bg-[#047857] text-white font-bold p-1 rounded-lg text-xs outline-none border-none shadow-lg">
     </div>
 
-    <div id="main-content" class="p-5">
-        
-        <div id="home-page">
-            <div id="holiday-banner" class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl hidden mb-4 text-amber-900 font-bold text-sm">
+    <div id="main-content" class="hidden">
+        <div id="home-page" class="p-5">
+            <div id="holiday-banner" class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl hidden mb-4 text-center text-amber-900 font-bold text-sm">
                 <p id="holiday-reason-text"></p>
             </div>
             
-            <div class="card bg-emerald-50 border-emerald-200">
-                <p class="text-[10px] font-black text-emerald-800 uppercase mb-2">Notice Board & Settings</p>
-                <textarea id="h-reason-input" class="w-full p-2 border rounded-xl text-xs mb-2 outline-none" placeholder="Reason for leave..."></textarea>
-                <button id="h-notice-btn" onclick="toggleGlobalHoliday()" class="w-full py-2 rounded-xl text-[10px] font-black uppercase text-white shadow-md mb-4"></button>
-                
-                <div class="border-t pt-3">
-                    <p class="text-[9px] font-bold text-gray-500 uppercase mb-2">Edit Azan Timings</p>
-                    <div class="grid grid-cols-5 gap-1 mb-2">
-                        <input type="text" id="up-subhi" placeholder="Sub" class="p-1 border rounded text-[8px] text-center">
-                        <input type="text" id="up-duhar" placeholder="Duh" class="p-1 border rounded text-[8px] text-center">
-                        <input type="text" id="up-asr" placeholder="Asr" class="p-1 border rounded text-[8px] text-center">
-                        <input type="text" id="up-magh" placeholder="Mag" class="p-1 border rounded text-[8px] text-center">
-                        <input type="text" id="up-isha" placeholder="Ish" class="p-1 border rounded text-[8px] text-center">
+            <div id="admin-tools" class="hidden">
+                <div class="card bg-emerald-50 border-emerald-200">
+                    <p class="text-[10px] font-black text-emerald-800 uppercase mb-2">Settings & Notice Board</p>
+                    <textarea id="h-reason-input" class="w-full p-2 border rounded-xl text-xs mb-2 outline-none" placeholder="Leave reason..."></textarea>
+                    <button id="h-notice-btn" onclick="toggleGlobalHoliday()" class="w-full py-2 rounded-xl text-[10px] font-black uppercase text-white mb-4 bg-blue-600 shadow-md"></button>
+                    
+                    <div class="border-t pt-3">
+                        <p class="text-[9px] font-bold text-gray-500 uppercase mb-2">Edit Azan Timings</p>
+                        <div class="grid grid-cols-5 gap-1 mb-2">
+                            <input type="text" id="up-subhi" placeholder="Sub" class="p-1 border rounded text-[8px] text-center">
+                            <input type="text" id="up-duhar" placeholder="Duh" class="p-1 border rounded text-[8px] text-center">
+                            <input type="text" id="up-asr" placeholder="Asr" class="p-1 border rounded text-[8px] text-center">
+                            <input type="text" id="up-magh" placeholder="Mag" class="p-1 border rounded text-[8px] text-center">
+                            <input type="text" id="up-isha" placeholder="Ish" class="p-1 border rounded text-[8px] text-center">
+                        </div>
+                        <button onclick="updateAzanTimes()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-[9px] font-black uppercase shadow-md">Update Timings</button>
                     </div>
-                    <button onclick="updateAzanTimes()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-[9px] font-black uppercase shadow-md">Update Timings</button>
                 </div>
             </div>
 
-            <div class="card text-center mt-4">
-                <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Today's Azan Timings</p>
+            <div class="card text-center">
+                <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Azan Timings</p>
                 <div id="azan-list" class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase">
                     <div class="bg-gray-50 p-2 rounded-lg">SUBHI<br><span id="t-subhi" class="text-emerald-700">-</span></div>
                     <div class="bg-gray-50 p-2 rounded-lg">DUHAR<br><span id="t-duhar" class="text-emerald-700">-</span></div>
@@ -69,17 +73,23 @@
             </div>
         </div>
 
-        <div id="tracker-page" class="hidden"><div id="tracker-list"></div></div>
-        <div id="attendance-page" class="hidden"><div id="attendance-list"></div></div>
-        <div id="results-page" class="hidden">
+        <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
+        <div id="attendance-page" class="p-5 hidden"><div id="attendance-list"></div></div>
+        
+        <div id="results-page" class="p-5 hidden">
             <h2 class="text-center font-black text-emerald-800 uppercase mb-4 text-sm tracking-widest">Public Results 2026</h2>
             <input type="text" id="res-srch" onkeyup="searchStudent()" placeholder="Search name..." class="w-full p-4 mb-4 rounded-xl border outline-none text-sm bg-white shadow-sm">
             <div id="results-list"></div>
         </div>
-        <div id="history-page" class="hidden"><div id="history-list"></div></div>
+
+        <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
         
-        <div id="chat-page" class="hidden">
-            <div class="card p-4">
+        <div id="chat-page" class="p-5 hidden text-center">
+            <div class="card py-10 mb-4">
+                <p id="profile-email" class="text-xs font-bold text-emerald-700 mb-4"></p>
+                <button onclick="handleLogout()" class="w-full border border-red-500 text-red-500 py-2 rounded-xl text-[10px] font-bold uppercase">Sign Out</button>
+            </div>
+            <div class="card p-4 text-left">
                 <h3 class="text-xs font-black text-gray-500 uppercase mb-4 border-b pb-2">Community Chat</h3>
                 <div id="chat-box" class="chat-container"></div>
                 <div class="flex gap-2">
@@ -90,23 +100,44 @@
         </div>
     </div>
 
-    <div class="bottom-nav">
+    <div class="bottom-nav hidden" id="nav-bar">
         <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house"></i>HOME</div>
         <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-check"></i>TRACKER</div>
         <div class="nav-item" onclick="navigate('attendance', this)"><i class="fa-solid fa-user-check"></i>ATTEND</div>
         <div class="nav-item" onclick="navigate('results', this)"><i class="fa-solid fa-scroll"></i>RESULTS</div>
         <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-medal"></i>STATS</div>
-        <div class="nav-item" onclick="navigate('chat', this)"><i class="fa-solid fa-comments"></i>CHAT</div>
+        <div class="nav-item" onclick="navigate('chat', this)"><i class="fa-solid fa-comments"></i>ME</div>
+    </div>
+
+    <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
+        <div id="login-box" class="card shadow-2xl">
+            <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase tracking-widest">Login</h2>
+            <input type="email" id="email-l" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm border-none shadow-inner">
+            <input type="password" id="pass-l" placeholder="Password" class="w-full p-4 rounded-xl mb-2 bg-gray-100 outline-none text-sm border-none shadow-inner">
+            <div class="text-right mb-6"><span onclick="forgotPass()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer uppercase">Forgot Password?</span></div>
+            <button onclick="handleLogin()" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-4 uppercase shadow-lg">Login</button>
+            <p class="text-xs font-bold text-gray-400">New? <span onclick="toggleAuth(true)" class="text-emerald-700 underline cursor-pointer">Register</span></p>
+        </div>
+        <div id="signup-box" class="card hidden shadow-2xl">
+            <h2 class="text-xl font-black text-blue-800 mb-8 uppercase">Register</h2>
+            <input type="email" id="email-s" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none">
+            <input type="password" id="pass-s" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-gray-100 outline-none">
+            <button onclick="handleSignUp()" class="w-full bg-blue-800 text-white font-black py-4 rounded-xl mb-4 uppercase">Sign Up</button>
+            <p onclick="toggleAuth(false)" class="text-xs font-bold text-gray-400 underline cursor-pointer uppercase text-center">Back to Login</p>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, getDocs, where, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0", authDomain: "hidayatul-islam-traker.firebaseapp.com", projectId: "hidayatul-islam-traker", storageBucket: "hidayatul-islam-traker.firebasestorage.app", messagingSenderId: "82744495268", appId: "1:82744495268:web:afc2f87d3d06884363ea31" };
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
+        const ADMIN_EMAIL = "kereemk81@gmail.com";
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         let selectedDate = new Date().toLocaleDateString('en-CA');
         let globalHoliday = false;
@@ -129,12 +160,30 @@
             { name: "FATHIMATH FIDA", scores: { "Dur-1": "79 B+", "Fiq": "77 B+", "Taj": "80 B+", "Dur-2": "64 B", "Quran": "73 B+", "Prac": "99 A++" }, total: 472, remark: "PASSED" }
         ];
 
-        // STARTUP
-        document.getElementById('global-date').value = selectedDate;
-        loadAzan(); syncHoliday(); loadChat();
+        // STARTUP & AUTH
+        onAuthStateChanged(auth, (u) => {
+            document.getElementById('auth-page').classList.toggle('hidden', !!u);
+            document.getElementById('main-content').classList.toggle('hidden', !u);
+            document.getElementById('app-header').classList.toggle('hidden', !u);
+            document.getElementById('nav-bar').classList.toggle('hidden', !u);
+            if(u) {
+                document.getElementById('profile-email').innerText = u.email;
+                if(u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) document.getElementById('admin-tools').classList.remove('hidden');
+                document.getElementById('global-date').value = selectedDate;
+                loadAzan(); syncHoliday(); loadChat(); navigate('home', document.querySelector('.nav-item'));
+            }
+        });
 
+        window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email-l').value, document.getElementById('pass-l').value).catch(e => alert(e.message));
+        window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('email-s').value, document.getElementById('pass-s').value).then(() => alert("Success!")).catch(e => alert(e.message));
+        window.forgotPass = () => { const e = document.getElementById('email-l').value; if(!e) return alert("Enter Email"); sendPasswordResetEmail(auth, e).then(() => alert("Link Sent")); };
+        window.handleLogout = () => signOut(auth);
+        window.toggleAuth = (s) => { document.getElementById('login-box').classList.toggle('hidden', s); document.getElementById('signup-box').classList.toggle('hidden', !s); };
+
+        // NAVIGATION
         window.navigate = (p, el) => {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(el) el.classList.add('active');
             ['home', 'tracker', 'attendance', 'results', 'history', 'chat'].forEach(pg => {
                 const element = document.getElementById(pg + (pg==='home'?'':'-page'));
                 if(element) element.classList.toggle('hidden', pg !== p);
@@ -145,7 +194,12 @@
             if(p === 'history') loadHistory();
         };
 
-        window.changeDate = (v) => { selectedDate = v; navigate(document.querySelector('.nav-item.active').innerText.toLowerCase().trim(), document.querySelector('.nav-item.active')); };
+        // CORE LOGIC
+        document.getElementById('global-date').onchange = (e) => {
+            selectedDate = e.target.value;
+            const currentActive = document.querySelector('.nav-item.active').innerText.toLowerCase().trim();
+            navigate(currentActive === 'me' ? 'chat' : currentActive, document.querySelector('.nav-item.active'));
+        };
 
         function loadAzan() {
             onSnapshot(doc(db, "settings", "timings"), (s) => {
@@ -158,7 +212,7 @@
 
         window.updateAzanTimes = () => {
             const d = { subhi: document.getElementById('up-subhi').value, duhar: document.getElementById('up-duhar').value, asr: document.getElementById('up-asr').value, magh: document.getElementById('up-magh').value, isha: document.getElementById('up-isha').value };
-            setDoc(doc(db, "settings", "timings"), d, {merge: true}).then(() => alert("Timings Updated!"));
+            setDoc(doc(db, "settings", "timings"), d, {merge: true}).then(() => alert("Updated!"));
         };
 
         function syncHoliday() {
@@ -166,15 +220,14 @@
                 const d = s.exists() ? s.data() : { isHoliday: false, reason: "" }; globalHoliday = d.isHoliday;
                 document.getElementById('holiday-banner').classList.toggle('hidden', !globalHoliday);
                 if(globalHoliday) document.getElementById('holiday-reason-text').innerText = d.reason;
-                const btn = document.getElementById('h-notice-btn'); btn.innerText = globalHoliday ? "STOP LEAVE" : "POST LEAVE NOTICE";
-                btn.className = globalHoliday ? "w-full py-2 rounded-xl text-[10px] font-black uppercase bg-red-600 shadow-md text-white" : "w-full py-2 rounded-xl text-[10px] font-black uppercase bg-blue-600 shadow-md text-white";
+                const btn = document.getElementById('h-notice-btn'); btn.innerText = globalHoliday ? "STOP LEAVE NOTICE" : "POST LEAVE NOTICE";
                 loadAttendance();
             });
         }
 
         window.toggleGlobalHoliday = () => {
             const r = document.getElementById('h-reason-input').value;
-            setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: !globalHoliday, reason: r || "Madrasa is on leave." });
+            setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: !globalHoliday, reason: r || "On Leave" });
             document.getElementById('h-reason-input').value = "";
         };
 
@@ -183,7 +236,9 @@
                 const data = {}; snap.forEach(d => data[d.id] = d.data());
                 document.getElementById('tracker-list').innerHTML = students.map(s => {
                     const d = data[s + "_" + selectedDate] || {};
-                    return `<div class="card"><p class="text-xs font-black uppercase mb-3 text-gray-700">${s}</p><div class="grid grid-cols-5 gap-1">${["Subhi","Duhar","Asr","Maghrib","Isha"].map(p => `<button onclick="toggleP('${s}','${p}',${!!d[p]})" class="p-btn ${d[p] ? 'active' : ''}">${d[p] ? '✓' : p.substring(0,3)}</button>`).join('')}</div></div>`;
+                    return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="grid grid-cols-5 gap-1">
+                        ${["Subhi","Duhar","Asr","Maghrib","Isha"].map(p => `<button onclick="toggleP('${s}','${p}',${!!d[p]})" class="p-btn ${d[p] ? 'active' : ''}">${d[p] ? '✓' : p.substring(0,3)}</button>`).join('')}
+                    </div></div>`;
                 }).join('');
             });
         }
@@ -193,52 +248,4 @@
                 const data = {}; snap.forEach(d => data[d.id] = d.data());
                 document.getElementById('attendance-list').innerHTML = students.map(s => {
                     const d = data[s + "_" + selectedDate] || {};
-                    if(globalHoliday) return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="p-3 bg-blue-600 text-white rounded-xl text-center font-bold text-xs">LEAVE</div></div>`;
-                    return `<div class="card"><p class="text-xs font-black mb-3 uppercase text-gray-700">${s}</p><div class="flex gap-2"><button onclick="setA('${s}','P')" class="att-btn ${d.status==='P'?'p-active':''}">PRESENT</button><button onclick="setA('${s}','A')" class="att-btn ${d.status==='A'?'a-active':''}">ABSENT</button></div></div>`;
-                }).join('');
-            });
-        }
-
-        window.loadResults = () => {
-            document.getElementById('results-list').innerHTML = resultsData.map((r, i) => `
-                <div class="card res-card" onclick="document.getElementById('mks-${i}').classList.toggle('hidden')">
-                    <div class="flex justify-between items-center">
-                        <div><p class="nm text-[11px] font-black uppercase text-gray-800">${r.name}</p><p class="text-[9px] font-bold ${r.remark==='DISTINCTION'?'text-emerald-600':'text-gray-400'}">${r.remark}</p></div>
-                        <p class="text-xl font-black text-emerald-800">${r.total}/600</p>
-                    </div>
-                    <div id="mks-${i}" class="hidden subject-grid">
-                        ${Object.entries(r.scores).map(([k,v]) => `<div class="sub-box"><p class="uppercase text-[8px] text-gray-400 font-bold mb-1">${k}</p><p class="font-black text-gray-800">${v}</p></div>`).join('')}
-                    </div>
-                </div>`).join('');
-        };
-
-        window.searchStudent = () => {
-            let v = document.getElementById('res-srch').value.toLowerCase();
-            document.querySelectorAll('.res-card').forEach(it => { it.style.display = it.querySelector('.nm').innerText.toLowerCase().includes(v) ? "" : "none"; });
-        };
-
-        async function loadHistory() {
-            const snap = await getDocs(collection(db, "daily")); const st = {}; students.forEach(s => st[s] = { p:0, a:0, pr:0 });
-            snap.forEach(d => { const doc = d.data(); if(st[doc.name]) { ["Subhi","Duhar","Asr","Maghrib","Isha"].forEach(p => { if(doc[p]) st[doc.name].pr++; }); if(doc.status === 'P') st[doc.name].p++; if(doc.status === 'A') st[doc.name].a++; } });
-            document.getElementById('history-list').innerHTML = students.map(s => `<div class="card"><p class="font-black text-sm uppercase mb-3 text-gray-700">${s}</p><div class="flex justify-between text-[10px] font-black"><span class="text-emerald-600">PRAYERS: ${st[s].pr}</span><span class="text-blue-600">PRESENT: ${st[s].p}</span><span class="text-red-600">ABSENT: ${st[s].a}</span></div></div>`).join('');
-        }
-
-        window.sendMessage = async () => {
-            const t = document.getElementById('chat-input').value; if(!t.trim()) return;
-            await addDoc(collection(db, "chats"), { sender: "Parent", text: t, time: Timestamp.now() });
-            document.getElementById('chat-input').value = "";
-        };
-
-        function loadChat() {
-            onSnapshot(query(collection(db, "chats"), orderBy("time", "desc"), limit(30)), (snap) => {
-                const b = document.getElementById('chat-box'); b.innerHTML = "";
-                snap.forEach(d => { b.innerHTML += `<div class="msg p-3 rounded-xl mb-2 shadow-sm"><p class="text-gray-800 font-medium">${d.data().text}</p></div>`; });
-                b.scrollTop = b.scrollHeight;
-            });
-        }
-
-        window.toggleP = (n, p, cur) => setDoc(doc(db, "daily", n + "_" + selectedDate), { name: n, date: selectedDate, [p]: !cur }, { merge: true });
-        window.setA = (n, s) => setDoc(doc(db, "daily", n + "_" + selectedDate), { name: n, date: selectedDate, status: s }, { merge: true });
-    </script>
-</body>
-</html>
+      
