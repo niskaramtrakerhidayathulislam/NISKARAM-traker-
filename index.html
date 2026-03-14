@@ -30,7 +30,7 @@
 
     <div id="app-header" class="header-card hidden">
         <h1 class="text-2xl font-black uppercase">Hidayatul Islam</h1>
-        <p class="text-[9px] font-bold opacity-80 mb-3">Class 6 - Achangi</p>
+        <p class="text-[9px] font-bold opacity-80 mb-3 uppercase">Class 6 - Achangi</p>
         <input type="date" id="global-date" class="bg-[#047857] text-white font-bold p-1 rounded-lg text-xs outline-none" onchange="changeDate(this.value)">
     </div>
 
@@ -40,7 +40,7 @@
                 <p class="font-black text-amber-800 uppercase text-[10px] mb-1">📢 MADRASA NOTICE</p>
                 <p id="holiday-reason-text" class="text-sm font-bold text-amber-900"></p>
             </div>
-            <div id="admin-holiday-tool" class="card hidden border-emerald-300 bg-emerald-50">
+            <div id="admin-holiday-tool" class="card hidden border-emerald-300 bg-emerald-50 text-center">
                 <textarea id="holiday-reason-input" class="w-full p-3 border rounded-xl text-xs mb-3 outline-none" placeholder="Type reason for leave notice..."></textarea>
                 <button onclick="toggleGlobalHoliday()" id="holiday-toggle-btn" class="w-full py-3 rounded-xl text-xs font-black uppercase text-white shadow-md"></button>
             </div>
@@ -65,6 +65,7 @@
         <div id="attendance-page" class="p-5 hidden"><div id="attendance-list"></div></div>
         <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
         <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
+        
         <div id="profile-page" class="p-5 hidden text-center">
             <div class="card py-10">
                 <p id="user-email-text" class="text-xs font-bold text-gray-500 mb-8"></p>
@@ -141,16 +142,17 @@
                 document.getElementById('user-email-text').innerText = u.email;
                 if(u.email.toLowerCase() === ADMIN_EMAIL) document.getElementById('admin-holiday-tool').classList.remove('hidden');
                 syncHoliday();
+                navigate('home', document.querySelector('.nav-item'));
             }
         });
 
         window.navigate = (p, el) => {
             if(el) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); }
-            ['home', 'tracker', 'attendance', 'results', 'history', 'profile'].forEach(pg => document.getElementById(pg+'-page').classList.toggle('hidden', !pg.includes(p)));
+            ['home', 'tracker', 'attendance', 'results', 'history', 'profile'].forEach(pg => document.getElementById(pg+'-page').classList.toggle('hidden', pg !== p));
             if(p === 'results') loadResults();
-            if(p.includes('tracker')) loadTracker();
-            if(p.includes('attendance')) loadAttendance();
-            if(p.includes('history')) loadHistory();
+            if(p === 'tracker') loadTracker();
+            if(p === 'attendance') loadAttendance();
+            if(p === 'history') loadHistory();
         };
 
         window.loadResults = () => {
@@ -187,34 +189,65 @@
             }
         };
 
-        // ... Sync Holiday, Auth, Tracker functions remain same as provided code ...
+        function loadTracker() {
+            const container = document.getElementById('tracker-list');
+            onSnapshot(query(collection(db, "daily"), where("date", "==", selectedDate)), (snap) => {
+                const data = {}; snap.forEach(d => data[d.id] = d.data());
+                container.innerHTML = students.map(s => {
+                    const d = data[s + "_" + selectedDate] || {};
+                    return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="grid grid-cols-5 gap-1">
+                        ${["Subhi","Duhar","Asr","Maghrib","Isha"].map(p => `<button onclick="toggleP('${s}','${p}',${!!d[p]})" class="p-btn ${d[p] ? 'active' : ''}">${d[p] ? '✓' : p}</button>`).join('')}
+                    </div></div>`;
+                }).join('');
+            });
+        }
+
+        function loadAttendance() {
+            const isAdmin = auth.currentUser?.email.toLowerCase() === ADMIN_EMAIL;
+            const container = document.getElementById('attendance-list');
+            onSnapshot(query(collection(db, "daily"), where("date", "==", selectedDate)), (snap) => {
+                const data = {}; snap.forEach(d => data[d.id] = d.data());
+                container.innerHTML = students.map(s => {
+                    const d = data[s + "_" + selectedDate] || {};
+                    if(globalHoliday) return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="status-leave uppercase">Leave</div></div>`;
+                    return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="flex gap-2">
+                        <button onclick="${isAdmin ? `setA('${s}','P')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'P' ? 'text-white bg-emerald-600' : ''}">PRESENT</button>
+                        <button onclick="${isAdmin ? `setA('${s}','A')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'A' ? 'text-white bg-red-600' : ''}">ABSENT</button>
+                    </div></div>`;
+                }).join('');
+            });
+        }
+
+        async function loadHistory() {
+            const snap = await getDocs(collection(db, "daily"));
+            const st = {}; students.forEach(s => st[s] = { p:0, a:0, pr:0 });
+            snap.forEach(d => {
+                const doc = d.data();
+                if(st[doc.name]) {
+                    ["Subhi","Duhar","Asr","Maghrib","Isha"].forEach(p => { if(doc[p]) st[doc.name].pr++; });
+                    if(doc.status === 'P') st[doc.name].p++;
+                    if(doc.status === 'A') st[doc.name].a++;
+                }
+            });
+            document.getElementById('history-list').innerHTML = students.map(s => `<div class="card"><p class="font-black text-sm uppercase mb-2">${s}</p><div class="flex justify-between text-[10px] font-bold">
+                <span class="text-emerald-600">PRAYERS: ${st[s].pr}</span><span class="text-blue-600">PRESENT: ${st[s].p}</span><span class="text-red-600">ABSENT: ${st[s].a}</span>
+            </div></div>`).join('');
+        }
+
         function syncHoliday() {
             onSnapshot(doc(db, "settings", "madrasa_status"), (snap) => {
-                const data = snap.exists() ? snap.data() : { isHoliday: false, reason: "" };
-                globalHoliday = data.isHoliday;
+                const d = snap.exists() ? snap.data() : { isHoliday: false, reason: "" };
+                globalHoliday = d.isHoliday;
                 const banner = document.getElementById('holiday-banner');
-                if(globalHoliday) { banner.classList.remove('hidden'); document.getElementById('holiday-reason-text').innerText = data.reason; }
+                if(globalHoliday) { banner.classList.remove('hidden'); document.getElementById('holiday-reason-text').innerText = d.reason; }
                 else banner.classList.add('hidden');
                 const btn = document.getElementById('holiday-toggle-btn');
                 btn.innerText = globalHoliday ? "CANCEL LEAVE NOTICE" : "POST LEAVE NOTICE";
-                btn.className = globalHoliday ? "w-full py-3 rounded-xl text-xs font-black uppercase bg-red-600 shadow-md" : "w-full py-3 rounded-xl text-xs font-black uppercase bg-blue-600 shadow-md";
+                btn.className = globalHoliday ? "w-full py-3 rounded-xl text-xs font-black uppercase bg-red-600 shadow-md text-white" : "w-full py-3 rounded-xl text-xs font-black uppercase bg-blue-600 shadow-md text-white";
+                loadAttendance();
             });
         }
+
         window.toggleGlobalHoliday = () => {
             const reason = document.getElementById('holiday-reason-input').value;
-            if(!globalHoliday && !reason) return alert("Type reason!");
-            setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: !globalHoliday, reason: !globalHoliday ? reason : "" });
-        };
-        window.handleResetPassword = () => {
-            const email = document.getElementById('email').value;
-            if(!email) return alert("Enter email!");
-            sendPasswordResetEmail(auth, email).then(() => alert("Reset link sent!")).catch(e => alert(e.message));
-        };
-        window.changeDate = (val) => { selectedDate = val; navigate('home', null); };
-        window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value);
-        window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('s-email').value, document.getElementById('s-pass').value).then(() => alert("Success!"));
-        window.handleLogout = () => signOut(auth);
-        window.toggleAuth = (s) => { document.getElementById('login-box').classList.toggle('hidden', s); document.getElementById('signup-box').classList.toggle('hidden', !s); };
-    </script>
-</body>
-</html>
+       
