@@ -7,55 +7,74 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f3f4f6; padding-bottom: 80px; }
-        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 8px; border: 1px solid #ddd; }
-        .p-btn { background: #f9fafb; border: 1px solid #ccc; padding: 12px 0; border-radius: 8px; font-size: 11px; font-weight: bold; width: 100%; transition: 0.2s; }
+        body { background-color: #f3f4f6; padding-bottom: 90px; font-family: sans-serif; }
+        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
+        .p-btn { background: #f9fafb; border: 1px solid #ddd; padding: 12px 0; border-radius: 12px; font-size: 11px; font-weight: 800; width: 100%; color: #374151; }
         .p-btn.active { background: #10b981 !important; color: white !important; border-color: #059669; }
-        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; border-top: 1px solid #ddd; z-index: 100; }
-        .nav-item { flex: 1; text-align: center; padding: 12px 0; font-size: 10px; font-weight: bold; color: #9ca3af; cursor: pointer; }
+        
+        /* Attendance Buttons */
+        .att-btn { padding: 10px 0; border-radius: 10px; font-size: 11px; font-weight: 900; flex: 1; text-align: center; border: 1px solid #eee; background: #f9fafb; color: #6b7280; }
+        .att-btn.p-active { background: #059669 !important; color: white !important; border: none; }
+        .att-btn.a-active { background: #dc2626 !important; color: white !important; border: none; }
+        .att-btn.l-active { background: #2563eb !important; color: white !important; border: none; }
+
+        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; border-top: 1px solid #e5e7eb; z-index: 1000; padding: 10px 0; }
+        .nav-item { flex: 1; text-align: center; font-size: 10px; font-weight: 800; color: #9ca3af; cursor: pointer; }
         .nav-item.active { color: #065f46; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
         .hidden { display: none; }
+        .header-bg { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 30px 20px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="bg-[#065f46] text-white p-5 text-center rounded-b-3xl">
-        <h1 class="text-lg font-black uppercase">Hidayatul Islam</h1>
-        <p id="top-date" class="text-[10px] font-bold opacity-75"></p>
+    <div id="app-ui" class="hidden">
+        <div class="header-bg">
+            <h1 class="text-2xl font-black uppercase">Hidayatul Islam</h1>
+            <p id="top-date" class="text-xs font-bold text-amber-400 mt-2"></p>
+        </div>
+
+        <div class="p-4">
+            <div id="tracker-page">
+                <div id="tracker-list"></div>
+            </div>
+
+            <div id="attend-page" class="hidden">
+                <div id="attend-list"></div>
+            </div>
+
+            <div id="stats-page" class="hidden">
+                <div id="stats-list"></div>
+            </div>
+
+            <div id="profile-page" class="hidden text-center">
+                <div class="card py-12">
+                    <p id="user-display-email" class="text-sm font-black text-gray-600 mb-8"></p>
+                    <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-2xl uppercase text-xs">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showPage('tracker', this)"><i class="fa fa-clipboard-check"></i>TRACKER</div>
+            <div class="nav-item" onclick="showPage('attend', this)"><i class="fa fa-user-clock"></i>ATTEND</div>
+            <div class="nav-item" onclick="showPage('stats', this)"><i class="fa fa-medal"></i>STATS</div>
+            <div class="nav-item" onclick="showPage('profile', this)"><i class="fa fa-circle-user"></i>ME</div>
+        </div>
     </div>
 
-    <div id="auth-page" class="p-6">
-        <div class="card shadow-md text-center">
-            <h2 class="font-bold mb-4">LOGIN / REGISTER</h2>
-            <input type="email" id="user-email" placeholder="Email" class="w-full p-3 border rounded mb-3 outline-none">
-            <input type="password" id="user-pass" placeholder="Password" class="w-full p-3 border rounded mb-4 outline-none">
-            <button onclick="handleAuth('login')" class="w-full bg-[#065f46] text-white py-3 rounded font-bold mb-2">LOGIN</button>
-            <button onclick="handleAuth('signup')" class="w-full border border-[#065f46] text-[#065f46] py-3 rounded font-bold">CREATE ACCOUNT</button>
+    <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center bg-gray-50">
+        <div class="card shadow-2xl border-none p-8 text-center">
+            <h2 class="text-2xl font-black text-emerald-800 mb-6">LOGIN</h2>
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none bg-gray-50">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 outline-none bg-gray-50">
+            <button onclick="handleAuth('login')" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl">ENTER</button>
         </div>
-    </div>
-
-    <div id="main-app" class="p-3 hidden">
-        <div id="tracker-page">
-            <div id="tracker-list"></div>
-        </div>
-        <div id="attend-page" class="hidden">
-            <div id="attend-list"></div>
-        </div>
-        <div id="stats-page" class="hidden">
-            <div id="stats-list"></div>
-        </div>
-    </div>
-
-    <div id="nav-bar" class="bottom-nav hidden">
-        <div class="nav-item active" onclick="showPage('tracker', this)"><i class="fa fa-list-check block text-xl"></i>TRACKER</div>
-        <div class="nav-item" onclick="showPage('attend', this)"><i class="fa fa-user-clock block text-xl"></i>ATTEND</div>
-        <div class="nav-item" onclick="showPage('stats', this)"><i class="fa fa-chart-simple block text-xl"></i>STATS</div>
-        <div class="nav-item" onclick="handleLogout()"><i class="fa fa-sign-out block text-xl"></i>EXIT</div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -79,23 +98,18 @@
         document.getElementById('top-date').innerText = new Date().toDateString().toUpperCase();
 
         onAuthStateChanged(auth, (u) => {
+            document.getElementById('auth-page').classList.toggle('hidden', !!u);
+            document.getElementById('app-ui').classList.toggle('hidden', !u);
             if(u) {
-                document.getElementById('auth-page').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                document.getElementById('nav-bar').classList.remove('hidden');
+                document.getElementById('user-display-email').innerText = u.email;
                 loadTracker();
-            } else {
-                document.getElementById('auth-page').classList.remove('hidden');
-                document.getElementById('main-app').classList.add('hidden');
-                document.getElementById('nav-bar').classList.add('hidden');
             }
         });
 
         window.handleAuth = (type) => {
-            const e = document.getElementById('user-email').value;
-            const p = document.getElementById('user-pass').value;
-            if(type === 'login') signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
-            else createUserWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('pass').value;
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Login Failed: " + err.message));
         };
 
         window.handleLogout = () => signOut(auth);
@@ -103,22 +117,20 @@
         window.showPage = (p, el) => {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            ['tracker', 'attend', 'stats'].forEach(id => document.getElementById(id+'-page').classList.toggle('hidden', id !== p));
+            ['tracker', 'attend', 'stats', 'profile'].forEach(id => document.getElementById(id+'-page').classList.toggle('hidden', id !== p));
             if(p === 'tracker') loadTracker();
             if(p === 'attend') loadAttend();
             if(p === 'stats') loadStats();
         };
 
-        async function loadTracker() {
+        function loadTracker() {
             const container = document.getElementById('tracker-list');
-            container.innerHTML = "<p class='text-center py-5'>Loading...</p>";
-            
             onSnapshot(query(collection(db, "daily"), where("date", "==", today)), (snap) => {
                 const data = {}; snap.forEach(d => data[d.id] = d.data());
                 container.innerHTML = students.map(s => {
                     const sData = data[s + "_" + today] || {};
                     return `<div class="card">
-                        <p class="font-bold text-sm mb-3 uppercase text-emerald-900">${s}</p>
+                        <p class="font-black text-xs mb-3 uppercase text-emerald-900">${s}</p>
                         <div class="grid grid-cols-5 gap-1">
                             ${prayers.map(p => `<button onclick="toggleP('${s}','${p}',${!!sData[p]})" class="p-btn ${sData[p] ? 'active' : ''}">${sData[p] ? '✓' : p}</button>`).join('')}
                         </div>
@@ -134,31 +146,33 @@
         async function loadAttend() {
             const isAdmin = auth.currentUser.email === USTHAD;
             const container = document.getElementById('attend-list');
-            container.innerHTML = "Loading...";
+            container.innerHTML = "<p class='text-center py-5'>Loading Attendance...</p>";
             
-            const snap = await getDocs(query(collection(db, "daily"), where("date", "==", today)));
-            const data = {}; snap.forEach(d => data[d.id] = d.data());
-
-            container.innerHTML = students.map(s => {
-                const sData = data[s + "_" + today] || {};
-                return `<div class="card flex justify-between items-center">
-                    <p class="font-bold text-sm uppercase">${s}</p>
-                    <div class="flex gap-2">
-                        <button onclick="${isAdmin ? `setA('${s}','P')` : ''}" class="px-4 py-2 rounded font-bold text-xs ${sData.present ? 'bg-green-600 text-white' : 'bg-gray-100'}">P</button>
-                        <button onclick="${isAdmin ? `setA('${s}','A')` : ''}" class="px-4 py-2 rounded font-bold text-xs ${sData.absent ? 'bg-red-600 text-white' : 'bg-gray-100'}">A</button>
-                    </div>
-                </div>`;
-            }).join('');
+            onSnapshot(query(collection(db, "daily"), where("date", "==", today)), (snap) => {
+                const data = {}; snap.forEach(d => data[d.id] = d.data());
+                container.innerHTML = students.map(s => {
+                    const sData = data[s + "_" + today] || {};
+                    return `<div class="card">
+                        <div class="flex justify-between items-center mb-3">
+                            <p class="font-black text-xs uppercase">${s}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="${isAdmin ? `setA('${s}','P')` : ''}" class="att-btn ${sData.status === 'P' ? 'p-active' : ''}">PRESENT</button>
+                            <button onclick="${isAdmin ? `setA('${s}','A')` : ''}" class="att-btn ${sData.status === 'A' ? 'a-active' : ''}">ABSENT</button>
+                            <button onclick="${isAdmin ? `setA('${s}','L')` : ''}" class="att-btn ${sData.status === 'L' ? 'l-active' : ''}">LEAVE</button>
+                        </div>
+                    </div>`;
+                }).join('');
+            });
         }
 
-        window.setA = async (name, type) => {
-            await setDoc(doc(db, "daily", name + "_" + today), { name, date: today, present: type==='P', absent: type==='A' }, { merge: true });
-            loadAttend();
+        window.setA = async (name, status) => {
+            await setDoc(doc(db, "daily", name + "_" + today), { name, date: today, status: status }, { merge: true });
         };
 
         async function loadStats() {
             const container = document.getElementById('stats-list');
-            container.innerHTML = "Calculating...";
+            container.innerHTML = "<p class='text-center py-5 text-xs font-bold'>CALCULATING SCORES...</p>";
             const snap = await getDocs(collection(db, "daily"));
             const scores = {}; students.forEach(s => scores[s] = 0);
             snap.forEach(d => {
@@ -166,7 +180,10 @@
                 if(scores[doc.name] !== undefined) prayers.forEach(p => { if(doc[p]) scores[doc.name]++; });
             });
             container.innerHTML = students.sort((a,b) => scores[b]-scores[a]).map(s => `
-                <div class="card flex justify-between items-center"><span>${s}</span><span class="font-bold text-emerald-600">${scores[s]}</span></div>
+                <div class="card flex justify-between items-center py-5">
+                    <span class="font-black text-sm uppercase">${s}</span>
+                    <span class="font-black text-lg text-emerald-600">${scores[s]}</span>
+                </div>
             `).join('');
         }
     </script>
