@@ -36,15 +36,10 @@
             <h2 class="text-lg font-black text-emerald-700 mb-6 uppercase">Login</h2>
             <input type="email" id="email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none bg-gray-50">
             <input type="password" id="pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-2 outline-none bg-gray-50">
-            
-            <div class="text-right mb-6">
-                <span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer">Forgot Password?</span>
-            </div>
-
+            <div class="text-right mb-6"><span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer">Forgot Password?</span></div>
             <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl mb-4 shadow-lg">LOGIN</button>
             <p class="text-xs">New user? <span onclick="toggleAuth(true)" class="text-emerald-700 font-bold underline cursor-pointer">Create Account</span></p>
         </div>
-
         <div id="signup-box" class="card shadow-2xl hidden">
             <h2 class="text-lg font-black text-blue-700 mb-4 uppercase">Create Account</h2>
             <input type="email" id="s-email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none">
@@ -56,14 +51,29 @@
 
     <div id="main-content" class="hidden">
         <div id="home-page" class="p-5">
-            <div class="card text-center">
-                <h3 class="text-xs font-black text-gray-400 mb-4 uppercase tracking-widest">Azan Timings</h3>
-                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase">
-                    <div class="bg-gray-50 p-2 rounded-lg">SUBHI<br><span class="text-emerald-700">05:15</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">DUHAR<br><span class="text-emerald-700">12:38</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">ASR<br><span class="text-emerald-700">03:58</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">MAGH<br><span class="text-emerald-700">06:39</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">ISHA<br><span class="text-emerald-700">07:49</span></div>
+            <div class="card bg-emerald-50 border-emerald-100">
+                <h3 class="text-[10px] font-black text-emerald-800 mb-3 uppercase tracking-widest flex justify-between">
+                    Today Madrasa Time
+                    <i id="edit-madrasa-icon" class="fa-solid fa-pen hidden cursor-pointer" onclick="editMadrasaTime()"></i>
+                </h3>
+                <div class="flex justify-around text-center">
+                    <div><p class="text-[8px] text-emerald-600 font-bold uppercase">Start</p><p id="m-start" class="font-black text-lg text-emerald-900">07:30 AM</p></div>
+                    <div class="w-[1px] bg-emerald-200"></div>
+                    <div><p class="text-[8px] text-emerald-600 font-bold uppercase">End</p><p id="m-end" class="font-black text-lg text-emerald-900">09:30 AM</p></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest flex justify-between">
+                    Azan Timings
+                    <i id="edit-azan-icon" class="fa-solid fa-pen hidden cursor-pointer" onclick="navigate('profile', null)"></i>
+                </h3>
+                <div id="azan-list" class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase">
+                    <div class="bg-gray-50 p-2 rounded-lg">SUBHI<br><span id="t-subhi" class="text-emerald-700">05:15</span></div>
+                    <div class="bg-gray-50 p-2 rounded-lg">DUHAR<br><span id="t-duhar" class="text-emerald-700">12:38</span></div>
+                    <div class="bg-gray-50 p-2 rounded-lg">ASR<br><span id="t-asr" class="text-emerald-700">03:58</span></div>
+                    <div class="bg-gray-50 p-2 rounded-lg">MAGH<br><span id="t-magh" class="text-emerald-700">06:39</span></div>
+                    <div class="bg-gray-50 p-2 rounded-lg">ISHA<br><span id="t-isha" class="text-emerald-700">07:49</span></div>
                 </div>
             </div>
         </div>
@@ -73,10 +83,23 @@
         <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
         
         <div id="profile-page" class="p-5 hidden text-center">
-            <div class="card py-10">
-                <i class="fa-solid fa-circle-user text-5xl text-emerald-700 mb-4"></i>
-                <p id="user-email-text" class="text-sm font-bold text-gray-500 mb-8"></p>
-                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-bold py-3 rounded-xl uppercase text-xs">Sign Out</button>
+            <div class="card">
+                <i class="fa-solid fa-circle-user text-5xl text-emerald-700 mb-2"></i>
+                <p id="user-email-text" class="text-xs font-bold text-gray-500 mb-6"></p>
+                
+                <div id="admin-panel" class="hidden border-t pt-4 text-left">
+                    <p class="text-[10px] font-black text-gray-400 uppercase mb-4">Update Timings (Usthad Only)</p>
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        <input type="text" id="up-subhi" placeholder="Subhi" class="p-2 border rounded text-xs">
+                        <input type="text" id="up-duhar" placeholder="Duhar" class="p-2 border rounded text-xs">
+                        <input type="text" id="up-asr" placeholder="Asr" class="p-2 border rounded text-xs">
+                        <input type="text" id="up-magh" placeholder="Maghrib" class="p-2 border rounded text-xs">
+                        <input type="text" id="up-isha" placeholder="Isha" class="p-2 border rounded text-xs">
+                    </div>
+                    <button onclick="updateAzanTimes()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-xs font-bold mb-4">UPDATE AZAN TIME</button>
+                </div>
+
+                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-bold py-3 rounded-xl uppercase text-[10px]">Sign Out</button>
             </div>
         </div>
 
@@ -92,7 +115,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, query, where, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, collection, query, where, onSnapshot, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0",
@@ -107,41 +130,77 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ഉസ്താദിന്റെ ഇമെയിൽ ഇവിടെ മാറ്റിയിട്ടുണ്ട്
         const ADMIN = "kereemk81@gmail.com";
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
-        const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         const today = new Date().toLocaleDateString('en-CA');
         document.getElementById('display-date').innerText = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'long', year:'numeric' });
 
+        onAuthStateChanged(auth, (u) => {
+            document.getElementById('auth-page').classList.toggle('hidden', !!u);
+            document.getElementById('main-content').classList.toggle('hidden', !u);
+            document.getElementById('app-header').classList.toggle('hidden', !u);
+            if(u) {
+                document.getElementById('user-email-text').innerText = u.email;
+                const isAdmin = u.email.toLowerCase() === ADMIN.toLowerCase();
+                document.getElementById('admin-panel').classList.toggle('hidden', !isAdmin);
+                document.getElementById('edit-madrasa-icon').classList.toggle('hidden', !isAdmin);
+                document.getElementById('edit-azan-icon').classList.toggle('hidden', !isAdmin);
+            }
+            loadSettings();
+        });
+
+        // Load Azan and Madrasa Times from Firestore
+        function loadSettings() {
+            onSnapshot(doc(db, "settings", "times"), (snap) => {
+                if(snap.exists()){
+                    const d = snap.data();
+                    if(d.subhi) document.getElementById('t-subhi').innerText = d.subhi;
+                    if(d.duhar) document.getElementById('t-duhar').innerText = d.duhar;
+                    if(d.asr) document.getElementById('t-asr').innerText = d.asr;
+                    if(d.magh) document.getElementById('t-magh').innerText = d.magh;
+                    if(d.isha) document.getElementById('t-isha').innerText = d.isha;
+                    if(d.mStart) document.getElementById('m-start').innerText = d.mStart;
+                    if(d.mEnd) document.getElementById('m-end').innerText = d.mEnd;
+                }
+            });
+        }
+
+        window.updateAzanTimes = () => {
+            const data = {
+                subhi: document.getElementById('up-subhi').value || document.getElementById('t-subhi').innerText,
+                duhar: document.getElementById('up-duhar').value || document.getElementById('t-duhar').innerText,
+                asr: document.getElementById('up-asr').value || document.getElementById('t-asr').innerText,
+                magh: document.getElementById('up-magh').value || document.getElementById('t-magh').innerText,
+                isha: document.getElementById('up-isha').value || document.getElementById('t-isha').innerText
+            };
+            setDoc(doc(db, "settings", "times"), data, {merge: true}).then(() => alert("Times Updated!"));
+        };
+
+        window.editMadrasaTime = () => {
+            const start = prompt("Enter Madrasa Start Time (e.g. 07:30 AM):");
+            const end = prompt("Enter Madrasa End Time (e.g. 09:30 AM):");
+            if(start && end) {
+                setDoc(doc(db, "settings", "times"), { mStart: start, mEnd: end }, { merge: true });
+            }
+        };
+
         window.navigate = (p, el) => {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
+            if(el) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                el.classList.add('active');
+            }
             ['home', 'tracker', 'attendance', 'history', 'profile'].forEach(pg => document.getElementById(pg+'-page').classList.toggle('hidden', pg !== p));
             if(p === 'tracker') loadTracker();
             if(p === 'attendance') loadAttendance();
             if(p === 'history') loadHistory();
         };
 
-        onAuthStateChanged(auth, (u) => {
-            document.getElementById('auth-page').classList.toggle('hidden', !!u);
-            document.getElementById('main-content').classList.toggle('hidden', !u);
-            document.getElementById('app-header').classList.toggle('hidden', !u);
-            if(u) document.getElementById('user-email-text').innerText = u.email;
-        });
-
-        window.toggleAuth = (showSignup) => {
-            document.getElementById('login-box').classList.toggle('hidden', showSignup);
-            document.getElementById('signup-box').classList.toggle('hidden', !showSignup);
-        };
-
         window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
         window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('s-email').value, document.getElementById('s-pass').value).then(() => alert("Success!")).catch(e => alert(e.message));
         window.handleLogout = () => signOut(auth);
-
         window.handleResetPassword = () => {
             const email = document.getElementById('email').value;
-            if(!email) { alert("Please enter email first!"); return; }
+            if(!email) { alert("Enter email!"); return; }
             sendPasswordResetEmail(auth, email).then(() => alert("Reset link sent!")).catch(e => alert(e.message));
         };
 
@@ -152,7 +211,7 @@
                 container.innerHTML = students.map(s => {
                     const d = data[s + "_" + today] || {};
                     return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="grid grid-cols-5 gap-1">
-                        ${prayers.map(p => `<button onclick="toggleP('${s}','${p}',${!!d[p]})" class="p-btn ${d[p] ? 'active' : ''}">${d[p] ? '✓' : p}</button>`).join('')}
+                        ${["Subhi","Duhar","Asr","Maghrib","Isha"].map(p => `<button onclick="toggleP('${s}','${p}',${!!d[p]})" class="p-btn ${d[p] ? 'active' : ''}">${d[p] ? '✓' : p}</button>`).join('')}
                     </div></div>`;
                 }).join('');
             });
@@ -170,23 +229,20 @@
                     return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p>
                         <div class="flex gap-2">
                             <button onclick="${isAdmin ? `setA('${s}','P')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'P' ? 'p-active' : ''}">PRESENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','A')` : 'att_a_error()'}" class="att-btn ${d.status === 'A' ? 'a-active' : ''}">ABSENT</button>
-                            <button onclick="${isAdmin ? `setA('${s}','L')` : 'att_l_error()'}" class="att-btn ${d.status === 'L' ? 'l-active' : ''}">LEAVE</button>
+                            <button onclick="${isAdmin ? `setA('${s}','A')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'A' ? 'a-active' : ''}">ABSENT</button>
+                            <button onclick="${isAdmin ? `setA('${s}','L')` : 'alert(\'Usthad only\')'}" class="att-btn ${d.status === 'L' ? 'l-active' : ''}">LEAVE</button>
                         </div>
                     </div>`;
                 }).join('');
             });
         }
-        
-        window.att_a_error = () => alert('Usthad only');
-        window.att_l_error = () => alert('Usthad only');
 
         window.setA = (n, s) => setDoc(doc(db, "daily", n + "_" + today), { name: n, date: today, status: s }, { merge: true });
 
         async function loadHistory() {
             const snap = await getDocs(collection(db, "daily"));
             const scores = {}; students.forEach(s => scores[s] = 0);
-            snap.forEach(d => { const doc = d.data(); if(scores[doc.name] !== undefined) prayers.forEach(p => { if(doc[p]) scores[doc.name]++; }); });
+            snap.forEach(d => { const doc = d.data(); if(scores[doc.name] !== undefined) ["Subhi","Duhar","Asr","Maghrib","Isha"].forEach(p => { if(doc[p]) scores[doc.name]++; }); });
             document.getElementById('history-list').innerHTML = students.sort((a,b) => scores[b]-scores[a]).map(s => `
                 <div class="card flex justify-between items-center py-5 shadow-sm">
                     <span class="font-black text-sm uppercase">${s}</span>
