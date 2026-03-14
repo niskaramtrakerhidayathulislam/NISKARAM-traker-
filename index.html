@@ -26,19 +26,25 @@
 <body>
 
     <div id="app-header" class="header-card hidden">
-        <h1 class="text-2xl font-black uppercase">Hidayatul Islam</h1>
+        <h1 class="text-2xl font-black uppercase tracking-tight">Hidayatul Islam</h1>
         <p class="text-[9px] font-bold opacity-80 uppercase tracking-widest">Class 6 - Achangi</p>
         <div id="display-date" class="text-xs font-bold text-amber-400 mt-2 uppercase"></div>
     </div>
 
     <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
         <div id="login-box" class="card shadow-2xl">
-            <h2 class="text-lg font-black text-emerald-700 mb-4 uppercase">Login</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 outline-none">
+            <h2 class="text-lg font-black text-emerald-700 mb-6 uppercase">Login</h2>
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none bg-gray-50">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-2 outline-none bg-gray-50">
+            
+            <div class="text-right mb-6">
+                <span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer">Forgot Password?</span>
+            </div>
+
             <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl mb-4">LOGIN</button>
-            <p class="text-xs">New Parent? <span onclick="toggleAuth(true)" class="text-emerald-700 font-bold underline cursor-pointer">Register</span></p>
+            <p class="text-xs">New user? <span onclick="toggleAuth(true)" class="text-emerald-700 font-bold underline cursor-pointer">Create Account</span></p>
         </div>
+
         <div id="signup-box" class="card shadow-2xl hidden">
             <h2 class="text-lg font-black text-blue-700 mb-4 uppercase">Create Account</h2>
             <input type="email" id="s-email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none">
@@ -85,7 +91,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, query, where, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -132,6 +138,15 @@
         window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('s-email').value, document.getElementById('s-pass').value).then(() => alert("Success!")).catch(e => alert(e.message));
         window.handleLogout = () => signOut(auth);
 
+        // Forgot Password Function
+        window.handleResetPassword = () => {
+            const email = document.getElementById('email').value;
+            if(!email) { alert("Please enter your email address first!"); return; }
+            sendPasswordResetEmail(auth, email)
+                .then(() => alert("Password reset link sent to your email!"))
+                .catch(e => alert(e.message));
+        };
+
         function loadTracker() {
             const container = document.getElementById('tracker-list');
             onSnapshot(query(collection(db, "daily"), where("date", "==", today)), (snap) => {
@@ -148,7 +163,7 @@
         window.toggleP = (n, p, cur) => setDoc(doc(db, "daily", n + "_" + today), { name: n, date: today, [p]: !cur }, { merge: true });
 
         function loadAttendance() {
-            const isAdmin = auth.currentUser?.email === ADMIN;
+            const isAdmin = auth.currentUser?.email === ADMIN || auth.currentUser?.email === "multicall9@gmail.com";
             const container = document.getElementById('attendance-list');
             onSnapshot(query(collection(db, "daily"), where("date", "==", today)), (snap) => {
                 const data = {}; snap.forEach(d => data[d.id] = d.data());
