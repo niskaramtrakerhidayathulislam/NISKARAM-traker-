@@ -2,104 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam Madrasa Tracker</title>
+    <title>Hidayatul Islam Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f3f4f6; color: #1f2937; font-family: sans-serif; padding-bottom: 90px; }
-        .hidden { display: none; }
-        .header-card { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 30px 20px; text-align: center; }
-        .bottom-nav { background: white; border-top: 1px solid #e5e7eb; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); }
-        .nav-item { text-align: center; font-size: 10px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 800; }
-        .nav-item.active { color: #065f46; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #e5e7eb; color: #1f2937; }
-        .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px 4px; border-radius: 12px; font-size: 10px; font-weight: 800; color: #374151; }
+        body { background-color: #f3f4f6; font-family: sans-serif; padding-bottom: 90px; }
+        .card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 10px; border: 1px solid #e5e7eb; }
+        .p-btn { background: #f3f4f6; border: 1px solid #ddd; padding: 10px 2px; border-radius: 8px; font-size: 10px; font-weight: bold; }
         .p-btn.active { background: #10b981 !important; color: white !important; border: none; }
-        .notice-badge { background: #fbbf24; color: #000; padding: 15px; border-radius: 15px; font-size: 13px; font-weight: 800; margin-bottom: 20px; border: 2px solid #000; box-shadow: 5px 5px 0px #000; }
-        .date-label { background: #065f46; color: white; padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: 800; display: inline-block; margin-bottom: 15px; }
+        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; }
+        .nav-item { text-align: center; font-size: 10px; color: #9ca3af; cursor: pointer; }
+        .nav-item.active { color: #065f46; }
+        .notice-box { background: #fbbf24; color: black; padding: 10px; border-radius: 10px; font-weight: bold; margin-bottom: 15px; border: 2px solid black; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="app-header" class="header-card hidden">
-        <h1 class="text-2xl font-black uppercase">Hidayatul Islam</h1>
-        <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest">Class 6 - Achangi</p>
-        <div id="display-date-header" class="text-[12px] font-bold text-amber-400 mt-2"></div>
+    <div class="bg-[#065f46] text-white p-6 text-center rounded-b-[30px] mb-4">
+        <h1 class="text-xl font-bold uppercase">Hidayatul Islam</h1>
+        <p id="today-date" class="text-xs opacity-80 mt-1"></p>
     </div>
 
-    <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center bg-emerald-50">
-        <div class="card shadow-2xl">
-            <h2 class="text-xl font-black text-emerald-800 mb-6 uppercase">Login</h2>
-            <input type="email" id="login-email" placeholder="Email" class="w-full p-4 border rounded-xl mb-4 outline-none">
-            <input type="password" id="login-password" placeholder="Password" class="w-full p-4 border rounded-xl mb-4 outline-none">
-            <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl">LOGIN</button>
-            <p class="text-xs mt-6 font-bold" onclick="toggleAuth('signup')">New? Register Here</p>
+    <div id="auth-page" class="p-6 text-center">
+        <div class="card shadow-lg">
+            <h2 class="text-lg font-bold mb-4">LOGIN</h2>
+            <input type="email" id="login-email" placeholder="Email" class="w-full p-3 border rounded mb-3 outline-none">
+            <input type="password" id="login-password" placeholder="Password" class="w-full p-3 border rounded mb-3 outline-none">
+            <button onclick="handleLogin()" class="w-full bg-[#065f46] text-white py-3 rounded font-bold">LOGIN</button>
+            <p class="text-xs mt-4" onclick="toggleAuth('signup')">New User? Register</p>
         </div>
-        <div id="signup-section" class="card shadow-2xl hidden mt-4">
-            <input type="email" id="signup-email" placeholder="New Email" class="w-full p-4 border rounded-xl mb-4 outline-none">
-            <input type="password" id="signup-password" placeholder="New Password" class="w-full p-4 border rounded-xl mb-4 outline-none">
-            <button onclick="handleSignUp()" class="w-full bg-blue-700 text-white font-black py-4 rounded-xl">CREATE</button>
+        <div id="signup-box" class="card shadow-lg hidden mt-4">
+            <input type="email" id="signup-email" placeholder="New Email" class="w-full p-3 border rounded mb-3 outline-none">
+            <input type="password" id="signup-password" placeholder="New Password" class="w-full p-3 border rounded mb-3 outline-none">
+            <button onclick="handleSignUp()" class="w-full bg-blue-600 text-white py-3 rounded font-bold">CREATE ACCOUNT</button>
         </div>
     </div>
 
-    <div id="main-content" class="hidden">
-        
-        <div id="home-page" class="p-5">
-            <div id="notice-board" class="notice-badge hidden"></div>
-            <div id="admin-notice-input" class="card hidden border-emerald-200">
-                <p class="text-[10px] font-black mb-2">USTHAD'S NOTICE BOARD</p>
-                <textarea id="notice-text" class="w-full p-3 border rounded-xl text-sm" placeholder="Post a message..."></textarea>
-                <button onclick="updateNotice()" class="mt-3 bg-emerald-700 text-white px-6 py-2 rounded-lg font-black text-xs">POST NOTICE</button>
+    <div id="main-content" class="p-4 hidden">
+        <div id="home-page">
+            <div id="notice-board" class="notice-box hidden"></div>
+            <div id="admin-notice-ui" class="card hidden">
+                <textarea id="notice-input" class="w-full p-2 border rounded" placeholder="Write notice..."></textarea>
+                <button onclick="saveNotice()" class="mt-2 bg-[#065f46] text-white px-4 py-1 rounded text-xs">POST</button>
             </div>
             <div class="card text-center">
-                <h3 class="text-[10px] font-black text-gray-400 mb-4">AZAN TIMINGS</h3>
-                <div class="grid grid-cols-5 gap-2 text-[9px] font-black">
-                    <div class="bg-gray-50 p-2 rounded-lg">SUBHI<br><span class="text-emerald-700">05:15</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">DUHAR<br><span class="text-emerald-700">12:38</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">ASR<br><span class="text-emerald-700">03:58</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">MAGH<br><span class="text-emerald-700">06:39</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">ISHA<br><span class="text-emerald-700">07:49</span></div>
+                <p class="text-[10px] font-bold text-gray-400 mb-2">AZAN TIMINGS</p>
+                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold">
+                    <div>SUBHI<br>05:15</div><div>DUHAR<br>12:38</div><div>ASR<br>03:58</div><div>MAGH<br>06:39</div><div>ISHA<br>07:49</div>
                 </div>
             </div>
         </div>
 
-        <div id="tracker-page" class="p-5 hidden">
-            <div class="text-center"><span class="date-label" id="date-tracker"></span></div>
-            <div id="tracker-list"></div>
-        </div>
+        <div id="tracker-page" class="hidden"></div>
+        <div id="attend-page" class="hidden"></div>
+        <div id="history-page" class="hidden"></div>
+    </div>
 
-        <div id="attendance-page" class="p-5 hidden">
-            <div class="text-center"><span class="date-label" id="date-attend"></span></div>
-            <div id="attendance-list"></div>
-        </div>
-
-        <div id="history-page" class="p-5 hidden">
-            <div id="history-list"></div>
-        </div>
-
-        <div id="profile-page" class="p-5 hidden text-center">
-            <div class="card py-10">
-                <p id="user-display-email" class="text-sm font-black text-gray-600 mb-8"></p>
-                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-black py-4 rounded-xl uppercase text-xs">Sign Out</button>
-            </div>
-        </div>
-
-        <div class="bottom-nav">
-            <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house"></i>HOME</div>
-            <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-check"></i>TRACKER</div>
-            <div class="nav-item" onclick="navigate('attendance', this)"><i class="fa-solid fa-user-clock"></i>ATTEND</div>
-            <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-chart-bar"></i>STATS</div>
-            <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-user-circle"></i>ME</div>
-        </div>
+    <div id="navbar" class="bottom-nav hidden">
+        <div class="nav-item active" onclick="showPage('home', this)"><i class="fa fa-house block text-lg"></i>HOME</div>
+        <div class="nav-item" onclick="showPage('tracker', this)"><i class="fa fa-check-square block text-lg"></i>TRACKER</div>
+        <div class="nav-item" onclick="showPage('attend', this)"><i class="fa fa-user-clock block text-lg"></i>ATTEND</div>
+        <div class="nav-item" onclick="showPage('history', this)"><i class="fa fa-medal block text-lg"></i>STATS</div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, query, where, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0",
@@ -114,125 +85,109 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const ADMIN_EMAIL = "Kereemk81@gmail.com"; 
+        const ADMIN = "Kereemk81@gmail.com";
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
-        
-        const now = new Date();
-        const today = now.toLocaleDateString('en-CA');
-        const formattedDate = now.toLocaleDateString('en-GB', { day:'2-digit', month:'long', year:'numeric' });
-        
-        document.getElementById('display-date-header').innerText = formattedDate;
-        document.getElementById('date-tracker').innerText = "DATE: " + formattedDate;
-        document.getElementById('date-attend').innerText = "DATE: " + formattedDate;
+        const today = new Date().toLocaleDateString('en-CA');
 
-        window.navigate = (p, el) => {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('today-date').innerText = new Date().toDateString();
+
+        window.showPage = (p, el) => {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            ['home', 'tracker', 'attendance', 'history', 'profile'].forEach(pg => document.getElementById(pg+'-page').classList.toggle('hidden', pg !== p));
+            ['home', 'tracker', 'attend', 'history'].forEach(id => document.getElementById(id+'-page').classList.toggle('hidden', id !== p));
             if(p === 'tracker') loadTracker();
-            if(p === 'attendance') loadAttendance();
+            if(p === 'attend') loadAttend();
             if(p === 'history') loadHistory();
         };
 
         onAuthStateChanged(auth, (u) => {
-            document.getElementById('auth-page').classList.toggle('hidden', !!u);
-            document.getElementById('main-content').classList.toggle('hidden', !u);
-            document.getElementById('app-header').classList.toggle('hidden', !u);
             if(u) {
-                document.getElementById('admin-notice-input').classList.toggle('hidden', u.email !== ADMIN_EMAIL);
-                document.getElementById('user-display-email').innerText = u.email;
+                document.getElementById('auth-page').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('navbar').classList.remove('hidden');
+                document.getElementById('admin-notice-ui').classList.toggle('hidden', u.email !== ADMIN);
+            } else {
+                document.getElementById('auth-page').classList.remove('hidden');
+                document.getElementById('main-content').classList.add('hidden');
+                document.getElementById('navbar').classList.add('hidden');
             }
         });
 
-        // Live Notice
+        // NOTICE BOARD
         onSnapshot(doc(db, "settings", "notice"), (d) => {
-            const box = document.getElementById('notice-board');
-            if(d.exists() && d.data().text) { box.innerText = "📢 " + d.data().text; box.classList.remove('hidden'); }
-            else { box.classList.add('hidden'); }
+            const b = document.getElementById('notice-board');
+            if(d.exists() && d.data().text) { b.innerText = d.data().text; b.classList.remove('hidden'); }
+            else b.classList.add('hidden');
         });
 
-        window.updateNotice = async () => {
-            await setDoc(doc(db, "settings", "notice"), { text: document.getElementById('notice-text').value });
-            alert("Posted!");
-        };
+        window.saveNotice = () => setDoc(doc(db, "settings", "notice"), { text: document.getElementById('notice-input').value });
 
         window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value).catch(e => alert(e.message));
-        window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-password').value).then(() => alert("Success")).catch(e => alert(e.message));
-        window.handleLogout = () => signOut(auth);
+        window.handleSignUp = () => createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-password').value).catch(e => alert(e.message));
+        window.toggleAuth = (m) => document.getElementById('signup-box').classList.toggle('hidden');
 
         async function loadTracker() {
-            const container = document.getElementById('tracker-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50 font-bold'>SYNCING...</p>";
+            const container = document.getElementById('tracker-page');
+            container.innerHTML = "Loading...";
             const snap = await getDocs(query(collection(db, "daily"), where("date", "==", today)));
-            const saved = {}; snap.forEach(d => saved[d.id] = d.data());
+            const data = {}; snap.forEach(d => data[d.data().name] = d.data());
 
-            container.innerHTML = students.map(n => {
-                const d = saved[n+'_'+today] || {};
-                return `<div class="card shadow-sm">
-                    <p class="text-xs font-black uppercase mb-3 text-emerald-800">${n}</p>
+            container.innerHTML = students.map(s => {
+                const sData = data[s] || {};
+                return `<div class="card">
+                    <p class="font-bold text-sm mb-3">${s}</p>
                     <div class="grid grid-cols-5 gap-1">
-                        ${prayers.map(p => `<button onclick="markPrayer('${n}','${p}')" class="p-btn ${d[p] ? 'active' : ''}">${d[p] ? '✓' : p}</button>`).join('')}
+                        ${prayers.map(p => `<button onclick="togglePrayer('${s}','${p}', ${!!sData[p]})" class="p-btn ${sData[p] ? 'active' : ''}">${sData[p] ? '✓' : p}</button>`).join('')}
                     </div>
                 </div>`;
             }).join('');
         }
 
-        async function loadAttendance() {
-            const isAdmin = auth.currentUser.email === ADMIN_EMAIL;
-            const container = document.getElementById('attendance-list');
-            container.innerHTML = "<p class='text-center py-10 opacity-50 font-black'>LOADING...</p>";
-            const snap = await getDocs(query(collection(db, "daily"), where("date", "==", today)));
-            const saved = {}; snap.forEach(d => saved[d.id] = d.data());
-
-            container.innerHTML = students.map(n => {
-                const data = saved[n+'_'+today] || {};
-                return `<div class="card shadow-sm">
-                    <div class="flex justify-between items-center">
-                        <p class="text-xs font-black uppercase">${n}</p>
-                        <div class="flex gap-2">
-                            <button onclick="${isAdmin ? `markAtt('${n}','present')` : ''}" class="px-4 py-2 rounded-lg text-[10px] font-black ${data.present ? 'bg-emerald-600 text-white' : 'bg-gray-100'}">PRESENT</button>
-                            <button onclick="${isAdmin ? `markAtt('${n}','absent')` : ''}" class="px-4 py-2 rounded-lg text-[10px] font-black ${data.absent ? 'bg-red-600 text-white' : 'bg-gray-100'}">ABSENT</button>
-                        </div>
-                    </div>
-                    ${data.absent ? `<input type="text" onchange="updateReason('${n}', this.value)" placeholder="Reason for absence..." class="w-full p-3 text-[11px] border rounded-xl mt-3 outline-none bg-red-50 border-red-100" value="${data.reason || ''}">` : ''}
-                </div>`;
-            }).join('');
-        }
-
-        window.markPrayer = async (n, p) => {
-            const d = doc(db, "daily", n+'_'+today);
-            await setDoc(d, { [p]: true, name: n, date: today }, { merge: true });
+        window.togglePrayer = async (name, prayer, current) => {
+            const id = name + "_" + today;
+            await setDoc(doc(db, "daily", id), { name, date: today, [prayer]: !current }, { merge: true });
             loadTracker();
         };
 
-        window.markAtt = async (n, t) => {
-            await setDoc(doc(db, "daily", n+'_'+today), { name: n, date: today, present: t==='present', absent: t==='absent' }, { merge: true });
-            loadAttendance();
-        };
+        async function loadAttend() {
+            const isAdmin = auth.currentUser.email === ADMIN;
+            const container = document.getElementById('attend-page');
+            container.innerHTML = "Loading...";
+            const snap = await getDocs(query(collection(db, "daily"), where("date", "==", today)));
+            const data = {}; snap.forEach(d => data[d.data().name] = d.data());
 
-        window.updateReason = async (n, tx) => await setDoc(doc(db, "daily", n+'_'+today), { reason: tx }, { merge: true });
-
-        async function loadHistory() {
-            const container = document.getElementById('history-list');
-            container.innerHTML = "<p class='text-center py-10 font-bold'>RANKING...</p>";
-            const snap = await getDocs(collection(db, "daily"));
-            const totals = {}; students.forEach(s => totals[s] = 0);
-            snap.forEach(d => {
-                const data = d.data();
-                if(totals[data.name] !== undefined) prayers.forEach(p => { if(data[p]) totals[data.name]++; });
-            });
-            container.innerHTML = students.sort((a,b) => totals[b] - totals[a]).map(n => `
-                <div class="card flex justify-between items-center py-5 shadow-sm">
-                    <p class="text-sm font-black uppercase">${n}</p>
-                    <div class="text-right"><p class="text-[8px] font-black text-gray-400">PRAYERS</p><p class="text-xl font-black text-emerald-600">${totals[n]}</p></div>
-                </div>`).join('');
+            container.innerHTML = students.map(s => {
+                const sData = data[s] || {};
+                return `<div class="card flex justify-between items-center">
+                    <p class="font-bold text-sm">${s}</p>
+                    <div class="flex gap-2">
+                        <button onclick="${isAdmin ? `setAtt('${s}','present')` : ''}" class="px-3 py-1 rounded text-xs font-bold ${sData.present ? 'bg-green-600 text-white' : 'bg-gray-100'}">P</button>
+                        <button onclick="${isAdmin ? `setAtt('${s}','absent')` : ''}" class="px-3 py-1 rounded text-xs font-bold ${sData.absent ? 'bg-red-600 text-white' : 'bg-gray-100'}">A</button>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
-        window.toggleAuth = (m) => {
-            document.getElementById('login-section').classList.toggle('hidden', m === 'signup');
-            document.getElementById('signup-section').classList.toggle('hidden', m === 'login');
+        window.setAtt = async (name, type) => {
+            const id = name + "_" + today;
+            await setDoc(doc(db, "daily", id), { name, date: today, present: type==='present', absent: type==='absent' }, { merge: true });
+            loadAttend();
         };
+
+        async function loadHistory() {
+            const container = document.getElementById('history-page');
+            container.innerHTML = "Calculating...";
+            const snap = await getDocs(collection(db, "daily"));
+            const scores = {}; students.forEach(s => scores[s] = 0);
+            snap.forEach(d => {
+                const doc = d.data();
+                if(scores[doc.name] !== undefined) prayers.forEach(p => { if(doc[p]) scores[doc.name]++; });
+            });
+            container.innerHTML = students.sort((a,b) => scores[b]-scores[a]).map(s => `
+                <div class="card flex justify-between"><span>${s}</span><span class="font-bold text-green-600">${scores[s]}</span></div>
+            `).join('');
+        }
     </script>
 </body>
 </html>
