@@ -9,29 +9,18 @@
     <style>
         :root { --primary: #065f46; --bg: #f8fafc; }
         body { background: var(--bg); font-family: sans-serif; padding-bottom: 90px; }
-        .hidden { display: none; }
         .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; border: 1px solid #edf2f7; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .glass-header { background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white; border-radius: 0 0 35px 35px; padding: 40px 20px; text-align: center; }
         .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; z-index: 100; }
         .nav-item { text-align: center; font-size: 10px; color: #94a3b8; font-weight: 800; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary); }
-        .btn-main { background: var(--primary); color: white; width: 100%; padding: 14px; border-radius: 12px; font-weight: 800; text-transform: uppercase; }
-        .admin-only { background: #f0fdf4; border: 1px dashed #10b981; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
+        .admin-box { background: #f0fdf4; border: 1px dashed #10b981; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="auth-page" class="min-h-screen flex flex-col justify-center px-6">
-        <div class="card py-10 text-center">
-            <h2 class="text-2xl font-black text-emerald-900 mb-6 uppercase">Hidayatul Islam</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl bg-gray-50 mb-4 border font-bold outline-none">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl bg-gray-50 mb-6 border font-bold outline-none">
-            <button onclick="handleAuth()" id="auth-btn" class="btn-main shadow-lg">Login</button>
-            <p class="mt-6 text-xs font-bold text-gray-400 uppercase">New? <span onclick="toggleAuth()" id="toggle-text" class="text-emerald-700 underline">Register</span></p>
-        </div>
-    </div>
-
-    <div id="main-content" class="hidden">
+    <div id="main-content">
         <div class="glass-header shadow-lg">
             <h1 id="display-madrasa-name" class="text-2xl font-black uppercase tracking-tighter">Hidayatul Islam</h1>
             <p id="display-sub-text" class="text-[10px] font-bold opacity-80 uppercase tracking-widest">Achangi • Class 6 • 2026</p>
@@ -39,31 +28,26 @@
 
         <div id="home-page" class="view-page p-4">
             
-            <div id="admin-tools" class="hidden">
-                <div class="admin-only">
-                    <p class="text-[9px] font-black text-emerald-700 mb-3 uppercase text-center"><i class="fa-solid fa-tools"></i> Usthad Control Panel</p>
-                    
-                    <div class="space-y-2 mb-4">
-                        <input type="text" id="edit-name" placeholder="Edit Madrasa Name" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
-                        <input type="text" id="edit-sub" placeholder="Edit Place/Class/Year" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
-                        <button onclick="updateHeader()" class="w-full bg-emerald-700 text-white py-2 rounded-lg text-[9px] font-black uppercase">Update Header</button>
-                    </div>
-
-                    <hr class="my-4">
-
-                    <p class="text-[8px] font-black text-gray-400 mb-2 uppercase">Edit Azan Times</p>
-                    <div class="grid grid-cols-2 gap-2 mb-3">
-                        <input type="text" id="up-subhi" placeholder="Subhi" class="p-2 border rounded text-xs font-bold">
-                        <input type="text" id="up-duhar" placeholder="Duhar" class="p-2 border rounded text-xs font-bold">
-                        <input type="text" id="up-asr" placeholder="Asr" class="p-2 border rounded text-xs font-bold">
-                        <input type="text" id="up-magh" placeholder="Maghrib" class="p-2 border rounded text-xs font-bold">
-                        <input type="text" id="up-isha" placeholder="Isha" class="p-2 border rounded text-xs font-bold">
-                    </div>
-                    <button onclick="updateAzanTimes()" class="w-full bg-blue-700 text-white py-2 rounded-lg text-[9px] font-black uppercase">Update Timings</button>
+            <div class="admin-box">
+                <p class="text-[9px] font-black text-emerald-700 mb-3 uppercase text-center"><i class="fa-solid fa-tools"></i> Settings (Temporary)</p>
+                
+                <div class="space-y-2 mb-4">
+                    <input type="text" id="edit-name" placeholder="Madrasa Name" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
+                    <input type="text" id="edit-sub" placeholder="Place/Class Info" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
+                    <button onclick="updateHeader()" class="w-full bg-emerald-700 text-white py-2 rounded-lg text-[9px] font-black uppercase">Save Name</button>
                 </div>
+
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <input type="text" id="up-subhi" placeholder="Subhi" class="p-2 border rounded text-xs font-bold">
+                    <input type="text" id="up-duhar" placeholder="Duhar" class="p-2 border rounded text-xs font-bold">
+                    <input type="text" id="up-asr" placeholder="Asr" class="p-2 border rounded text-xs font-bold">
+                    <input type="text" id="up-magh" placeholder="Magh" class="p-2 border rounded text-xs font-bold">
+                    <input type="text" id="up-isha" placeholder="Isha" class="p-2 border rounded text-xs font-bold">
+                </div>
+                <button onclick="updateAzanTimes()" class="w-full bg-blue-700 text-white py-2 rounded-lg text-[9px] font-black uppercase">Save Timings</button>
             </div>
 
-            <div class="card mt-2">
+            <div class="card">
                 <p class="text-[10px] font-black text-gray-400 text-center mb-4 uppercase">Azan Timings</p>
                 <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center">
                     <div class="bg-emerald-50 p-2 rounded-lg">SUBHI<br><span id="t-subhi">05:15</span></div>
@@ -75,17 +59,23 @@
             </div>
         </div>
 
-        <div class="bottom-nav shadow-lg">
+        <div id="tracker-page" class="view-page hidden p-4">
+             <div id="tracker-list" class="space-y-3"></div>
+        </div>
+
+        <div id="results-page" class="view-page hidden p-4">
+             <div id="results-list" class="space-y-3"></div>
+        </div>
+
+        <div class="bottom-nav">
             <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house text-xl mb-1"></i><br>HOME</div>
             <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-calendar-check text-xl mb-1"></i><br>TRACKER</div>
             <div class="nav-item" onclick="navigate('results', this)"><i class="fa-solid fa-graduation-cap text-xl mb-1"></i><br>RESULTS</div>
-            <div onclick="logout()" class="nav-item"><i class="fa-solid fa-power-off text-xl mb-1 text-red-400"></i><br>EXIT</div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -98,24 +88,10 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const ADMIN_EMAIL = "kereemk81@gmail.com";
-
-        onAuthStateChanged(auth, (u) => {
-            document.getElementById('auth-page').classList.toggle('hidden', !!u);
-            document.getElementById('main-content').classList.toggle('hidden', !u);
-            if(u) {
-                const isAdmin = u.email === ADMIN_EMAIL;
-                document.getElementById('admin-tools').classList.toggle('hidden', !isAdmin);
-                syncData();
-            }
-        });
-
-        // ലൈവ് ഡാറ്റ സിങ്ക് ചെയ്യുക
+        // ലൈവ് സിങ്കിംഗ്
         function syncData() {
-            // Header Sync
             onSnapshot(doc(db, "settings", "header_info"), (snap) => {
                 if(snap.exists()) {
                     const d = snap.data();
@@ -123,7 +99,6 @@
                     document.getElementById('display-sub-text').innerText = d.subtext || "Achangi • Class 6 • 2026";
                 }
             });
-            // Azan Sync
             onSnapshot(doc(db, "settings", "timings"), (snap) => {
                 if(snap.exists()){
                     const d = snap.data();
@@ -135,32 +110,33 @@
                 }
             });
         }
+        syncData();
 
-        // അപ്ഡേറ്റ് ഫംഗ്‌ഷനുകൾ
         window.updateHeader = async () => {
             const name = document.getElementById('edit-name').value;
             const sub = document.getElementById('edit-sub').value;
-            if(!name || !sub) return alert("Fill all fields");
             await setDoc(doc(db, "settings", "header_info"), { name, subtext: sub }, { merge: true });
-            alert("Header Updated!");
+            alert("Updated!");
         };
 
         window.updateAzanTimes = async () => {
             const data = {
-                subhi: document.getElementById('up-subhi').value || document.getElementById('t-subhi').innerText,
-                duhar: document.getElementById('up-duhar').value || document.getElementById('t-duhar').innerText,
-                asr: document.getElementById('up-asr').value || document.getElementById('t-asr').innerText,
-                magh: document.getElementById('up-magh').value || document.getElementById('t-magh').innerText,
-                isha: document.getElementById('up-isha').value || document.getElementById('t-isha').innerText
+                subhi: document.getElementById('up-subhi').value || "05:15",
+                duhar: document.getElementById('up-duhar').value || "12:38",
+                asr: document.getElementById('up-asr').value || "03:58",
+                magh: document.getElementById('up-magh').value || "06:39",
+                isha: document.getElementById('up-isha').value || "07:49"
             };
             await setDoc(doc(db, "settings", "timings"), data, { merge: true });
-            alert("Azan Timings Updated!");
+            alert("Timings Saved!");
         };
 
-        // ... (Auth & Navigation logic same as before) ...
-        window.handleAuth = () => { /* ... */ };
-        window.logout = () => signOut(auth);
-        window.navigate = (p, el) => { /* ... */ };
+        window.navigate = (p, el) => {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.view-page').forEach(page => page.classList.add('hidden'));
+            document.getElementById(p + '-page').classList.remove('hidden');
+        };
     </script>
 </body>
 </html>
