@@ -9,12 +9,12 @@
     <style>
         body { background-color: #f3f4f6; padding-bottom: 90px; font-family: sans-serif; }
         .hidden { display: none; }
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
         .header-card { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 25px 20px; text-align: center; }
         .bottom-nav { background: white; border-top: 1px solid #e5e7eb; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
         .nav-item { text-align: center; font-size: 10px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 800; }
         .nav-item.active { color: #065f46; }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
         .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 0; border-radius: 10px; font-size: 9px; font-weight: 800; width: 100%; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
         .att-btn { padding: 15px 0; border-radius: 10px; font-size: 11px; font-weight: 900; flex: 1; text-align: center; background: #f9fafb; color: #6b7280; border: 1px solid #eee; }
@@ -37,7 +37,7 @@
     <div id="main-content" class="hidden">
         <div id="home-page" class="p-5">
             <div class="card text-center">
-                <h3 class="text-[10px] font-black text-gray-400 mb-4 uppercase">Azan Timings</h3>
+                <h3 class="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest">Azan Timings</h3>
                 <div class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase text-emerald-700">
                     <div class="bg-gray-50 p-2 rounded-lg">SUBHI<br><span>05:15</span></div>
                     <div class="bg-gray-50 p-2 rounded-lg">DUHAR<br><span>12:38</span></div>
@@ -63,7 +63,7 @@
                 <i class="fa-solid fa-circle-user text-5xl text-emerald-700 mb-4"></i>
                 <p id="user-email-text" class="text-xs font-bold text-gray-500 mb-8"></p>
                 <button onclick="navigate('chat')" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl mb-4 uppercase text-[10px] flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-comments"></i> Open Chat
+                    <i class="fa-solid fa-comments text-lg"></i> Open Chat
                 </button>
                 <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-bold py-3 rounded-xl uppercase text-[10px]">Sign Out</button>
             </div>
@@ -77,7 +77,7 @@
             </div>
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 flex flex-col bg-gray-50"></div>
             <div class="p-4 bg-white border-t flex gap-2">
-                <input type="text" id="chat-input" placeholder="Message..." class="flex-1 p-3 bg-gray-100 rounded-xl outline-none">
+                <input type="text" id="chat-input" placeholder="Type message..." class="flex-1 p-3 bg-gray-100 rounded-xl outline-none">
                 <button onclick="sendMessage()" class="bg-emerald-700 text-white p-3 rounded-xl"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
@@ -95,18 +95,18 @@
     <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
         <div id="login-box" class="card">
             <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase">Login</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl mb-2 bg-gray-100 outline-none">
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl mb-2 bg-gray-100 outline-none text-sm">
             <div class="text-right mb-6"><span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer">Forgot Password?</span></div>
             <button onclick="handleLogin()" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-4 uppercase">Login</button>
             <p onclick="toggleAuth(true)" class="text-xs font-bold text-gray-400 uppercase cursor-pointer">New? <span class="text-emerald-700 underline">Register</span></p>
         </div>
         <div id="signup-box" class="card hidden">
             <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase">Register</h2>
-            <input type="email" id="s-email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none">
-            <input type="password" id="s-pass" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-gray-100 outline-none">
+            <input type="email" id="s-email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm">
+            <input type="password" id="s-pass" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-gray-100 outline-none text-sm">
             <button onclick="handleSignUp()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl mb-4 uppercase">Create Account</button>
-            <p onclick="toggleAuth(false)" class="text-xs font-bold text-gray-400 underline cursor-pointer uppercase">Back to Login</p>
+            <p onclick="toggleAuth(false)" class="text-xs font-bold text-gray-400 underline cursor-pointer uppercase text-center">Back to Login</p>
         </div>
     </div>
 
@@ -162,6 +162,29 @@
             }
         });
 
+        // Global functions
+        window.handleLogin = () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            signInWithEmailAndPassword(auth, email, pass).catch(e => alert("Error: " + e.message));
+        };
+
+        window.handleSignUp = () => {
+            const email = document.getElementById('s-email').value;
+            const pass = document.getElementById('s-pass').value;
+            createUserWithEmailAndPassword(auth, email, pass).then(() => alert("Success!")).catch(e => alert(e.message));
+        };
+
+        window.handleResetPassword = () => {
+            const email = document.getElementById('email').value;
+            if(email) sendPasswordResetEmail(auth, email).then(() => alert("Reset Link Sent!")).catch(e => alert(e.message));
+            else alert("Please enter email");
+        };
+
+        window.handleLogout = () => signOut(auth);
+        window.toggleAuth = (s) => { document.getElementById('login-box').classList.toggle('hidden', s); document.getElementById('signup-box').classList.toggle('hidden', !s); };
+        window.changeDate = (val) => { selectedDate = val; navigate('home', null); };
+
         window.navigate = (p, el) => {
             if(el) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); }
             ['home', 'tracker', 'attendance', 'results', 'history', 'profile', 'chat'].forEach(pg => {
@@ -177,6 +200,7 @@
             if(p === 'history') loadHistory();
         };
 
+        // Logic Functions
         function loadAttendance() {
             const isAdmin = auth.currentUser?.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
             const container = document.getElementById('attendance-list');
@@ -218,12 +242,7 @@
                         <p class="text-lg font-black text-emerald-800">${r.total}/600</p>
                     </div>
                     <div id="marks-${i}" class="hidden subject-grid">
-                        <div class="sub-box"><p class="text-[7px] text-gray-400">Duroosul I</p><p class="text-[10px] font-black">${r.scores['Dur-1']}</p></div>
-                        <div class="sub-box"><p class="text-[7px] text-gray-400">Fiqh</p><p class="text-[10px] font-black">${r.scores['Fiq']}</p></div>
-                        <div class="sub-box"><p class="text-[7px] text-gray-400">Tajweed</p><p class="text-[10px] font-black">${r.scores['Taj']}</p></div>
-                        <div class="sub-box"><p class="text-[7px] text-gray-400">Duroosul II</p><p class="text-[10px] font-black">${r.scores['Dur-2']}</p></div>
-                        <div class="sub-box"><p class="text-[7px] text-gray-400">Quran</p><p class="text-[10px] font-black">${r.scores['Quran']}</p></div>
-                        <div class="sub-box"><p class="text-[7px] text-gray-400">Practical</p><p class="text-[10px] font-black">${r.scores['Prac']}</p></div>
+                        ${Object.keys(r.scores).map(sub => `<div class="sub-box"><p class="text-[7px] text-gray-400">${sub}</p><p class="text-[10px] font-black">${r.scores[sub]}</p></div>`).join('')}
                     </div>
                 </div>`).join('');
         };
@@ -246,16 +265,9 @@
             const isAdmin = user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
             if (isAdmin) chatName = "ADMIN";
             else if (!chatName) {
-                let n = prompt("Name:"); if (n && n.trim()) { chatName = n.trim(); localStorage.setItem('madrasa_chat_name', chatName); }
+                let n = prompt("Enter Student Name to start Chat:");
+                if (n && n.trim()) { chatName = n.trim(); localStorage.setItem('madrasa_chat_name', chatName); }
                 else { navigate('profile'); return; }
             }
             onSnapshot(query(collection(db, "messages"), orderBy("timestamp", "asc")), (snap) => {
-                const container = document.getElementById('chat-messages'); container.innerHTML = "";
-                snap.forEach(d => {
-                    const data = d.data(); const isMe = data.sender === chatName;
-                    container.innerHTML += `<div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-2">
-                        <span class="text-[8px] font-black uppercase text-gray-400 px-1">${data.sender} ${isAdmin ? `<button onclick="deleteMsg('${d.id}')" class="text-red-500 ml-2">DEL</button>` : ''}</span>
-                        <div class="msg-box ${isMe ? 'msg-me' : 'msg-them'}"><p>${data.text}</p></div>
-                    </div>`;
-                });
-               
+                const container = document.getElementById('chat-messages'); containe
