@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,238 +7,49 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #065f46; --bg: #f8fafc; }
-        body { background: var(--bg); font-family: sans-serif; padding-bottom: 100px; }
-        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; border: 1px solid #edf2f7; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .glass-header { background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white; border-radius: 0 0 35px 35px; padding: 30px 20px; text-align: center; position: relative; }
-        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 2000; }
-        .nav-item { text-align: center; font-size: 9px; color: #94a3b8; font-weight: 800; cursor: pointer; flex: 1; text-transform: uppercase; }
-        .nav-item.active { color: var(--primary); }
-        .admin-box { background: #f0fdf4; border: 1px dashed #10b981; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
-        .view-page { display: none; }
-        .view-page.active { display: block; }
-        .p-btn-active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
-        .att-btn { padding: 8px 12px; border-radius: 10px; font-weight: 900; border: 2px solid #e2e8f0; font-size: 10px; min-width: 90px; text-transform: uppercase; }
-        .is-present { background: #10b981 !important; color: white !important; }
-        .is-absent { background: #ef4444 !important; color: white !important; }
-        .hidden { display: none !important; }
-        .date-input { background: rgba(255,255,255,0.2); border: none; color: white; font-weight: 900; font-size: 12px; padding: 6px 12px; border-radius: 10px; outline: none; cursor: pointer; }
+        body {
+            background-color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .main-card {
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .header-bg {
+            background: linear-gradient(135deg, #065f46 0%, #059669 100%);
+        }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen p-6">
 
-    <div id="login-overlay" class="fixed inset-0 bg-emerald-900 z-[5000] flex items-center justify-center p-6 text-center">
-        <div class="bg-white w-full max-w-md rounded-3xl p-8 shadow-2xl">
-            <h2 id="auth-title" class="text-2xl font-black text-emerald-900 mb-6 uppercase">Admin Login</h2>
-            <input type="email" id="auth-email" placeholder="Email Address" class="w-full p-4 border rounded-xl mb-3 outline-none font-bold">
-            <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 outline-none font-bold">
-            <button id="btn-auth-action" class="w-full bg-emerald-700 text-white py-4 rounded-xl font-black uppercase mb-4 shadow-lg">Login</button>
-            <div class="flex flex-col gap-3">
-                <p id="toggle-auth" class="text-xs font-black text-emerald-600 cursor-pointer uppercase">New User? Create Account</p>
-                <p id="forgot-pass-btn" class="text-xs font-bold text-gray-400 cursor-pointer uppercase underline">Forgot Password?</p>
+    <div class="main-card w-full max-w-md overflow-hidden text-center">
+        <div class="header-bg p-10 text-white">
+            <i class="fa-solid fa-clock-rotate-left text-5xl mb-4 opacity-80"></i>
+            <h1 class="text-xl font-black uppercase tracking-tighter">
+                HIDAYATUL ISLAM CONNECT
+            </h1>
+        </div>
+
+        <div class="p-10">
+            <h2 class="text-2xl font-bold text-emerald-900 mb-4 leading-relaxed">
+                ಸದ್ಯಕ್ಕೆ ಇದನ್ನು ಸ್ಥಗಿತಗೊಳಿಸಲಾಗಿದೆ
+            </h2>
+            
+            <div class="w-16 h-1 bg-emerald-100 mx-auto mb-6"></div>
+            
+            <p class="text-gray-500 text-sm font-medium leading-loose">
+                ಮದರಸಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಅಪ್‌ಡೇಟ್‌ಗಳಿಗಾಗಿ ಮತ್ತು <br>
+                ಹೆಚ್ಚಿನ ಮಾಹಿತಿಗಾಗಿ ದಯವಿಟ್ಟು ನೇರವಾಗಿ ಸಂಪರ್ಕಿಸಿ.
+            </p>
+
+            <div class="mt-10">
+                <p class="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                    Hidayatul Islam Madrasa, Achangi
+                </p>
             </div>
         </div>
     </div>
 
-    <div class="glass-header shadow-lg">
-        <button id="btn-logout" class="absolute right-6 top-8 text-white opacity-50 hidden"><i class="fa-solid fa-right-from-bracket text-xl"></i></button>
-        <h1 id="madrasa-title-display" class="text-xl font-black uppercase text-white tracking-tighter">HIDAYATUL ISLAM MADRASA</h1>
-        <div class="mt-3"><input type="date" id="global-date" class="date-input"></div>
-    </div>
-
-    <div id="home-page" class="view-page active p-4">
-        <div class="admin-box">
-            <p class="text-[10px] font-black text-emerald-700 mb-3 text-center uppercase underline">Settings</p>
-            <div class="grid grid-cols-3 gap-2 mb-4">
-                <input type="text" id="up-subhi" placeholder="Subhi" class="p-2 border rounded text-[10px] font-bold">
-                <input type="text" id="up-duhar" placeholder="Duhar" class="p-2 border rounded text-[10px] font-bold">
-                <input type="text" id="up-asr" placeholder="Asr" class="p-2 border rounded text-[10px] font-bold">
-                <input type="text" id="up-magh" placeholder="Magh" class="p-2 border rounded text-[10px] font-bold">
-                <input type="text" id="up-isha" placeholder="Isha" class="p-2 border rounded text-[10px] font-bold">
-                <button id="btn-save-timings" class="bg-emerald-600 text-white rounded text-[8px] font-black uppercase">Update</button>
-            </div>
-            <textarea id="holiday-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Notice Board..."></textarea>
-            <button id="btn-post-notice" class="w-full bg-amber-600 text-white py-3 rounded-xl text-[9px] font-black uppercase mb-4">Post Notice</button>
-            <input type="text" id="edit-name" placeholder="Madrasa Name" class="w-full p-3 border rounded-xl text-xs font-bold mb-2">
-            <button id="btn-save-header" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[9px] font-black uppercase">Save Branding</button>
-        </div>
-        <div class="card shadow-sm">
-            <p class="text-[10px] font-black text-gray-400 text-center mb-4 uppercase">Azan Timings</p>
-            <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center uppercase">
-                <div class="bg-emerald-50 p-2 rounded-xl">SUBHI<br><span id="t-subhi">--:--</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">DUHAR<br><span id="t-duhar">--:--</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">ASR<br><span id="t-asr">--:--</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">MAGH<br><span id="t-magh">--:--</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">ISHA<br><span id="t-isha">--:--</span></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="tracker-page" class="view-page p-4"><div id="tracker-list" class="space-y-3"></div></div>
-
-    <div id="attendance-page" class="view-page p-4">
-        <div class="admin-box flex gap-2"><input type="text" id="new-student-name" placeholder="Student Name" class="flex-1 p-2 border rounded text-xs font-bold outline-none"><button id="btn-add-student" class="bg-emerald-700 text-white px-5 rounded text-[10px] font-bold uppercase">Add</button></div>
-        <div id="attendance-list" class="space-y-3"></div>
-    </div>
-
-    <div id="stats-page" class="view-page p-4">
-        <p class="text-[10px] font-black text-center text-emerald-800 mb-4 uppercase underline">Student Progress Summary</p>
-        <div id="stats-list" class="space-y-3"></div>
-    </div>
-
-    <div id="results-page" class="view-page p-4">
-        <div class="card bg-emerald-50 border-emerald-100"><p id="display-homework" class="text-sm font-bold text-emerald-800 text-center">No homework posted.</p></div>
-        <div class="card shadow-sm">
-            <p class="text-[9px] font-black text-gray-500 mb-3 uppercase tracking-widest font-bold">Message to Usthad</p>
-            <input type="text" id="parent-student-name" placeholder="Student Name" class="w-full p-3 border rounded-xl text-xs font-bold mb-2">
-            <textarea id="parent-complaint" class="w-full p-3 border rounded-xl text-xs font-bold mb-2" placeholder="Message..."></textarea>
-            <button id="btn-send-complaint" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[10px] font-black uppercase">Send Message</button>
-        </div>
-        <div class="admin-box mt-4">
-            <textarea id="homework-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Homework..."></textarea>
-            <button id="btn-save-homework" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[9px] font-black uppercase">Post Work</button>
-            <div id="complaints-list" class="mt-4 space-y-2"></div>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <div id="nav-home" class="nav-item active" onclick="navigate('home')"><i class="fa-solid fa-house text-lg mb-1"></i><br>HOME</div>
-        <div id="nav-tracker" class="nav-item" onclick="navigate('tracker')"><i class="fa-solid fa-person-praying text-lg mb-1"></i><br>NAMAZ</div>
-        <div id="nav-attendance" class="nav-item" onclick="navigate('attendance')"><i class="fa-solid fa-clipboard-user text-lg mb-1"></i><br>HAJAR</div>
-        <div id="nav-stats" class="nav-item" onclick="navigate('stats')"><i class="fa-solid fa-chart-line text-lg mb-1"></i><br>STATS</div>
-        <div id="nav-results" class="nav-item" onclick="navigate('results')"><i class="fa-solid fa-users text-lg mb-1"></i><br>COMMUNITY</div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc, collection, addDoc, query, orderBy, limit, getDocs, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCnSz248OfMbDr3V3kD9NAZkVxxON2fIvE",
-            authDomain: "madrasa-4c7e2.firebaseapp.com",
-            projectId: "madrasa-4c7e2",
-            storageBucket: "madrasa-4c7e2.firebasestorage.app",
-            messagingSenderId: "770067409084",
-            appId: "1:770067409084:web:52e38ae80a3601245248b9"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        let studentList = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
-        let selectedDate = new Date().toLocaleDateString('en-CA');
-        let isSignupMode = false;
-
-        document.getElementById('global-date').value = selectedDate;
-        document.getElementById('global-date').onchange = (e) => { selectedDate = e.target.value; renderTracker(); renderAttendance(); renderStats(); };
-
-        onAuthStateChanged(auth, user => {
-            document.getElementById('login-overlay').classList.toggle('hidden', !!user);
-            document.getElementById('btn-logout').classList.toggle('hidden', !user);
-            if(user) { renderTracker(); renderAttendance(); renderStats(); }
-        });
-
-        document.getElementById('btn-auth-action').onclick = () => {
-            const e = document.getElementById('auth-email').value; const p = document.getElementById('auth-pass').value;
-            if(!e || !p) return alert("Fill details");
-            if(isSignupMode) createUserWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
-            else signInWithEmailAndPassword(auth, e, p).catch(() => alert("Login Failed - Create Account if New"));
-        };
-
-        document.getElementById('toggle-auth').onclick = () => {
-            isSignupMode = !isSignupMode;
-            document.getElementById('auth-title').innerText = isSignupMode ? "Create Account" : "Admin Login";
-            document.getElementById('btn-auth-action').innerText = isSignupMode ? "Sign Up" : "Login";
-            document.getElementById('toggle-auth').innerText = isSignupMode ? "Login Instead" : "New User? Create Account";
-        };
-
-        document.getElementById('forgot-pass-btn').onclick = () => {
-            const e = document.getElementById('auth-email').value;
-            if(e) sendPasswordResetEmail(auth, e).then(() => alert("Reset link sent!")).catch(err => alert(err.message));
-            else alert("Enter email first");
-        };
-
-        document.getElementById('btn-logout').onclick = () => signOut(auth);
-
-        window.navigate = (p) => {
-            document.querySelectorAll('.view-page').forEach(page => page.classList.remove('active'));
-            document.getElementById(p + '-page').classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('nav-' + p).classList.add('active');
-            if(p === 'tracker') renderTracker(); if(p === 'attendance') renderAttendance(); if(p === 'stats') renderStats();
-        };
-
-        // --- RENDER FUNCTIONS ---
-        function renderTracker() {
-            const container = document.getElementById('tracker-list');
-            container.innerHTML = studentList.map(name => `
-                <div class="card"><p class="text-[12px] font-black uppercase mb-3 text-emerald-900">${name}</p>
-                <div class="grid grid-cols-5 gap-1">
-                    ${["Subhi", "Duhar", "Asr", "Maghrib", "Isha"].map(p => `
-                        <div class="text-center"><p style="font-size:7px" class="uppercase font-black text-gray-400 mb-1">${p}</p>
-                        <button onclick="togglePrayer('${name}','${p}')" id="n-${name}-${p}" class="bg-gray-50 py-3 rounded-lg border text-[10px] font-bold w-full uppercase">${p[0]}</button></div>
-                    `).join('')}
-                </div></div>`).join('');
-            syncTrackerData();
-        }
-
-        function renderAttendance() {
-            const container = document.getElementById('attendance-list');
-            container.innerHTML = studentList.map(name => `<div class="card flex justify-between items-center py-2"><p class="text-[12px] font-black uppercase text-emerald-900 font-bold">${name}</p><button onclick="toggleAttendance('${name}')" id="att-${name}" class="att-btn">MARK</button></div>`).join('');
-            syncAttendanceData();
-        }
-
-        async function renderStats() {
-            const container = document.getElementById('stats-list');
-            container.innerHTML = "<p class='text-center text-xs font-bold'>Loading Summary...</p>";
-            let html = "";
-            for(const name of studentList) {
-                const qAtt = query(collection(db, "daily_attendance"), where("name", "==", name), where("status", "==", "present"));
-                const qSnap = await getDocs(qAtt);
-                html += `<div class="card"><p class="text-[12px] font-black uppercase text-emerald-900 mb-3 font-bold">${name}</p>
-                        <div class="grid grid-cols-2 gap-2 text-center">
-                            <div class="bg-blue-50 p-3 rounded-xl"><p class="text-sm font-black text-blue-700">${qSnap.size}</p><p class="text-[8px] font-bold uppercase">Days Present</p></div>
-                            <div class="bg-emerald-50 p-3 rounded-xl"><p class="text-sm font-black text-emerald-700">Check</p><p class="text-[8px] font-bold uppercase">Total Namaz</p></div>
-                        </div></div>`;
-            }
-            container.innerHTML = html;
-        }
-
-        // DATABASE SYNC
-        window.toggleAttendance = async (name) => {
-            const ref = doc(db, "daily_attendance", `${selectedDate}_${name}`);
-            const snap = await getDoc(ref);
-            await setDoc(ref, { name: name, status: (snap.exists() && snap.data().status === 'present') ? 'absent' : 'present' });
-        };
-        window.togglePrayer = async (student, prayer) => {
-            const ref = doc(db, "namaz_tracker", `${selectedDate}_${student}`);
-            const snap = await getDoc(ref);
-            await setDoc(ref, { [prayer]: !(snap.exists() && snap.data()[prayer]) }, { merge: true });
-        };
-        function syncAttendanceData() {
-            studentList.forEach(name => { onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${name}`), snap => { const btn = document.getElementById(`att-${name}`); if(btn && snap.exists()){ btn.className = `att-btn ${snap.data().status === 'present' ? 'is-present' : 'is-absent'}`; btn.innerText = snap.data().status.toUpperCase(); } else if(btn) { btn.className = "att-btn"; btn.innerText = "MARK"; } }); });
-        }
-        function syncTrackerData() {
-            studentList.forEach(name => { onSnapshot(doc(db, "namaz_tracker", `${selectedDate}_${name}`), snap => { const data = snap.data(); ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"].forEach(p => { const btn = document.getElementById(`n-${name}-${p}`); if(btn){ if(data && data[p]) btn.classList.add('p-btn-active'); else btn.classList.remove('p-btn-active'); } }); }); });
-        }
-
-        // SYNC REALTIME
-        onSnapshot(doc(db, "settings", "header_info"), snap => { if(snap.exists()) document.getElementById('madrasa-title-display').innerText = snap.data().name || "HIDAYATUL ISLAM MADRASA"; });
-        onSnapshot(doc(db, "settings", "timings"), snap => { if(snap.exists()){ const d = snap.data(); ["subhi", "duhar", "asr", "magh", "isha"].forEach(p => { if(d[p]) document.getElementById('t-' + p).innerText = d[p]; }); } });
-        onSnapshot(doc(db, "settings", "homework"), snap => { if(snap.exists()) document.getElementById('display-homework').innerText = snap.data().text; });
-        onSnapshot(query(collection(db, "complaints"), orderBy("timestamp", "desc"), limit(5)), snap => {
-            const list = document.getElementById('complaints-list'); list.innerHTML = "";
-            snap.forEach(doc => { const d = doc.data(); list.innerHTML += `<div class="p-2 bg-rose-50 border-l-4 border-rose-300 rounded mb-1"><p class="text-[9px] font-black uppercase text-rose-800">${d.student}</p><p class="text-xs text-gray-700 font-bold">${d.text}</p></div>`; });
-        });
-
-        // ACTIONS
-        document.getElementById('btn-save-timings').onclick = async () => { await setDoc(doc(db, "settings", "timings"), { subhi: document.getElementById('up-subhi').value, duhar: document.getElementById('up-duhar').value, asr: document.getElementById('up-asr').value, magh: document.getElementById('up-magh').value, isha: document.getElementById('up-isha').value }, {merge:true}); alert("Updated"); };
-        document.getElementById('btn-save-header').onclick = async () => { await setDoc(doc(db, "settings", "header_info"), { name: document.getElementById('edit-name').value }); alert("Saved"); };
-        document.getElementById('btn-save-homework').onclick = async () => { await setDoc(doc(db, "settings", "homework"), { text: document.getElementById('homework-input').value }); alert("Posted"); };
-        document.getElementById('btn-post-notice').onclick = async () => { await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: true, reason: document.getElementById('holiday-input').value }); document.getElementById('holiday-input').value = ""; };
-        document.getElementById('btn-send-complaint').onclick = async () => { const s = document.getElementById('parent-student-name').value; const t = document.getElementById('parent-complaint').value; if(s && t) await addDoc(collection(db, "complaints"), { student: s, text: t, timestamp: new Date() }); alert("Sent"); };
-    </script>
 </body>
 </html>
