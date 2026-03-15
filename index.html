@@ -3,47 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam Madrasa</title>
+    <title>Hidayatul Islam Connect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #065f46; --bg: #f1f5f9; }
+        :root { --primary: #065f46; --bg: #f8fafc; }
         body { background: var(--bg); font-family: sans-serif; padding-bottom: 90px; }
         .hidden { display: none; }
-        .card { background: white; border-radius: 20px; padding: 20px; margin: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .header { background: var(--primary); color: white; padding: 40px 20px; border-radius: 0 0 30px 30px; text-align: center; }
-        .btn-main { background: var(--primary); color: white; width: 100%; padding: 15px; border-radius: 12px; font-weight: 800; text-transform: uppercase; }
-        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #ddd; z-index: 100; }
-        .nav-item { font-size: 10px; font-weight: 800; color: #94a3b8; text-align: center; cursor: pointer; }
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; border: 1px solid #edf2f7; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .glass-header { background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white; border-radius: 0 0 30px 30px; padding: 30px 20px; text-align: center; }
+        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; z-index: 100; }
+        .nav-item { text-align: center; font-size: 10px; color: #94a3b8; font-weight: 800; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
+        .btn-main { background: var(--primary); color: white; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; text-transform: uppercase; }
+        .sub-box { background: #f8fafc; padding: 8px; border-radius: 10px; text-align: center; border: 1px solid #edf2f7; }
     </style>
 </head>
 <body>
 
     <div id="auth-page" class="min-h-screen flex flex-col justify-center px-6">
         <div class="card py-10 text-center shadow-2xl">
-            <h2 class="text-3xl font-black text-emerald-900 mb-2 uppercase tracking-tighter">Madrasa Connect</h2>
-            <p class="text-[10px] font-bold text-gray-400 mb-8 uppercase">Hidayatul Islam • Achangi</p>
-            
-            <div id="login-form">
-                <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl bg-gray-50 mb-4 border-none outline-none font-bold text-sm">
-                <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl bg-gray-50 mb-6 border-none outline-none font-bold text-sm">
-                <button onclick="handleAuth()" id="auth-btn" class="btn-main shadow-lg active:scale-95 transition-all">Login</button>
-                <p class="mt-8 text-xs font-bold text-gray-400">Don't have an account? <span onclick="toggleAuth()" id="toggle-text" class="text-emerald-700 underline cursor-pointer">Register</span></p>
+            <h2 class="text-3xl font-black text-emerald-900 mb-8 uppercase tracking-tighter">Hidayatul Islam</h2>
+            <div id="auth-form">
+                <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl bg-gray-50 mb-4 outline-none border font-bold">
+                <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl bg-gray-50 mb-6 outline-none border font-bold">
+                <button onclick="handleAuth()" id="auth-btn" class="btn-main">Login</button>
+                <p class="mt-8 text-xs font-bold text-gray-400 uppercase">New User? <span onclick="toggleAuth()" id="toggle-text" class="text-emerald-700 underline cursor-pointer">Register</span></p>
             </div>
         </div>
     </div>
 
     <div id="main-content" class="hidden">
-        <div class="header shadow-lg">
+        <div class="glass-header shadow-lg">
             <h1 class="text-2xl font-black uppercase tracking-tighter">Hidayatul Islam</h1>
-            <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest">Class 6 • New Edition 2026</p>
+            <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest">Achangi • Class 6 • 2026</p>
         </div>
 
-        <div id="home-page" class="page-view">
+        <div id="home-page" class="view-page p-4">
             <div class="card text-center">
                 <h3 class="text-[10px] font-black text-gray-400 uppercase mb-4 tracking-widest">Azan Timings</h3>
-                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800">
+                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 uppercase">
                     <div class="bg-emerald-50 p-2 rounded-lg">SUBHI<br>05:15</div>
                     <div class="bg-emerald-50 p-2 rounded-lg">DUHAR<br>12:38</div>
                     <div class="bg-emerald-50 p-2 rounded-lg">ASR<br>03:58</div>
@@ -51,36 +50,49 @@
                     <div class="bg-emerald-50 p-2 rounded-lg">ISHA<br>07:49</div>
                 </div>
             </div>
-            <div class="card p-10 text-center">
-                <i class="fa-solid fa-circle-check text-5xl text-emerald-600 mb-4"></i>
-                <h2 class="font-black text-emerald-900 uppercase">Success!</h2>
-                <p class="text-xs text-gray-500 mt-2">ലോഗിൻ പൂർത്തിയായി. ബാക്കി വിവരങ്ങൾ ഓരോന്നായി നമുക്ക് ഇവിടെ ചേർക്കാം.</p>
-            </div>
         </div>
 
+        <div id="results-page" class="view-page hidden p-4">
+            <h2 class="text-center font-black text-emerald-800 uppercase mb-4 text-sm tracking-widest">Public Exam Results</h2>
+            <div id="results-list" class="space-y-3"></div>
+        </div>
+        
+        <div id="tracker-page" class="view-page hidden p-4"><div id="tracker-list" class="space-y-3"></div></div>
+
         <div class="bottom-nav">
-            <div class="nav-item active"><i class="fa-solid fa-house text-xl mb-1"></i><br>HOME</div>
-            <div onclick="logout()" class="nav-item"><i class="fa-solid fa-power-off text-xl mb-1 text-red-400"></i><br>LOGOUT</div>
+            <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house text-xl mb-1"></i><br>HOME</div>
+            <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-calendar-check text-xl mb-1"></i><br>TRACKER</div>
+            <div class="nav-item" onclick="navigate('results', this)"><i class="fa-solid fa-graduation-cap text-xl mb-1"></i><br>RESULTS</div>
+            <div onclick="logout()" class="nav-item"><i class="fa-solid fa-power-off text-xl mb-1 text-red-400"></i><br>EXIT</div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, collection, onSnapshot, setDoc, addDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Your New Config
         const firebaseConfig = {
             apiKey: "AIzaSyCnSz248OfMbDr3V3kD9NAZkVxxON2fIvE",
             authDomain: "madrasa-4c7e2.firebaseapp.com",
             projectId: "madrasa-4c7e2",
             storageBucket: "madrasa-4c7e2.firebasestorage.app",
             messagingSenderId: "770067409084",
-            appId: "1:770067409084:web:52e38ae80a3601245248b9",
-            measurementId: "G-8NW073CSLY"
+            appId: "1:770067409084:web:52e38ae80a3601245248b9"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
+        const fullResults = [
+            { name: "MUHAMMAD DISHAN K.A", total: 529, remark: "DISTINCTION", scores: { "Duroosul I": "90 A", "Fiqh": "89 A", "Tajweed": "91 A+", "Duroosul II": "81 A", "Quran": "80 B+", "Practical": "98 A++" } },
+            { name: "SHAKIRA", total: 558, remark: "DISTINCTION", scores: { "Duroosul I": "96 A++", "Fiqh": "96 A++", "Tajweed": "95 A+", "Duroosul II": "91 A+", "Quran": "80 B+", "Practical": "100 A++" } },
+            { name: "MUHAMMAD SIFAN", total: 490, remark: "DISTINCTION", scores: { "Duroosul I": "90 A", "Fiqh": "77 B+", "Tajweed": "84 A", "Duroosul II": "69 B", "Quran": "78 B+", "Practical": "92 A+" } },
+            { name: "KADEEJATHU NILA", total: 487, remark: "DISTINCTION", scores: { "Duroosul I": "84 A", "Fiqh": "70 B", "Tajweed": "84 A", "Duroosul II": "78 B+", "Quran": "71 B+", "Practical": "100 A++" } }
+            // ബാക്കി കുട്ടികളുടെ ഡാറ്റയും ഇതേപോലെ ചേർക്കാം...
+        ];
 
         let isLogin = true;
 
@@ -98,14 +110,45 @@
         window.handleAuth = () => {
             const e = document.getElementById('email').value;
             const p = document.getElementById('pass').value;
-            if (isLogin) {
-                signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
-            } else {
-                createUserWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
-            }
+            if(isLogin) signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+            else createUserWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
         };
 
         window.logout = () => signOut(auth);
+
+        window.navigate = (p, el) => {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.view-page').forEach(page => page.classList.add('hidden'));
+            document.getElementById(p + '-page').classList.remove('hidden');
+            if(p === 'results') loadResults();
+            if(p === 'tracker') loadTracker();
+        };
+
+        function loadResults() {
+            const container = document.getElementById('results-list');
+            container.innerHTML = fullResults.map((r, i) => `
+                <div class="card p-5 border-l-8 border-emerald-800" onclick="this.querySelector('.details').classList.toggle('hidden')">
+                    <div class="flex justify-between items-center">
+                        <div><p class="font-black text-xs uppercase">${r.name}</p><p class="text-[9px] text-emerald-600 font-bold">${r.remark}</p></div>
+                        <p class="text-xl font-black text-emerald-900">${r.total}/600</p>
+                    </div>
+                    <div class="details hidden mt-4 pt-4 border-t border-dashed grid grid-cols-2 gap-2">
+                        ${Object.keys(r.scores).map(s => `<div class="sub-box"><p class="text-[7px] text-gray-400 uppercase">${s}</p><p class="text-[10px] font-black">${r.scores[s]}</p></div>`).join('')}
+                    </div>
+                </div>`).join('');
+        }
+
+        function loadTracker() {
+            const container = document.getElementById('tracker-list');
+            container.innerHTML = students.map(s => `
+                <div class="card p-4">
+                    <p class="text-xs font-black uppercase mb-3 text-emerald-900">${s}</p>
+                    <div class="grid grid-cols-5 gap-1">
+                        ${["Subhi","Duhar","Asr","Maghrib","Isha"].map(p => `<button class="text-[8px] font-black bg-gray-50 p-2 rounded-lg border border-gray-100 uppercase">${p}</button>`).join('')}
+                    </div>
+                </div>`).join('');
+        }
     </script>
 </body>
 </html>
