@@ -188,3 +188,115 @@
     </script>
 </body>
 </html>
+<div id="tracker-page" class="view-page hidden p-4">
+    <div class="admin-box mb-6">
+        <p class="text-[10px] font-black text-emerald-700 mb-3 uppercase text-center">
+            <i class="fa-solid fa-users-gear"></i> Student Manager
+        </p>
+        <div class="flex gap-2 mb-3">
+            <input type="text" id="new-student-name" placeholder="New Student Name" class="flex-1 p-3 rounded-lg border text-xs font-bold outline-none">
+            <button id="btn-add-student" class="bg-emerald-700 text-white px-4 rounded-lg text-[10px] font-black uppercase">Add</button>
+        </div>
+        <p class="text-[8px] text-gray-400 font-bold mb-2 uppercase">Current Students (Click to Remove)</p>
+        <div id="student-edit-list" class="flex flex-wrap gap-2">
+            </div>
+    </div>
+
+    <hr class="my-4 border-dashed">
+
+    <h2 class="font-black text-emerald-900 uppercase text-sm mb-4 tracking-tighter">Daily Namaz Tracker</h2>
+    <div id="tracker-list" class="space-y-3">
+        </div>
+</div>
+
+<script type="module">
+    // ... (Firebase Initialize ഭാഗം പഴയതുപോലെ) ...
+
+    let studentList = [];
+
+    // ഡാറ്റാബേസിൽ നിന്ന് കുട്ടികളുടെ ലിസ്റ്റ് എടുക്കുന്നു
+    function syncStudents() {
+        onSnapshot(doc(db, "settings", "students_list"), (snap) => {
+            if(snap.exists()) {
+                studentList = snap.data().names || [];
+                renderStudentManager();
+                renderTracker();
+            }
+        });
+    }
+    syncStudents();
+
+    // അഡ്മിൻ ബോക്സിൽ കുട്ടികളുടെ പേര് കാണിക്കുന്നു
+    function renderStudentManager() {
+        const container = document.getElementById('student-edit-list');
+        container.innerHTML = studentList.map(name => `
+            <span onclick="removeStudent('${name}')" class="bg-white border border-emerald-200 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-bold cursor-pointer hover:bg-red-50 hover:text-red-600">
+                ${name} ×
+            </span>
+        `).join('');
+    }
+
+    // ട്രാക്കറിൽ ബട്ടണുകൾ കാണിക്കുന്നു
+    function renderTracker() {
+        const container = document.getElementById('tracker-list');
+        const today = new Date().toISOString().split('T')[0];
+        
+        container.innerHTML = studentList.map(name => `
+            <div class="card p-4">
+                <p class="text-xs font-black uppercase mb-3 text-emerald-900">${name}</p>
+                <div class="grid grid-cols-5 gap-1">
+                    ${["Subhi", "Duhar", "Asr", "Magh", "Isha"].map(p => `
+                        <button id="t-${name}-${p}" onclick="markPrayer('${name}','${p}')" 
+                                class="p-btn text-[8px] font-black bg-gray-50 p-2 rounded-lg border border-gray-100 uppercase">
+                            ${p[0]}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+        
+        // നിലവിലെ സേവിംഗ്സ് പച്ചയാക്കുന്നു
+        studentList.forEach(name => syncSingleTracker(today, name));
+    }
+
+    // പുതിയ കുട്ടിയെ ചേർക്കാൻ
+    document.getElementById('btn-add-student').onclick = async () => {
+        const name = document.getElementById('new-student-name').value.trim();
+        if(!name) return;
+        if(studentList.includes(name)) return alert("Name already exists!");
+        
+        const newList = [...studentList, name];
+        await setDoc(doc(db, "settings", "students_list"), { names: newList });
+        document.getElementById('new-student-name').value = "";
+    };
+
+    // കുട്ടിയെ ഒഴിവാക്കാൻ
+    window.removeStudent = async (name) => {
+        if(confirm(`Remove ${name} from list?`)) {
+            const newList = studentList.filter(s => s !== name);
+            await setDoc(doc(db, "settings", "students_list"), { names: newList });
+        }
+    };
+
+    // നിസ്കാരം മാർക്ക് ചെയ്യാൻ
+    window.markPrayer = async (name, prayer) => {
+        const today = new Date().toISOString().split('T')[0];
+        const ref = doc(db, "tracker", `${today}_${name}`);
+        // Toggle logic (ഉണ്ടെങ്കിൽ കളയുക, ഇല്ലെങ്കിൽ ചേർക്കുക)
+        await setDoc(ref, { [prayer]: true }, { merge: true });
+    };
+
+    function syncSingleTracker(date, name) {
+        onSnapshot(doc(db, "tracker", `${date}_${name}`), (snap) => {
+            if(snap.exists()) {
+                const data = snap.data();
+                ["Subhi", "Duhar", "Asr", "Magh", "Isha"].forEach(p => {
+                    const btn = document.getElementById(`t-${name}-${p}`);
+                    if(btn && data[p]) btn.classList.add('bg-emerald-500', 'text-white');
+                });
+            }
+        });
+    }
+
+    // ... (Navigation functions) ...
+</script>
