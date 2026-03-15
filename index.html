@@ -17,13 +17,14 @@
         .admin-box { background: #f0fdf4; border: 1px dashed #10b981; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
         .notice-card { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .hidden { display: none; }
+        .p-btn-active { background-color: #10b981 !important; color: white !important; }
     </style>
 </head>
 <body>
 
     <div class="glass-header shadow-lg">
-        <h1 id="display-madrasa-name" class="text-2xl font-black uppercase tracking-tighter">Hidayatul Islam</h1>
-        <p id="display-sub-text" class="text-[10px] font-bold opacity-80 uppercase tracking-widest">Achangi • Class 6 • 2026</p>
+        <h1 id="display-madrasa-name" class="text-2xl font-black uppercase tracking-tighter text-white">Hidayatul Islam</h1>
+        <p id="display-sub-text" class="text-[10px] font-bold opacity-80 uppercase tracking-widest text-white">Achangi • Class 6 • 2026</p>
     </div>
 
     <div id="home-page" class="view-page p-4">
@@ -33,25 +34,25 @@
         </div>
 
         <div class="admin-box">
-            <p class="text-[9px] font-black text-emerald-700 mb-3 uppercase text-center">Home Settings</p>
-            <textarea id="holiday-input" class="w-full p-3 border rounded-xl text-xs mb-2 outline-none" placeholder="Type notice..."></textarea>
+            <p class="text-[9px] font-black text-emerald-700 mb-3 uppercase text-center">Settings</p>
+            <textarea id="holiday-input" class="w-full p-3 border rounded-xl text-xs mb-2 outline-none font-bold" placeholder="Notice here..."></textarea>
             <div class="flex gap-2 mb-4">
-                <button id="btn-post-notice" class="flex-1 bg-amber-600 text-white py-2 rounded-lg text-[9px] font-black uppercase">Post Notice</button>
-                <button id="btn-clear-notice" class="bg-gray-400 text-white px-3 py-2 rounded-lg text-[9px] font-black uppercase">Clear</button>
+                <button id="btn-post-notice" class="flex-1 bg-amber-600 text-white py-3 rounded-lg text-[9px] font-black uppercase">Post Notice</button>
+                <button id="btn-clear-notice" class="bg-gray-400 text-white px-4 py-3 rounded-lg text-[9px] font-black uppercase">Clear</button>
             </div>
-            <input type="text" id="edit-name" placeholder="Madrasa Name" class="w-full p-3 rounded-lg border text-xs mb-2 outline-none font-bold">
-            <input type="text" id="edit-sub" placeholder="Place/Class Info" class="w-full p-3 rounded-lg border text-xs mb-4 outline-none font-bold">
+            <input type="text" id="edit-name" placeholder="Madrasa Name" class="w-full p-3 rounded-lg border text-xs mb-2 font-bold outline-none">
+            <input type="text" id="edit-sub" placeholder="Place/Class" class="w-full p-3 rounded-lg border text-xs mb-3 font-bold outline-none">
             <button id="btn-save-name" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[9px] font-black uppercase">Save Name/Place</button>
         </div>
 
         <div class="card">
             <p class="text-[10px] font-black text-gray-400 text-center mb-4 uppercase">Azan Timings</p>
             <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center">
-                <div class="bg-emerald-50 p-2 rounded-lg">SUBHI<br><span id="t-subhi">05:15</span></div>
-                <div class="bg-emerald-50 p-2 rounded-lg">DUHAR<br><span id="t-duhar">12:38</span></div>
-                <div class="bg-emerald-50 p-2 rounded-lg">ASR<br><span id="t-asr">03:58</span></div>
-                <div class="bg-emerald-50 p-2 rounded-lg">MAGH<br><span id="t-magh">06:39</span></div>
-                <div class="bg-emerald-50 p-2 rounded-lg">ISHA<br><span id="t-isha">07:49</span></div>
+                <div class="bg-emerald-50 p-2 rounded-lg">SUBHI<br><span>05:15</span></div>
+                <div class="bg-emerald-50 p-2 rounded-lg">DUHAR<br><span>12:38</span></div>
+                <div class="bg-emerald-50 p-2 rounded-lg">ASR<br><span>03:58</span></div>
+                <div class="bg-emerald-50 p-2 rounded-lg">MAGH<br><span>06:39</span></div>
+                <div class="bg-emerald-50 p-2 rounded-lg">ISHA<br><span>07:49</span></div>
             </div>
         </div>
     </div>
@@ -61,11 +62,15 @@
             <p class="text-[9px] font-black text-emerald-700 mb-3 uppercase text-center">Student Manager</p>
             <div class="flex gap-2 mb-3">
                 <input type="text" id="new-student-name" placeholder="Student Name" class="flex-1 p-3 rounded-lg border text-xs font-bold outline-none">
-                <button id="btn-add-student" class="bg-emerald-700 text-white px-4 rounded-lg text-[10px] font-black">ADD</button>
+                <button id="btn-add-student" class="bg-emerald-700 text-white px-6 rounded-lg text-[10px] font-black">ADD</button>
             </div>
             <div id="student-edit-list" class="flex flex-wrap gap-2"></div>
         </div>
         <div id="tracker-list" class="space-y-3"></div>
+    </div>
+
+    <div id="results-page" class="view-page hidden p-4">
+        <p class="text-center font-bold text-gray-400 mt-10">Results Section Coming Soon...</p>
     </div>
 
     <div class="bottom-nav">
@@ -76,7 +81,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCnSz248OfMbDr3V3kD9NAZkVxxON2fIvE",
@@ -90,13 +95,14 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        const defaultStudents = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         let studentList = [];
 
         // --- Data Listeners ---
         onSnapshot(doc(db, "settings", "header_info"), (snap) => {
             if(snap.exists()) {
-                document.getElementById('display-madrasa-name').innerText = snap.data().name;
-                document.getElementById('display-sub-text').innerText = snap.data().subtext;
+                document.getElementById('display-madrasa-name').innerText = snap.data().name || "Hidayatul Islam";
+                document.getElementById('display-sub-text').innerText = snap.data().subtext || "Achangi • Class 6 • 2026";
             }
         });
 
@@ -108,10 +114,16 @@
             } else banner.classList.add('hidden');
         });
 
+        // കുട്ടികളുടെ ലിസ്റ്റ് ലൈവ് ആയി അപ്ഡേറ്റ് ചെയ്യുന്നു
         onSnapshot(doc(db, "settings", "students_list"), (snap) => {
-            studentList = snap.exists() ? snap.data().names : [];
+            if (snap.exists()) {
+                studentList = snap.data().names || [];
+            } else {
+                studentList = defaultStudents;
+                setDoc(doc(db, "settings", "students_list"), { names: defaultStudents });
+            }
             renderStudentManager();
-            if(!document.getElementById('tracker-page').classList.contains('hidden')) renderTracker();
+            renderTracker();
         });
 
         // --- Functions ---
@@ -120,7 +132,6 @@
             el.classList.add('active');
             document.querySelectorAll('.view-page').forEach(page => page.classList.add('hidden'));
             document.getElementById(p + '-page').classList.remove('hidden');
-            if(p === 'tracker') renderTracker();
         };
 
         function renderStudentManager() {
@@ -136,41 +147,77 @@
                 <div class="card p-4">
                     <p class="text-xs font-black uppercase mb-3 text-emerald-900">${name}</p>
                     <div class="grid grid-cols-5 gap-1">
-                        ${["Subhi", "Duhar", "Asr", "Magh", "Isha"].map(p => `<button class="bg-gray-50 p-2 rounded-lg border text-[8px] font-bold uppercase">${p[0]}</button>`).join('')}
+                        ${["Subhi", "Duhar", "Asr", "Magh", "Isha"].map(p => `
+                            <button onclick="togglePrayer('${name}', '${p}')" id="btn-${name}-${p}" class="bg-gray-50 p-2 rounded-lg border text-[8px] font-bold uppercase transition-all">${p[0]}</button>
+                        `).join('')}
                     </div>
                 </div>
             `).join('');
+            syncNamazData();
         }
 
-        document.getElementById('btn-add-student').onclick = async () => {
+        // ADD Button Logic
+        document.getElementById('btn-add-student').addEventListener('click', async () => {
             const name = document.getElementById('new-student-name').value.trim();
-            if(name && !studentList.includes(name)) {
-                await setDoc(doc(db, "settings", "students_list"), { names: [...studentList, name] });
-                document.getElementById('new-student-name').value = "";
+            if (name && !studentList.includes(name)) {
+                const newList = [...studentList, name];
+                try {
+                    await setDoc(doc(db, "settings", "students_list"), { names: newList });
+                    document.getElementById('new-student-name').value = "";
+                } catch(e) { alert("Error adding student"); }
             }
-        };
+        });
 
         window.removeStudent = async (name) => {
             if(confirm(`Remove ${name}?`)) {
-                await setDoc(doc(db, "settings", "students_list"), { names: studentList.filter(s => s !== name) });
+                const newList = studentList.filter(s => s !== name);
+                await setDoc(doc(db, "settings", "students_list"), { names: newList });
             }
         };
 
+        window.togglePrayer = async (student, prayer) => {
+            const date = new Date().toISOString().split('T')[0];
+            const ref = doc(db, "namaz_tracker", `${date}_${student}`);
+            const snap = await getDoc(ref);
+            let currentStatus = snap.exists() ? snap.data()[prayer] : false;
+            await setDoc(ref, { [prayer]: !currentStatus }, { merge: true });
+        };
+
+        function syncNamazData() {
+            const date = new Date().toISOString().split('T')[0];
+            studentList.forEach(student => {
+                onSnapshot(doc(db, "namaz_tracker", `${date}_${student}`), (snap) => {
+                    if(snap.exists()) {
+                        const data = snap.data();
+                        ["Subhi", "Duhar", "Asr", "Magh", "Isha"].forEach(p => {
+                            const btn = document.getElementById(`btn-${student}-${p}`);
+                            if(btn) {
+                                if(data[p]) btn.classList.add('p-btn-active');
+                                else btn.classList.remove('p-btn-active');
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        // Home Settings
         document.getElementById('btn-save-name').onclick = async () => {
             const name = document.getElementById('edit-name').value;
             const sub = document.getElementById('edit-sub').value;
-            await setDoc(doc(db, "settings", "header_info"), { name, subtext: sub });
-            alert("Updated!");
+            if(name && sub) await setDoc(doc(db, "settings", "header_info"), { name, subtext: sub });
+            alert("Header Saved!");
         };
 
         document.getElementById('btn-post-notice').onclick = async () => {
             const reason = document.getElementById('holiday-input').value;
-            await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: true, reason });
+            if(reason) await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: true, reason });
         };
 
         document.getElementById('btn-clear-notice').onclick = async () => {
             await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: false, reason: "" });
         };
+
     </script>
 </body>
 </html>
