@@ -3,271 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam Tracker</title>
+    <title>Hidayatul Islam Madrasa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f3f4f6; padding-bottom: 90px; font-family: sans-serif; }
+        :root { --primary: #065f46; --bg: #f1f5f9; }
+        body { background: var(--bg); font-family: sans-serif; padding-bottom: 90px; }
         .hidden { display: none; }
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
-        .header-card { background: #065f46; color: white; border-radius: 0 0 35px 35px; padding: 25px 20px; text-align: center; }
-        .bottom-nav { background: white; border-top: 1px solid #e5e7eb; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
-        .nav-item { text-align: center; font-size: 10px; color: #9ca3af; cursor: pointer; flex: 1; font-weight: 800; }
-        .nav-item.active { color: #065f46; }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
-        .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 0; border-radius: 10px; font-size: 9px; font-weight: 800; width: 100%; }
-        .p-btn.active { background: #10b981 !important; color: white !important; }
-        .att-btn { padding: 15px 0; border-radius: 10px; font-size: 11px; font-weight: 900; flex: 1; text-align: center; background: #f9fafb; color: #6b7280; border: 1px solid #eee; }
-        .res-card { border-left: 5px solid #065f46; cursor: pointer; }
-        .subject-grid { display: grid; grid-template-cols: repeat(2, 1fr); gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ddd; }
-        .sub-box { background: #f8fafc; padding: 8px; border-radius: 10px; text-align: center; border: 1px solid #edf2f7; }
-        .msg-box { padding: 10px 14px; border-radius: 18px; max-width: 85%; font-size: 13px; }
-        .msg-me { align-self: flex-end; background: #065f46; color: white; border-bottom-right-radius: 4px; }
-        .msg-them { align-self: flex-start; background: white; color: #1f2937; border-bottom-left-radius: 4px; border: 1px solid #e5e7eb; }
+        .card { background: white; border-radius: 20px; padding: 20px; margin: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .header { background: var(--primary); color: white; padding: 40px 20px; border-radius: 0 0 30px 30px; text-align: center; }
+        .btn-main { background: var(--primary); color: white; width: 100%; padding: 15px; border-radius: 12px; font-weight: 800; text-transform: uppercase; }
+        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #ddd; z-index: 100; }
+        .nav-item { font-size: 10px; font-weight: 800; color: #94a3b8; text-align: center; cursor: pointer; }
+        .nav-item.active { color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <div id="app-header" class="header-card hidden">
-        <h1 class="text-2xl font-black uppercase">Hidayatul Islam</h1>
-        <p class="text-[9px] font-bold opacity-80 mb-3">Class 6 - Achangi</p>
-        <input type="date" id="global-date" class="bg-[#047857] text-white font-bold p-1 rounded-lg text-xs outline-none" onchange="changeDate(this.value)">
+    <div id="auth-page" class="min-h-screen flex flex-col justify-center px-6">
+        <div class="card py-10 text-center shadow-2xl">
+            <h2 class="text-3xl font-black text-emerald-900 mb-2 uppercase tracking-tighter">Madrasa Connect</h2>
+            <p class="text-[10px] font-bold text-gray-400 mb-8 uppercase">Hidayatul Islam • Achangi</p>
+            
+            <div id="login-form">
+                <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl bg-gray-50 mb-4 border-none outline-none font-bold text-sm">
+                <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl bg-gray-50 mb-6 border-none outline-none font-bold text-sm">
+                <button onclick="handleAuth()" id="auth-btn" class="btn-main shadow-lg active:scale-95 transition-all">Login</button>
+                <p class="mt-8 text-xs font-bold text-gray-400">Don't have an account? <span onclick="toggleAuth()" id="toggle-text" class="text-emerald-700 underline cursor-pointer">Register</span></p>
+            </div>
+        </div>
     </div>
 
     <div id="main-content" class="hidden">
-        <div id="home-page" class="p-5">
+        <div class="header shadow-lg">
+            <h1 class="text-2xl font-black uppercase tracking-tighter">Hidayatul Islam</h1>
+            <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest">Class 6 • New Edition 2026</p>
+        </div>
+
+        <div id="home-page" class="page-view">
             <div class="card text-center">
-                <h3 class="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest">Azan Timings</h3>
-                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase text-emerald-700">
-                    <div class="bg-gray-50 p-2 rounded-lg">SUBHI<br><span>05:15</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">DUHAR<br><span>12:38</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">ASR<br><span>03:58</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">MAGH<br><span>06:39</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">ISHA<br><span>07:49</span></div>
+                <h3 class="text-[10px] font-black text-gray-400 uppercase mb-4 tracking-widest">Azan Timings</h3>
+                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800">
+                    <div class="bg-emerald-50 p-2 rounded-lg">SUBHI<br>05:15</div>
+                    <div class="bg-emerald-50 p-2 rounded-lg">DUHAR<br>12:38</div>
+                    <div class="bg-emerald-50 p-2 rounded-lg">ASR<br>03:58</div>
+                    <div class="bg-emerald-50 p-2 rounded-lg">MAGH<br>06:39</div>
+                    <div class="bg-emerald-50 p-2 rounded-lg">ISHA<br>07:49</div>
                 </div>
             </div>
-        </div>
-
-        <div id="attendance-page" class="p-5 hidden"><div id="attendance-list" class="space-y-2"></div></div>
-        <div id="tracker-page" class="p-5 hidden"><div id="tracker-list" class="space-y-2"></div></div>
-        
-        <div id="results-page" class="p-5 hidden">
-            <h2 class="text-center font-black text-emerald-800 uppercase mb-4 text-sm">Public Exam Results 2026</h2>
-            <div id="results-list" class="space-y-3"></div>
-        </div>
-
-        <div id="history-page" class="p-5 hidden"><div id="history-list" class="space-y-2"></div></div>
-
-        <div id="profile-page" class="p-5 hidden text-center">
-            <div class="card py-10">
-                <i class="fa-solid fa-circle-user text-5xl text-emerald-700 mb-4"></i>
-                <p id="user-email-text" class="text-xs font-bold text-gray-500 mb-8"></p>
-                <button onclick="navigate('chat')" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl mb-4 uppercase text-[10px] flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-comments text-lg"></i> Open Chat
-                </button>
-                <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-bold py-3 rounded-xl uppercase text-[10px]">Sign Out</button>
-            </div>
-        </div>
-
-        <div id="chat-page" class="hidden h-screen flex flex-col bg-white">
-            <div class="bg-[#065f46] text-white p-4 flex items-center justify-between">
-                <button onclick="navigate('profile')"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="font-black uppercase text-sm">Class Chat</h2>
-                <div></div>
-            </div>
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 flex flex-col bg-gray-50"></div>
-            <div class="p-4 bg-white border-t flex gap-2">
-                <input type="text" id="chat-input" placeholder="Type message..." class="flex-1 p-3 bg-gray-100 rounded-xl outline-none">
-                <button onclick="sendMessage()" class="bg-emerald-700 text-white p-3 rounded-xl"><i class="fa-solid fa-paper-plane"></i></button>
+            <div class="card p-10 text-center">
+                <i class="fa-solid fa-circle-check text-5xl text-emerald-600 mb-4"></i>
+                <h2 class="font-black text-emerald-900 uppercase">Success!</h2>
+                <p class="text-xs text-gray-500 mt-2">ലോഗിൻ പൂർത്തിയായി. ബാക്കി വിവരങ്ങൾ ഓരോന്നായി നമുക്ക് ഇവിടെ ചേർക്കാം.</p>
             </div>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house"></i>HOME</div>
-            <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-clipboard-check"></i>TRACKER</div>
-            <div class="nav-item" onclick="navigate('attendance', this)"><i class="fa-solid fa-user-check"></i>ATTEND</div>
-            <div class="nav-item" onclick="navigate('results', this)"><i class="fa-solid fa-scroll"></i>RESULTS</div>
-            <div class="nav-item" onclick="navigate('history', this)"><i class="fa-solid fa-medal"></i>STATS</div>
-            <div class="nav-item" onclick="navigate('profile', this)"><i class="fa-solid fa-user-circle"></i>ME</div>
-        </div>
-    </div>
-
-    <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
-        <div id="login-box" class="card">
-            <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase">Login</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl mb-2 bg-gray-100 outline-none text-sm">
-            <div class="text-right mb-6"><span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer">Forgot Password?</span></div>
-            <button onclick="handleLogin()" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-4 uppercase">Login</button>
-            <p onclick="toggleAuth(true)" class="text-xs font-bold text-gray-400 uppercase cursor-pointer">New? <span class="text-emerald-700 underline">Register</span></p>
-        </div>
-        <div id="signup-box" class="card hidden">
-            <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase">Register</h2>
-            <input type="email" id="s-email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none text-sm">
-            <input type="password" id="s-pass" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-gray-100 outline-none text-sm">
-            <button onclick="handleSignUp()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl mb-4 uppercase">Create Account</button>
-            <p onclick="toggleAuth(false)" class="text-xs font-bold text-gray-400 underline cursor-pointer uppercase text-center">Back to Login</p>
+            <div class="nav-item active"><i class="fa-solid fa-house text-xl mb-1"></i><br>HOME</div>
+            <div onclick="logout()" class="nav-item"><i class="fa-solid fa-power-off text-xl mb-1 text-red-400"></i><br>LOGOUT</div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, query, where, orderBy, onSnapshot, getDocs, addDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        const firebaseConfig = { 
-            apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0", 
-            authDomain: "hidayatul-islam-traker.firebaseapp.com", 
-            projectId: "hidayatul-islam-traker", 
-            storageBucket: "hidayatul-islam-traker.firebasestorage.app", 
-            messagingSenderId: "82744495268", 
-            appId: "1:82744495268:web:afc2f87d3d06884363ea31" 
+        // Your New Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnSz248OfMbDr3V3kD9NAZkVxxON2fIvE",
+            authDomain: "madrasa-4c7e2.firebaseapp.com",
+            projectId: "madrasa-4c7e2",
+            storageBucket: "madrasa-4c7e2.firebasestorage.app",
+            messagingSenderId: "770067409084",
+            appId: "1:770067409084:web:52e38ae80a3601245248b9",
+            measurementId: "G-8NW073CSLY"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
 
-        const ADMIN_EMAIL = "kereemk81@gmail.com";
-        const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
-        
-        const fullResults = [
-            { name: "MUHAMMAD DISHAN K.A", total: 529, remark: "DISTINCTION", scores: { "Dur-1": "90 A", "Fiq": "89 A", "Taj": "91 A+", "Dur-2": "81 A", "Quran": "80 B+", "Prac": "98 A++" } },
-            { name: "SHAKIRA", total: 558, remark: "DISTINCTION", scores: { "Dur-1": "96 A++", "Fiq": "96 A++", "Taj": "95 A+", "Dur-2": "91 A+", "Quran": "80 B+", "Prac": "100 A++" } },
-            { name: "MUHAMMAD SIFAN", total: 490, remark: "DISTINCTION", scores: { "Dur-1": "90 A", "Fiq": "77 B+", "Taj": "84 A", "Dur-2": "69 B", "Quran": "78 B+", "Prac": "92 A+" } },
-            { name: "KADEEJATHU NILA", total: 487, remark: "DISTINCTION", scores: { "Dur-1": "84 A", "Fiq": "70 B", "Taj": "84 A", "Dur-2": "78 B+", "Quran": "71 B+", "Prac": "100 A++" } },
-            { name: "MUHAMMAD SUHAIR", total: 483, remark: "DISTINCTION", scores: { "Dur-1": "80 B+", "Fiq": "76 B+", "Taj": "87 A", "Dur-2": "76 B+", "Quran": "69 B", "Prac": "95 A+" } },
-            { name: "AFREENA", total: 472, remark: "PASSED", scores: { "Dur-1": "76 B+", "Fiq": "76 B+", "Taj": "81 A", "Dur-2": "70 B", "Quran": "70 B", "Prac": "99 A++" } },
-            { name: "FATHIMATH FIDA", total: 472, remark: "PASSED", scores: { "Dur-1": "79 B+", "Fiq": "77 B+", "Taj": "80 B+", "Dur-2": "64 B", "Quran": "73 B+", "Prac": "99 A++" } },
-            { name: "MUHAMMAD FAZIL", total: 449, remark: "PASSED", scores: { "Dur-1": "81 A", "Fiq": "77 B+", "Taj": "78 B+", "Dur-2": "74 B+", "Quran": "45 C", "Prac": "94 A+" } },
-            { name: "SUHAIBA", total: 449, remark: "PASSED", scores: { "Dur-1": "79 B+", "Fiq": "68 B", "Taj": "86 A", "Dur-2": "73 B+", "Quran": "50 C", "Prac": "93 A+" } },
-            { name: "FATHIMATH RIFA", total: 422, remark: "PASSED", scores: { "Dur-1": "75 B+", "Fiq": "72 B+", "Taj": "75 B+", "Dur-2": "66 B", "Quran": "51 C+", "Prac": "83 A" } },
-            { name: "MUHAMMAD YASEEN", total: 419, remark: "PASSED", scores: { "Dur-1": "68 B", "Fiq": "68 B", "Taj": "60 C+", "Dur-2": "63 B", "Quran": "72 B+", "Prac": "88 A" } },
-            { name: "TWALHATH", total: 369, remark: "PASSED", scores: { "Dur-1": "57 C+", "Fiq": "49 C", "Taj": "52 C+", "Dur-2": "45 C", "Quran": "68 B", "Prac": "98 A++" } },
-            { name: "NAFEESATH AIZA", total: 355, remark: "PASSED", scores: { "Dur-1": "58 C+", "Fiq": "50 C", "Taj": "52 C+", "Dur-2": "53 C+", "Quran": "47 C", "Prac": "95 A+" } },
-            { name: "RASEENA", total: 350, remark: "PASSED", scores: { "Dur-1": "60 C+", "Fiq": "58 C+", "Taj": "40 C", "Dur-2": "54 C+", "Quran": "40 C", "Prac": "98 A++" } },
-            { name: "MISHA FATHIMA", total: 313, remark: "PASSED", scores: { "Dur-1": "40 C", "Fiq": "47 C", "Taj": "50 C", "Dur-2": "47 C", "Quran": "44 C", "Prac": "85 A" } }
-        ];
-
-        let selectedDate = new Date().toLocaleDateString('en-CA');
-        let chatName = localStorage.getItem('madrasa_chat_name') || "";
+        let isLogin = true;
 
         onAuthStateChanged(auth, (u) => {
             document.getElementById('auth-page').classList.toggle('hidden', !!u);
             document.getElementById('main-content').classList.toggle('hidden', !u);
-            document.getElementById('app-header').classList.toggle('hidden', !u);
-            if(u) {
-                document.getElementById('user-email-text').innerText = u.email;
-                document.getElementById('global-date').value = selectedDate;
-            }
         });
 
-        // Global functions
-        window.handleLogin = () => {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            signInWithEmailAndPassword(auth, email, pass).catch(e => alert("Error: " + e.message));
+        window.toggleAuth = () => {
+            isLogin = !isLogin;
+            document.getElementById('auth-btn').innerText = isLogin ? 'Login' : 'Register';
+            document.getElementById('toggle-text').innerText = isLogin ? 'Register' : 'Login';
         };
 
-        window.handleSignUp = () => {
-            const email = document.getElementById('s-email').value;
-            const pass = document.getElementById('s-pass').value;
-            createUserWithEmailAndPassword(auth, email, pass).then(() => alert("Success!")).catch(e => alert(e.message));
-        };
-
-        window.handleResetPassword = () => {
-            const email = document.getElementById('email').value;
-            if(email) sendPasswordResetEmail(auth, email).then(() => alert("Reset Link Sent!")).catch(e => alert(e.message));
-            else alert("Please enter email");
-        };
-
-        window.handleLogout = () => signOut(auth);
-        window.toggleAuth = (s) => { document.getElementById('login-box').classList.toggle('hidden', s); document.getElementById('signup-box').classList.toggle('hidden', !s); };
-        window.changeDate = (val) => { selectedDate = val; navigate('home', null); };
-
-        window.navigate = (p, el) => {
-            if(el) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); }
-            ['home', 'tracker', 'attendance', 'results', 'history', 'profile', 'chat'].forEach(pg => {
-                const element = document.getElementById(pg + '-page');
-                if(element) element.classList.toggle('hidden', pg !== p);
-            });
-            if(p === 'chat') { document.getElementById('app-header').classList.add('hidden'); document.querySelector('.bottom-nav').classList.add('hidden'); initChat(); }
-            else { document.getElementById('app-header').classList.remove('hidden'); document.querySelector('.bottom-nav').classList.remove('hidden'); }
-            
-            if(p === 'attendance') loadAttendance();
-            if(p === 'tracker') loadTracker();
-            if(p === 'results') loadResults();
-            if(p === 'history') loadHistory();
-        };
-
-        // Logic Functions
-        function loadAttendance() {
-            const isAdmin = auth.currentUser?.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-            const container = document.getElementById('attendance-list');
-            onSnapshot(query(collection(db, "daily"), where("date", "==", selectedDate)), (snap) => {
-                const data = {}; snap.forEach(d => data[d.data().name] = d.data());
-                container.innerHTML = students.map(s => {
-                    const status = data[s]?.status || "";
-                    return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="flex gap-2">
-                        <button onclick="${isAdmin ? `setA('${s}','P')` : 'alert(\'Only Usthad\')'}" class="att-btn ${status === 'P' ? 'bg-emerald-600 text-white' : ''}">PRESENT</button>
-                        <button onclick="${isAdmin ? `setA('${s}','A')` : 'alert(\'Only Usthad\')'}" class="att-btn ${status === 'A' ? 'bg-red-600 text-white' : ''}">ABSENT</button>
-                    </div></div>`;
-                }).join('');
-            });
-        }
-
-        window.setA = (n, s) => setDoc(doc(db, "daily", n + "_" + selectedDate), { name: n, date: selectedDate, status: s }, { merge: true });
-
-        function loadTracker() {
-            const container = document.getElementById('tracker-list');
-            onSnapshot(query(collection(db, "daily"), where("date", "==", selectedDate)), (snap) => {
-                const data = {}; snap.forEach(d => data[d.data().name] = d.data());
-                container.innerHTML = students.map(s => {
-                    const d = data[s] || {};
-                    return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="grid grid-cols-5 gap-1">
-                        ${["Subhi","Duhar","Asr","Maghrib","Isha"].map(p => `<button onclick="toggleP('${s}','${p}',${!!d[p]})" class="p-btn ${d[p] ? 'active' : ''}">${d[p] ? '✓' : p}</button>`).join('')}
-                    </div></div>`;
-                }).join('');
-            });
-        }
-
-        window.toggleP = (n, p, cur) => setDoc(doc(db, "daily", n + "_" + selectedDate), { name: n, date: selectedDate, [p]: !cur }, { merge: true });
-
-        window.loadResults = () => {
-            const container = document.getElementById('results-list');
-            container.innerHTML = fullResults.map((r, i) => `
-                <div class="card res-card" onclick="document.getElementById('marks-${i}').classList.toggle('hidden')">
-                    <div class="flex justify-between items-center">
-                        <div><p class="text-[10px] font-black uppercase">${r.name}</p><p class="text-[8px] font-bold ${r.remark === 'DISTINCTION' ? 'text-emerald-600' : 'text-gray-400'}">${r.remark}</p></div>
-                        <p class="text-lg font-black text-emerald-800">${r.total}/600</p>
-                    </div>
-                    <div id="marks-${i}" class="hidden subject-grid">
-                        ${Object.keys(r.scores).map(sub => `<div class="sub-box"><p class="text-[7px] text-gray-400">${sub}</p><p class="text-[10px] font-black">${r.scores[sub]}</p></div>`).join('')}
-                    </div>
-                </div>`).join('');
-        };
-
-        async function loadHistory() {
-            const snap = await getDocs(collection(db, "daily"));
-            const st = {}; students.forEach(s => st[s] = { p:0, pr:0 });
-            snap.forEach(d => {
-                const doc = d.data();
-                if(st[doc.name]) {
-                    ["Subhi","Duhar","Asr","Maghrib","Isha"].forEach(p => { if(doc[p]) st[doc.name].pr++; });
-                    if(doc.status === 'P') st[doc.name].p++;
-                }
-            });
-            document.getElementById('history-list').innerHTML = students.map(s => `<div class="card"><p class="font-black text-sm uppercase mb-2">${s}</p><div class="flex justify-between text-[10px] font-bold"><span class="text-emerald-600">PRAYERS: ${st[s].pr}</span><span class="text-blue-600">PRESENT: ${st[s].p}</span></div></div>`).join('');
-        }
-
-        function initChat() {
-            const user = auth.currentUser;
-            const isAdmin = user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-            if (isAdmin) chatName = "ADMIN";
-            else if (!chatName) {
-                let n = prompt("Enter Student Name to start Chat:");
-                if (n && n.trim()) { chatName = n.trim(); localStorage.setItem('madrasa_chat_name', chatName); }
-                else { navigate('profile'); return; }
+        window.handleAuth = () => {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('pass').value;
+            if (isLogin) {
+                signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+            } else {
+                createUserWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
             }
-            onSnapshot(query(collection(db, "messages"), orderBy("timestamp", "asc")), (snap) => {
-                const container = document.getElementById('chat-messages'); containe
+        };
+
+        window.logout = () => signOut(auth);
+    </script>
+</body>
+</html>
