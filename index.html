@@ -38,28 +38,28 @@
                 <p class="text-[9px] font-black text-emerald-700 mb-3 uppercase text-center"><i class="fa-solid fa-tools"></i> Settings Panel</p>
                 
                 <div class="mb-4 pb-4 border-b border-emerald-100">
-                    <p class="text-[8px] font-black text-emerald-600 mb-2 uppercase">Post Leave/Notice</p>
-                    <textarea id="holiday-input" class="w-full p-3 border rounded-xl text-xs mb-2 outline-none font-bold" placeholder="Type notice here..."></textarea>
+                    <p class="text-[8px] font-black text-emerald-600 mb-2 uppercase tracking-widest">Post Leave/Notice</p>
+                    <textarea id="holiday-input" class="w-full p-4 border rounded-xl text-xs mb-3 outline-none font-bold" placeholder="Type notice here..."></textarea>
                     <div class="flex gap-2">
-                        <button onclick="postNotice()" class="flex-1 bg-amber-600 text-white py-2 rounded-lg text-[9px] font-black uppercase">Post Notice</button>
-                        <button onclick="clearNotice()" class="bg-gray-400 text-white px-4 py-2 rounded-lg text-[9px] font-black uppercase">Clear</button>
+                        <button id="btn-post-notice" class="flex-1 bg-amber-600 text-white py-3 rounded-lg text-[10px] font-black uppercase shadow-md active:bg-amber-700">Post Notice</button>
+                        <button id="btn-clear-notice" class="bg-gray-400 text-white px-5 py-3 rounded-lg text-[10px] font-black uppercase shadow-md active:bg-gray-500">Clear</button>
                     </div>
                 </div>
 
-                <div class="space-y-2 mb-4">
-                    <input type="text" id="edit-name" placeholder="Madrasa Name" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
-                    <input type="text" id="edit-sub" placeholder="Place/Class Info" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
-                    <button onclick="updateHeader()" class="w-full bg-emerald-700 text-white py-2 rounded-lg text-[9px] font-black uppercase">Save Name</button>
+                <div class="space-y-3 mb-4">
+                    <input type="text" id="edit-name" placeholder="Madrasa Name" class="w-full p-4 rounded-xl border text-xs font-bold outline-none">
+                    <input type="text" id="edit-sub" placeholder="Place/Class Info" class="w-full p-4 rounded-xl border text-xs font-bold outline-none">
+                    <button id="btn-save-name" class="w-full bg-emerald-700 text-white py-4 rounded-xl text-[10px] font-black uppercase shadow-md active:bg-emerald-800">Save Name</button>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 mb-3">
-                    <input type="text" id="up-subhi" placeholder="Subhi" class="p-2 border rounded text-xs font-bold">
-                    <input type="text" id="up-duhar" placeholder="Duhar" class="p-2 border rounded text-xs font-bold">
-                    <input type="text" id="up-asr" placeholder="Asr" class="p-2 border rounded text-xs font-bold">
-                    <input type="text" id="up-magh" placeholder="Magh" class="p-2 border rounded text-xs font-bold">
-                    <input type="text" id="up-isha" placeholder="Isha" class="p-2 border rounded text-xs font-bold">
+                    <input type="text" id="up-subhi" placeholder="Subhi" class="p-3 border rounded-xl text-xs font-bold outline-none">
+                    <input type="text" id="up-duhar" placeholder="Duhar" class="p-3 border rounded-xl text-xs font-bold outline-none">
+                    <input type="text" id="up-asr" placeholder="Asr" class="p-3 border rounded-xl text-xs font-bold outline-none">
+                    <input type="text" id="up-magh" placeholder="Magh" class="p-3 border rounded-xl text-xs font-bold outline-none">
+                    <input type="text" id="up-isha" placeholder="Isha" class="p-3 border rounded-xl text-xs font-bold outline-none">
                 </div>
-                <button onclick="updateAzanTimes()" class="w-full bg-blue-700 text-white py-2 rounded-lg text-[9px] font-black uppercase">Save Timings</button>
+                <button id="btn-save-timings" class="w-full bg-blue-700 text-white py-4 rounded-xl text-[10px] font-black uppercase shadow-md active:bg-blue-800">Save Timings</button>
             </div>
 
             <div class="card">
@@ -105,60 +105,66 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ലൈവ് സിങ്കിംഗ് (Notice board ഉൾപ്പെടെ)
-        function syncData() {
-            onSnapshot(doc(db, "settings", "header_info"), (snap) => {
-                if(snap.exists()) {
-                    const d = snap.data();
-                    document.getElementById('display-madrasa-name').innerText = d.name || "Hidayatul Islam";
-                    document.getElementById('display-sub-text').innerText = d.subtext || "Achangi • Class 6 • 2026";
-                }
-            });
+        // --- ലൈവ് സിങ്കിംഗ് (Data Listeners) ---
+        onSnapshot(doc(db, "settings", "header_info"), (snap) => {
+            if(snap.exists()) {
+                const d = snap.data();
+                document.getElementById('display-madrasa-name').innerText = d.name || "Hidayatul Islam";
+                document.getElementById('display-sub-text').innerText = d.subtext || "Achangi • Class 6 • 2026";
+            }
+        });
 
-            onSnapshot(doc(db, "settings", "madrasa_status"), (snap) => {
-                const banner = document.getElementById('holiday-banner');
-                if(snap.exists() && snap.data().isHoliday) {
-                    banner.classList.remove('hidden');
-                    document.getElementById('holiday-reason-text').innerText = snap.data().reason;
-                } else {
-                    banner.classList.add('hidden');
-                }
-            });
+        onSnapshot(doc(db, "settings", "madrasa_status"), (snap) => {
+            const banner = document.getElementById('holiday-banner');
+            if(snap.exists() && snap.data().isHoliday) {
+                banner.classList.remove('hidden');
+                document.getElementById('holiday-reason-text').innerText = snap.data().reason;
+            } else {
+                banner.classList.add('hidden');
+            }
+        });
 
-            onSnapshot(doc(db, "settings", "timings"), (snap) => {
-                if(snap.exists()){
-                    const d = snap.data();
-                    if(d.subhi) document.getElementById('t-subhi').innerText = d.subhi;
-                    if(d.duhar) document.getElementById('t-duhar').innerText = d.duhar;
-                    if(d.asr) document.getElementById('t-asr').innerText = d.asr;
-                    if(d.magh) document.getElementById('t-magh').innerText = d.magh;
-                    if(d.isha) document.getElementById('t-isha').innerText = d.isha;
-                }
-            });
-        }
-        syncData();
+        onSnapshot(doc(db, "settings", "timings"), (snap) => {
+            if(snap.exists()){
+                const d = snap.data();
+                if(d.subhi) document.getElementById('t-subhi').innerText = d.subhi;
+                if(d.duhar) document.getElementById('t-duhar').innerText = d.duhar;
+                if(d.asr) document.getElementById('t-asr').innerText = d.asr;
+                if(d.magh) document.getElementById('t-magh').innerText = d.magh;
+                if(d.isha) document.getElementById('t-isha').innerText = d.isha;
+            }
+        });
 
-        window.postNotice = async () => {
+        // --- ബട്ടൺ പ്രവർത്തനങ്ങൾ (Event Listeners) ---
+        
+        document.getElementById('btn-post-notice').onclick = async () => {
             const reason = document.getElementById('holiday-input').value;
             if(!reason) return alert("Please type a reason!");
-            await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: true, reason: reason });
-            document.getElementById('holiday-input').value = "";
-            alert("Notice Posted!");
+            try {
+                await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: true, reason: reason });
+                document.getElementById('holiday-input').value = "";
+                alert("Notice Posted Successfully!");
+            } catch (e) { alert("Error: " + e.message); }
         };
 
-        window.clearNotice = async () => {
-            await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: false, reason: "" });
-            alert("Notice Cleared!");
+        document.getElementById('btn-clear-notice').onclick = async () => {
+            try {
+                await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: false, reason: "" });
+                alert("Notice Cleared!");
+            } catch (e) { alert("Error: " + e.message); }
         };
 
-        window.updateHeader = async () => {
+        document.getElementById('btn-save-name').onclick = async () => {
             const name = document.getElementById('edit-name').value;
             const sub = document.getElementById('edit-sub').value;
-            await setDoc(doc(db, "settings", "header_info"), { name, subtext: sub }, { merge: true });
-            alert("Name Updated!");
+            if(!name || !sub) return alert("Please fill both name and place fields!");
+            try {
+                await setDoc(doc(db, "settings", "header_info"), { name: name, subtext: sub }, { merge: true });
+                alert("Header Updated!");
+            } catch (e) { alert("Error: " + e.message); }
         };
 
-        window.updateAzanTimes = async () => {
+        document.getElementById('btn-save-timings').onclick = async () => {
             const data = {
                 subhi: document.getElementById('up-subhi').value || document.getElementById('t-subhi').innerText,
                 duhar: document.getElementById('up-duhar').value || document.getElementById('t-duhar').innerText,
@@ -166,10 +172,13 @@
                 magh: document.getElementById('up-magh').value || document.getElementById('t-magh').innerText,
                 isha: document.getElementById('up-isha').value || document.getElementById('t-isha').innerText
             };
-            await setDoc(doc(db, "settings", "timings"), data, { merge: true });
-            alert("Timings Saved!");
+            try {
+                await setDoc(doc(db, "settings", "timings"), data, { merge: true });
+                alert("Azan Timings Saved!");
+            } catch (e) { alert("Error: " + e.message); }
         };
 
+        // Navigation Function
         window.navigate = (p, el) => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
