@@ -3,68 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Niskaram Tracker</title>
+    <title>Hidayatul Islam Connect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #065f46; --bg: #f3f4f6; }
-        body { background: var(--bg); font-family: 'Inter', sans-serif; padding-bottom: 90px; }
-        .hidden { display: none; }
-        .header-top { background: #1a1a1a; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .green-banner { background: var(--primary); color: white; padding: 30px 10px; border-radius: 0 0 30px 30px; text-align: center; margin-bottom: 20px; }
-        .student-card { background: white; border-radius: 25px; padding: 20px; margin: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .prayer-btn { background: #f3f4f6; color: #1f2937; border-radius: 15px; padding: 15px 5px; font-size: 11px; font-weight: 700; width: 100%; transition: all 0.3s; border: none; }
-        .prayer-btn.active { background: #10b981; color: white; }
-        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 100; }
+        :root { --primary: #065f46; --bg: #f8fafc; }
+        body { background: var(--bg); font-family: sans-serif; padding-bottom: 90px; }
+        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; border: 1px solid #edf2f7; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .glass-header { background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white; border-radius: 0 0 35px 35px; padding: 40px 20px; text-align: center; }
+        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; z-index: 100; }
         .nav-item { text-align: center; font-size: 10px; color: #94a3b8; font-weight: 800; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary); }
-        .date-picker { background: rgba(255,255,255,0.2); color: white; border-radius: 20px; padding: 5px 15px; font-size: 12px; font-weight: bold; border: none; outline: none; }
+        .admin-box { background: #f0fdf4; border: 1px dashed #10b981; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
+        .notice-card { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .hidden { display: none; }
+        .p-btn-active { background-color: #10b981 !important; color: white !important; }
+        .prayer-name { font-size: 7px; text-transform: uppercase; font-weight: 900; color: #64748b; margin-bottom: 2px; }
     </style>
 </head>
 <body>
 
-    <div id="app-header">
-        <div class="header-top">
-            <h1 class="text-xl font-bold uppercase tracking-tight">Niskaram Tracker</h1>
-            <img src="https://cdn-icons-png.flaticon.com/512/1041/1041038.png" width="30" class="rounded-full">
-        </div>
-        <div class="green-banner">
-            <p class="text-[10px] font-bold opacity-80 mb-2 uppercase tracking-widest">Class 6 - Achangi</p>
-            <select id="date-select" class="date-picker">
-                <option value="today" id="today-opt">14/03/2026</option>
-            </select>
-        </div>
+    <div class="glass-header shadow-lg">
+        <h1 id="display-madrasa-name" class="text-2xl font-black uppercase tracking-tighter text-white">Hidayatul Islam</h1>
+        <p id="display-sub-text" class="text-[10px] font-bold opacity-80 uppercase tracking-widest text-white">Achangi • Class 6 • 2026</p>
     </div>
 
     <div id="home-page" class="view-page p-4">
-        <div class="bg-white p-6 rounded-[25px] shadow-sm mb-4">
-             <p class="text-[10px] font-black text-emerald-800 uppercase mb-4 text-center tracking-widest">Admin Settings</p>
-             <input type="text" id="edit-name" placeholder="Madrasa Name" class="w-full p-4 rounded-xl bg-gray-50 mb-3 border-none outline-none font-bold text-sm">
-             <input type="text" id="edit-sub" placeholder="Place/Class Info" class="w-full p-4 rounded-xl bg-gray-50 mb-4 border-none outline-none font-bold text-sm">
-             <button id="btn-save-name" class="w-full bg-emerald-800 text-white py-4 rounded-xl font-bold uppercase text-xs">Save Details</button>
+        <div id="holiday-banner" class="notice-card hidden">
+            <p class="font-black text-amber-800 uppercase text-[10px] mb-1">📢 MADRASA NOTICE</p>
+            <p id="holiday-reason-text" class="text-sm font-bold text-amber-900"></p>
+        </div>
+
+        <div class="admin-box">
+            <p class="text-[9px] font-black text-emerald-700 mb-3 uppercase text-center">Admin Settings</p>
+            <textarea id="holiday-input" class="w-full p-3 border rounded-xl text-xs mb-2 outline-none font-bold" placeholder="Notice here..."></textarea>
+            <div class="flex gap-2 mb-4">
+                <button id="btn-post-notice" class="flex-1 bg-amber-600 text-white py-3 rounded-lg text-[9px] font-black uppercase shadow-sm">Post Notice</button>
+                <button id="btn-clear-notice" class="bg-gray-400 text-white px-4 py-3 rounded-lg text-[9px] font-black uppercase">Clear</button>
+            </div>
+            
+            <div class="space-y-2 mb-4">
+                <input type="text" id="edit-name" placeholder="Madrasa Name" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
+                <input type="text" id="edit-sub" placeholder="Place/Class Info" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
+                <button id="btn-save-name" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[9px] font-black uppercase shadow-sm">Save Madrasa Details</button>
+            </div>
+
+            <hr class="my-4 border-emerald-100">
+            
+            <p class="text-[8px] font-black text-emerald-600 mb-2 uppercase">Edit Azan Timings</p>
+            <div class="grid grid-cols-3 gap-2 mb-3">
+                <input type="text" id="up-subhi" placeholder="Subhi" class="p-2 border rounded-lg text-xs font-bold outline-none">
+                <input type="text" id="up-duhar" placeholder="Duhar" class="p-2 border rounded-lg text-xs font-bold outline-none">
+                <input type="text" id="up-asr" placeholder="Asr" class="p-2 border rounded-lg text-xs font-bold outline-none">
+                <input type="text" id="up-magh" placeholder="Maghrib" class="p-2 border rounded-lg text-xs font-bold outline-none">
+                <input type="text" id="up-isha" placeholder="Isha" class="p-2 border rounded-lg text-xs font-bold outline-none">
+            </div>
+            <button id="btn-save-timings" class="w-full bg-blue-700 text-white py-3 rounded-xl text-[9px] font-black uppercase shadow-sm">Update Azan Timings</button>
+        </div>
+
+        <div class="card">
+            <p class="text-[10px] font-black text-gray-400 text-center mb-4 uppercase tracking-widest">Azan Timings</p>
+            <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center">
+                <div class="bg-emerald-50 p-2 rounded-xl">SUBHI<br><span id="t-subhi">05:15</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">DUHAR<br><span id="t-duhar">12:38</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">ASR<br><span id="t-asr">03:58</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">MAGH<br><span id="t-magh">06:39</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">ISHA<br><span id="t-isha">07:49</span></div>
+            </div>
         </div>
     </div>
 
-    <div id="tracker-page" class="view-page hidden">
-        <div class="px-4 mb-4">
-            <div class="bg-emerald-50 p-4 rounded-[20px] border border-emerald-100">
-                <div class="flex gap-2">
-                    <input type="text" id="new-student-name" placeholder="Add New Student" class="flex-1 p-3 rounded-xl border-none outline-none text-xs font-bold">
-                    <button id="btn-add-student" class="bg-emerald-700 text-white px-5 rounded-xl text-[10px] font-black uppercase">Add</button>
-                </div>
-                <div id="student-edit-list" class="flex flex-wrap gap-2 mt-3"></div>
+    <div id="tracker-page" class="view-page hidden p-4">
+        <div class="admin-box">
+            <p class="text-[9px] font-black text-emerald-700 mb-3 uppercase text-center">Student Manager</p>
+            <div class="flex gap-2 mb-3">
+                <input type="text" id="new-student-name" placeholder="Add New Student" class="flex-1 p-3 rounded-lg border text-xs font-bold outline-none">
+                <button id="btn-add-student" class="bg-emerald-700 text-white px-6 rounded-lg text-[10px] font-black uppercase shadow-sm">Add</button>
             </div>
+            <p class="text-[7px] font-bold text-gray-400 mb-2 uppercase text-center">Click name to remove</p>
+            <div id="student-edit-list" class="flex flex-wrap gap-2 justify-center"></div>
         </div>
-        <div id="tracker-list">
-            </div>
+
+        <h2 class="font-black text-emerald-900 uppercase text-xs mb-4 mt-6 tracking-widest text-center">Daily Namaz Tracker</h2>
+        <div id="tracker-list" class="space-y-3"></div>
     </div>
 
-    <div class="bottom-nav shadow-lg">
+    <div class="bottom-nav">
         <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house text-xl mb-1"></i><br>HOME</div>
-        <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-check-to-slot text-xl mb-1"></i><br>TRACKER</div>
-        <div class="nav-item"><i class="fa-solid fa-user-check text-xl mb-1"></i><br>ATTEND</div>
-        <div class="nav-item"><i class="fa-solid fa-file-invoice text-xl mb-1"></i><br>RESULTS</div>
-        <div class="nav-item"><i class="fa-solid fa-chart-line text-xl mb-1"></i><br>STATS</div>
+        <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-calendar-check text-xl mb-1"></i><br>TRACKER</div>
+        <div class="nav-item" onclick="navigate('results', this)"><i class="fa-solid fa-graduation-cap text-xl mb-1"></i><br>RESULTS</div>
     </div>
 
     <script type="module">
@@ -83,14 +110,36 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const initialStudents = ["DISHAN", "SIFAN", "FAZIL", "SUHAIR", "YASEEN", "TWALHATH", "AFREENA", "RASEENA", "AYIZZA", "MISHA", "NILA", "FIDA", "SHAKIRA", "SUHAIBA", "RIFA"];
+        const initialStudents = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         let studentList = [];
 
-        // Set Date
-        const today = new Date();
-        document.getElementById('today-opt').innerText = today.toLocaleDateString('en-GB');
+        // --- Data Listeners ---
+        onSnapshot(doc(db, "settings", "header_info"), (snap) => {
+            if(snap.exists()) {
+                document.getElementById('display-madrasa-name').innerText = snap.data().name || "Hidayatul Islam";
+                document.getElementById('display-sub-text').innerText = snap.data().subtext || "Achangi • Class 6 • 2026";
+            }
+        });
 
-        // Sync Data
+        onSnapshot(doc(db, "settings", "madrasa_status"), (snap) => {
+            const banner = document.getElementById('holiday-banner');
+            if(snap.exists() && snap.data().isHoliday) {
+                banner.classList.remove('hidden');
+                document.getElementById('holiday-reason-text').innerText = snap.data().reason;
+            } else banner.classList.add('hidden');
+        });
+
+        onSnapshot(doc(db, "settings", "timings"), (snap) => {
+            if(snap.exists()){
+                const d = snap.data();
+                if(d.subhi) document.getElementById('t-subhi').innerText = d.subhi;
+                if(d.duhar) document.getElementById('t-duhar').innerText = d.duhar;
+                if(d.asr) document.getElementById('t-asr').innerText = d.asr;
+                if(d.magh) document.getElementById('t-magh').innerText = d.magh;
+                if(d.isha) document.getElementById('t-isha').innerText = d.isha;
+            }
+        });
+
         onSnapshot(doc(db, "settings", "students_list"), (snap) => {
             if (snap.exists()) {
                 studentList = snap.data().names || [];
@@ -102,6 +151,7 @@
             renderTracker();
         });
 
+        // --- Functions ---
         window.navigate = (p, el) => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
@@ -112,7 +162,7 @@
         function renderStudentManager() {
             const container = document.getElementById('student-edit-list');
             container.innerHTML = studentList.map(name => `
-                <span onclick="removeStudent('${name}')" class="bg-white border text-[9px] font-bold px-3 py-1 rounded-full text-emerald-700 cursor-pointer shadow-sm">${name} ×</span>
+                <span onclick="removeStudent('${name}')" class="bg-white border border-emerald-200 px-3 py-1 rounded-full text-[9px] font-bold text-emerald-700 cursor-pointer shadow-sm active:scale-95">${name} ×</span>
             `).join('');
         }
 
@@ -120,13 +170,14 @@
             const container = document.getElementById('tracker-list');
             const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
             container.innerHTML = studentList.map(name => `
-                <div class="student-card">
-                    <h3 class="text-xs font-black mb-4 uppercase tracking-tighter">${name}</h3>
-                    <div class="grid grid-cols-5 gap-2">
+                <div class="card">
+                    <p class="text-[11px] font-black uppercase mb-3 text-emerald-900 tracking-tighter">${name}</p>
+                    <div class="grid grid-cols-5 gap-1">
                         ${prayers.map(p => `
-                            <button id="btn-${name}-${p}" onclick="togglePrayer('${name}', '${p}')" class="prayer-btn">
-                                ${p}
-                            </button>
+                            <div class="text-center">
+                                <p class="prayer-name">${p.slice(0,3)}</p>
+                                <button id="btn-${name}-${p}" onclick="togglePrayer('${name}', '${p}')" class="w-full bg-gray-50 py-3 rounded-lg border text-[10px] font-black uppercase transition-all active:scale-90">${p[0]}</button>
+                            </div>
                         `).join('')}
                     </div>
                 </div>
@@ -135,7 +186,7 @@
         }
 
         document.getElementById('btn-add-student').onclick = async () => {
-            const name = document.getElementById('new-student-name').value.trim().toUpperCase();
+            const name = document.getElementById('new-student-name').value.trim();
             if (name && !studentList.includes(name)) {
                 await setDoc(doc(db, "settings", "students_list"), { names: [...studentList, name] });
                 document.getElementById('new-student-name').value = "";
@@ -165,19 +216,43 @@
                         ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"].forEach(p => {
                             const btn = document.getElementById(`btn-${student}-${p}`);
                             if(btn) {
-                                if(data[p]) {
-                                    btn.classList.add('active');
-                                    btn.innerHTML = '<i class="fa-solid fa-check"></i>';
-                                } else {
-                                    btn.classList.remove('active');
-                                    btn.innerHTML = p;
-                                }
+                                if(data[p]) btn.classList.add('p-btn-active');
+                                else btn.classList.remove('p-btn-active');
                             }
                         });
                     }
                 });
             });
         }
+
+        // --- Admin Button Handlers ---
+        document.getElementById('btn-save-name').onclick = async () => {
+            const name = document.getElementById('edit-name').value;
+            const sub = document.getElementById('edit-sub').value;
+            if(name && sub) await setDoc(doc(db, "settings", "header_info"), { name, subtext: sub });
+            alert("Updated!");
+        };
+
+        document.getElementById('btn-save-timings').onclick = async () => {
+            const data = {
+                subhi: document.getElementById('up-subhi').value || document.getElementById('t-subhi').innerText,
+                duhar: document.getElementById('up-duhar').value || document.getElementById('t-duhar').innerText,
+                asr: document.getElementById('up-asr').value || document.getElementById('t-asr').innerText,
+                magh: document.getElementById('up-magh').value || document.getElementById('t-magh').innerText,
+                isha: document.getElementById('up-isha').value || document.getElementById('t-isha').innerText
+            };
+            await setDoc(doc(db, "settings", "timings"), data, { merge: true });
+            alert("Timings Updated!");
+        };
+
+        document.getElementById('btn-post-notice').onclick = async () => {
+            const reason = document.getElementById('holiday-input').value;
+            if(reason) await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: true, reason });
+        };
+
+        document.getElementById('btn-clear-notice').onclick = async () => {
+            await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: false, reason: "" });
+        };
     </script>
 </body>
 </html>
