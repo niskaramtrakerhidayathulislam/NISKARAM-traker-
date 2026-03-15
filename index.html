@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,16 +15,15 @@
         .nav-item.active { color: #065f46; }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
         .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
-        .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px 0; border-radius: 12px; font-size: 10px; font-weight: 800; width: 100%; }
+        .p-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 10px 0; border-radius: 10px; font-size: 9px; font-weight: 800; width: 100%; }
         .p-btn.active { background: #10b981 !important; color: white !important; }
         .att-btn { padding: 15px 0; border-radius: 10px; font-size: 11px; font-weight: 900; flex: 1; text-align: center; background: #f9fafb; color: #6b7280; border: 1px solid #eee; }
-        .p-active { background: #059669 !important; color: white !important; }
-        .a-active { background: #dc2626 !important; color: white !important; }
-        .status-leave { background: #2563eb; color: white; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 900; text-align: center; }
-        .notice-card { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .res-card { border-left: 5px solid #065f46; cursor: pointer; }
-        .subject-grid { display: grid; grid-template-cols: repeat(2, 1fr); gap: 8px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ddd; }
+        .subject-grid { display: grid; grid-template-cols: repeat(2, 1fr); gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ddd; }
         .sub-box { background: #f8fafc; padding: 8px; border-radius: 10px; text-align: center; border: 1px solid #edf2f7; }
+        .msg-box { padding: 10px 14px; border-radius: 18px; max-width: 85%; font-size: 13px; }
+        .msg-me { align-self: flex-end; background: #065f46; color: white; border-bottom-right-radius: 4px; }
+        .msg-them { align-self: flex-start; background: white; color: #1f2937; border-bottom-left-radius: 4px; border: 1px solid #e5e7eb; }
     </style>
 </head>
 <body>
@@ -37,56 +36,49 @@
 
     <div id="main-content" class="hidden">
         <div id="home-page" class="p-5">
-            <div id="holiday-banner" class="notice-card hidden">
-                <p class="font-black text-amber-800 uppercase text-[10px] mb-1">📢 MADRASA NOTICE</p>
-                <p id="holiday-reason-text" class="text-sm font-bold text-amber-900"></p>
-            </div>
-
-            <div id="admin-holiday-tool" class="card hidden border-emerald-300 bg-emerald-50">
-                <p class="text-[10px] font-black text-emerald-800 uppercase mb-3 text-center">Post Leave Notice</p>
-                <textarea id="holiday-reason-input" class="w-full p-3 border rounded-xl text-xs mb-3 outline-none" placeholder="Type reason for leave here..."></textarea>
-                <button id="holiday-toggle-btn" onclick="toggleGlobalHoliday()" class="w-full py-3 rounded-xl text-xs font-black uppercase transition-all shadow-md text-white"></button>
-            </div>
-            
-            <div class="card mt-4 text-center">
+            <div class="card text-center">
                 <h3 class="text-[10px] font-black text-gray-400 mb-4 uppercase">Azan Timings</h3>
-                <div id="azan-list" class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase mb-4">
-                    <div class="bg-gray-50 p-2 rounded-lg">SUBHI<br><span id="t-subhi" class="text-emerald-700">05:15</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">DUHAR<br><span id="t-duhar" class="text-emerald-700">12:38</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">ASR<br><span id="t-asr" class="text-emerald-700">03:58</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">MAGH<br><span id="t-magh" class="text-emerald-700">06:39</span></div>
-                    <div class="bg-gray-50 p-2 rounded-lg">ISHA<br><span id="t-isha" class="text-emerald-700">07:49</span></div>
-                </div>
-
-                <div id="admin-azan-tool" class="hidden border-t pt-4">
-                    <p class="text-[9px] font-black text-emerald-700 uppercase mb-2">Edit Timings (Usthad Only)</p>
-                    <div class="grid grid-cols-2 gap-2 mb-3">
-                        <input type="text" id="up-subhi" placeholder="Subhi" class="p-2 border rounded text-xs">
-                        <input type="text" id="up-duhar" placeholder="Duhar" class="p-2 border rounded text-xs">
-                        <input type="text" id="up-asr" placeholder="Asr" class="p-2 border rounded text-xs">
-                        <input type="text" id="up-magh" placeholder="Magh" class="p-2 border rounded text-xs">
-                        <input type="text" id="up-isha" placeholder="Isha" class="p-2 border rounded text-xs">
-                    </div>
-                    <button onclick="updateAzanTimes()" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-[10px] font-black uppercase">Update Timings</button>
+                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold uppercase text-emerald-700">
+                    <div class="bg-gray-50 p-2 rounded-lg">SUBHI<br><span>05:15</span></div>
+                    <div class="bg-gray-50 p-2 rounded-lg">DUHAR<br><span>12:38</span></div>
+                    <div class="bg-gray-50 p-2 rounded-lg">ASR<br><span>03:58</span></div>
+                    <div class="bg-gray-50 p-2 rounded-lg">MAGH<br><span>06:39</span></div>
+                    <div class="bg-gray-50 p-2 rounded-lg">ISHA<br><span>07:49</span></div>
                 </div>
             </div>
         </div>
 
+        <div id="attendance-page" class="p-5 hidden"><div id="attendance-list" class="space-y-2"></div></div>
+        <div id="tracker-page" class="p-5 hidden"><div id="tracker-list" class="space-y-2"></div></div>
+        
         <div id="results-page" class="p-5 hidden">
-            <h2 class="text-center font-black text-emerald-800 uppercase mb-4 tracking-widest text-sm">Public Exam Results 2026</h2>
-            <input type="text" id="search-results" onkeyup="searchStudent()" placeholder="Search student name..." class="w-full p-4 mb-4 rounded-xl border-none outline-none shadow-sm text-sm">
-            <div id="results-list"></div>
+            <h2 class="text-center font-black text-emerald-800 uppercase mb-4 text-sm">Public Exam Results 2026</h2>
+            <div id="results-list" class="space-y-3"></div>
         </div>
 
-        <div id="attendance-page" class="p-5 hidden"><div id="attendance-list"></div></div>
-        <div id="tracker-page" class="p-5 hidden"><div id="tracker-list"></div></div>
-        <div id="history-page" class="p-5 hidden"><div id="history-list"></div></div>
-        
+        <div id="history-page" class="p-5 hidden"><div id="history-list" class="space-y-2"></div></div>
+
         <div id="profile-page" class="p-5 hidden text-center">
             <div class="card py-10">
                 <i class="fa-solid fa-circle-user text-5xl text-emerald-700 mb-4"></i>
                 <p id="user-email-text" class="text-xs font-bold text-gray-500 mb-8"></p>
+                <button onclick="navigate('chat')" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl mb-4 uppercase text-[10px] flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-comments"></i> Open Chat
+                </button>
                 <button onclick="handleLogout()" class="w-full border-2 border-red-500 text-red-600 font-bold py-3 rounded-xl uppercase text-[10px]">Sign Out</button>
+            </div>
+        </div>
+
+        <div id="chat-page" class="hidden h-screen flex flex-col bg-white">
+            <div class="bg-[#065f46] text-white p-4 flex items-center justify-between">
+                <button onclick="navigate('profile')"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="font-black uppercase text-sm">Class Chat</h2>
+                <div></div>
+            </div>
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 flex flex-col bg-gray-50"></div>
+            <div class="p-4 bg-white border-t flex gap-2">
+                <input type="text" id="chat-input" placeholder="Message..." class="flex-1 p-3 bg-gray-100 rounded-xl outline-none">
+                <button onclick="sendMessage()" class="bg-emerald-700 text-white p-3 rounded-xl"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
 
@@ -102,54 +94,63 @@
 
     <div id="auth-page" class="p-6 min-h-screen flex flex-col justify-center text-center">
         <div id="login-box" class="card">
-            <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase tracking-widest">Login</h2>
-            <input type="email" id="email" placeholder="Enter Email" class="w-full p-4 rounded-xl mb-4 bg-[#f0f4f8] outline-none text-sm border-none">
-            <input type="password" id="pass" placeholder="Enter Password" class="w-full p-4 rounded-xl mb-2 bg-[#f0f4f8] outline-none text-sm border-none">
-            <div class="text-right mb-6"><span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer uppercase">Forgot Password?</span></div>
-            <button onclick="handleLogin()" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-4 uppercase shadow-lg">Login</button>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-tighter">New parent? <span onclick="toggleAuth(true)" class="text-emerald-700 underline cursor-pointer">Create Account</span></p>
+            <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase">Login</h2>
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl mb-2 bg-gray-100 outline-none">
+            <div class="text-right mb-6"><span onclick="handleResetPassword()" class="text-[10px] text-gray-500 font-bold underline cursor-pointer">Forgot Password?</span></div>
+            <button onclick="handleLogin()" class="w-full bg-[#065f46] text-white font-black py-4 rounded-xl mb-4 uppercase">Login</button>
+            <p onclick="toggleAuth(true)" class="text-xs font-bold text-gray-400 uppercase cursor-pointer">New? <span class="text-emerald-700 underline">Register</span></p>
         </div>
         <div id="signup-box" class="card hidden">
-            <h2 class="text-xl font-black text-blue-800 mb-8 uppercase">Register</h2>
-            <input type="email" id="s-email" placeholder="Your Email" class="w-full p-4 rounded-xl mb-4 bg-[#f0f4f8] outline-none text-sm border-none">
-            <input type="password" id="s-pass" placeholder="Create Password" class="w-full p-4 rounded-xl mb-6 bg-[#f0f4f8] outline-none text-sm border-none">
-            <button onclick="handleSignUp()" class="w-full bg-blue-800 text-white font-black py-4 rounded-xl mb-4 uppercase">Create Account</button>
-            <p onclick="toggleAuth(false)" class="text-xs font-bold text-gray-400 underline cursor-pointer uppercase text-center">Back to Login</p>
+            <h2 class="text-xl font-black text-emerald-800 mb-8 uppercase">Register</h2>
+            <input type="email" id="s-email" placeholder="Email" class="w-full p-4 rounded-xl mb-4 bg-gray-100 outline-none">
+            <input type="password" id="s-pass" placeholder="Password" class="w-full p-4 rounded-xl mb-6 bg-gray-100 outline-none">
+            <button onclick="handleSignUp()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl mb-4 uppercase">Create Account</button>
+            <p onclick="toggleAuth(false)" class="text-xs font-bold text-gray-400 underline cursor-pointer uppercase">Back to Login</p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, query, where, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, collection, query, where, orderBy, onSnapshot, getDocs, addDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0", authDomain: "hidayatul-islam-traker.firebaseapp.com", projectId: "hidayatul-islam-traker", storageBucket: "hidayatul-islam-traker.firebasestorage.app", messagingSenderId: "82744495268", appId: "1:82744495268:web:afc2f87d3d06884363ea31" };
+        const firebaseConfig = { 
+            apiKey: "AIzaSyA39r0TDE8BpdJ4vfOn0T3zvzYLV5ksTY0", 
+            authDomain: "hidayatul-islam-traker.firebaseapp.com", 
+            projectId: "hidayatul-islam-traker", 
+            storageBucket: "hidayatul-islam-traker.firebasestorage.app", 
+            messagingSenderId: "82744495268", 
+            appId: "1:82744495268:web:afc2f87d3d06884363ea31" 
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         const ADMIN_EMAIL = "kereemk81@gmail.com";
         const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
-        let selectedDate = new Date().toLocaleDateString('en-CA');
-        let globalHoliday = false;
-
+        
         const fullResults = [
-            { name: "MUHAMMAD SIFAN", reg: "550211", scores: { "Dur-1": "90 A", "Fiq": "77 B+", "Taj": "84 A", "Dur-2": "69 B", "Quran": "78 B+", "Prac": "92 A+" }, total: 490, remark: "DISTINCTION" },
-            { name: "MUHAMMAD YASEEN", reg: "550212", scores: { "Dur-1": "68 B", "Fiq": "68 B", "Taj": "60 C+", "Dur-2": "63 B", "Quran": "72 B+", "Prac": "88 A" }, total: 419, remark: "PASSED" },
-            { name: "MUHAMMAD SUHAIR", reg: "550213", scores: { "Dur-1": "80 B+", "Fiq": "76 B+", "Taj": "87 A", "Dur-2": "76 B+", "Quran": "69 B", "Prac": "95 A+" }, total: 483, remark: "DISTINCTION" },
-            { name: "MUHAMMAD FAZIL", reg: "550214", scores: { "Dur-1": "81 A", "Fiq": "77 B+", "Taj": "78 B+", "Dur-2": "74 B+", "Quran": "45 C", "Prac": "94 A+" }, total: 449, remark: "PASSED" },
-            { name: "TWALHATH", reg: "550215", scores: { "Dur-1": "57 C+", "Fiq": "49 C", "Taj": "52 C+", "Dur-2": "45 C", "Quran": "68 B", "Prac": "98 A++" }, total: 369, remark: "PASSED" },
-            { name: "MUHAMMAD DISHAN K.A", reg: "550216", scores: { "Dur-1": "90 A", "Fiq": "89 A", "Taj": "91 A+", "Dur-2": "81 A", "Quran": "80 B+", "Prac": "98 A++" }, total: 529, remark: "DISTINCTION" },
-            { name: "RASEENA", reg: "550217", scores: { "Dur-1": "60 C+", "Fiq": "58 C+", "Taj": "40 C", "Dur-2": "54 C+", "Quran": "40 C", "Prac": "98 A++" }, total: 350, remark: "PASSED" },
-            { name: "NAFEESATH AIZA", reg: "550218", scores: { "Dur-1": "58 C+", "Fiq": "50 C", "Taj": "52 C+", "Dur-2": "53 C+", "Quran": "47 C", "Prac": "95 A+" }, total: 355, remark: "PASSED" },
-            { name: "AFREENA", reg: "550219", scores: { "Dur-1": "76 B+", "Fiq": "76 B+", "Taj": "81 A", "Dur-2": "70 B", "Quran": "70 B", "Prac": "99 A++" }, total: 472, remark: "PASSED" },
-            { name: "MISHA FATHIMA", reg: "550220", scores: { "Dur-1": "40 C", "Fiq": "47 C", "Taj": "50 C", "Dur-2": "47 C", "Quran": "44 C", "Prac": "85 A" }, total: 313, remark: "PASSED" },
-            { name: "SHAKIRA", reg: "550221", scores: { "Dur-1": "96 A++", "Fiq": "96 A++", "Taj": "95 A+", "Dur-2": "91 A+", "Quran": "80 B+", "Prac": "100 A++" }, total: 558, remark: "DISTINCTION" },
-            { name: "FATHIMATH RIFA", reg: "550222", scores: { "Dur-1": "75 B+", "Fiq": "72 B+", "Taj": "75 B+", "Dur-2": "66 B", "Quran": "51 C+", "Prac": "83 A" }, total: 422, remark: "PASSED" },
-            { name: "SUHAIBA", reg: "550223", scores: { "Dur-1": "79 B+", "Fiq": "68 B", "Taj": "86 A", "Dur-2": "73 B+", "Quran": "50 C", "Prac": "93 A+" }, total: 449, remark: "PASSED" },
-            { name: "KADEEJATHU NILA", reg: "550224", scores: { "Dur-1": "84 A", "Fiq": "70 B", "Taj": "84 A", "Dur-2": "78 B+", "Quran": "71 B+", "Prac": "100 A++" }, total: 487, remark: "DISTINCTION" },
-            { name: "FATHIMATH FIDA", reg: "550225", scores: { "Dur-1": "79 B+", "Fiq": "77 B+", "Taj": "80 B+", "Dur-2": "64 B", "Quran": "73 B+", "Prac": "99 A++" }, total: 472, remark: "PASSED" }
+            { name: "MUHAMMAD DISHAN K.A", total: 529, remark: "DISTINCTION", scores: { "Dur-1": "90 A", "Fiq": "89 A", "Taj": "91 A+", "Dur-2": "81 A", "Quran": "80 B+", "Prac": "98 A++" } },
+            { name: "SHAKIRA", total: 558, remark: "DISTINCTION", scores: { "Dur-1": "96 A++", "Fiq": "96 A++", "Taj": "95 A+", "Dur-2": "91 A+", "Quran": "80 B+", "Prac": "100 A++" } },
+            { name: "MUHAMMAD SIFAN", total: 490, remark: "DISTINCTION", scores: { "Dur-1": "90 A", "Fiq": "77 B+", "Taj": "84 A", "Dur-2": "69 B", "Quran": "78 B+", "Prac": "92 A+" } },
+            { name: "KADEEJATHU NILA", total: 487, remark: "DISTINCTION", scores: { "Dur-1": "84 A", "Fiq": "70 B", "Taj": "84 A", "Dur-2": "78 B+", "Quran": "71 B+", "Prac": "100 A++" } },
+            { name: "MUHAMMAD SUHAIR", total: 483, remark: "DISTINCTION", scores: { "Dur-1": "80 B+", "Fiq": "76 B+", "Taj": "87 A", "Dur-2": "76 B+", "Quran": "69 B", "Prac": "95 A+" } },
+            { name: "AFREENA", total: 472, remark: "PASSED", scores: { "Dur-1": "76 B+", "Fiq": "76 B+", "Taj": "81 A", "Dur-2": "70 B", "Quran": "70 B", "Prac": "99 A++" } },
+            { name: "FATHIMATH FIDA", total: 472, remark: "PASSED", scores: { "Dur-1": "79 B+", "Fiq": "77 B+", "Taj": "80 B+", "Dur-2": "64 B", "Quran": "73 B+", "Prac": "99 A++" } },
+            { name: "MUHAMMAD FAZIL", total: 449, remark: "PASSED", scores: { "Dur-1": "81 A", "Fiq": "77 B+", "Taj": "78 B+", "Dur-2": "74 B+", "Quran": "45 C", "Prac": "94 A+" } },
+            { name: "SUHAIBA", total: 449, remark: "PASSED", scores: { "Dur-1": "79 B+", "Fiq": "68 B", "Taj": "86 A", "Dur-2": "73 B+", "Quran": "50 C", "Prac": "93 A+" } },
+            { name: "FATHIMATH RIFA", total: 422, remark: "PASSED", scores: { "Dur-1": "75 B+", "Fiq": "72 B+", "Taj": "75 B+", "Dur-2": "66 B", "Quran": "51 C+", "Prac": "83 A" } },
+            { name: "MUHAMMAD YASEEN", total: 419, remark: "PASSED", scores: { "Dur-1": "68 B", "Fiq": "68 B", "Taj": "60 C+", "Dur-2": "63 B", "Quran": "72 B+", "Prac": "88 A" } },
+            { name: "TWALHATH", total: 369, remark: "PASSED", scores: { "Dur-1": "57 C+", "Fiq": "49 C", "Taj": "52 C+", "Dur-2": "45 C", "Quran": "68 B", "Prac": "98 A++" } },
+            { name: "NAFEESATH AIZA", total: 355, remark: "PASSED", scores: { "Dur-1": "58 C+", "Fiq": "50 C", "Taj": "52 C+", "Dur-2": "53 C+", "Quran": "47 C", "Prac": "95 A+" } },
+            { name: "RASEENA", total: 350, remark: "PASSED", scores: { "Dur-1": "60 C+", "Fiq": "58 C+", "Taj": "40 C", "Dur-2": "54 C+", "Quran": "40 C", "Prac": "98 A++" } },
+            { name: "MISHA FATHIMA", total: 313, remark: "PASSED", scores: { "Dur-1": "40 C", "Fiq": "47 C", "Taj": "50 C", "Dur-2": "47 C", "Quran": "44 C", "Prac": "85 A" } }
         ];
+
+        let selectedDate = new Date().toLocaleDateString('en-CA');
+        let chatName = localStorage.getItem('madrasa_chat_name') || "";
 
         onAuthStateChanged(auth, (u) => {
             document.getElementById('auth-page').classList.toggle('hidden', !!u);
@@ -157,89 +158,104 @@
             document.getElementById('app-header').classList.toggle('hidden', !u);
             if(u) {
                 document.getElementById('user-email-text').innerText = u.email;
-                const isAdmin = u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-                document.getElementById('admin-holiday-tool').classList.toggle('hidden', !isAdmin);
-                document.getElementById('admin-azan-tool').classList.toggle('hidden', !isAdmin);
-                syncHoliday();
-                loadAzanTimes();
+                document.getElementById('global-date').value = selectedDate;
             }
         });
 
-        // Azan Functions
-        function loadAzanTimes() {
-            onSnapshot(doc(db, "settings", "timings"), (snap) => {
-                if(snap.exists()){
-                    const d = snap.data();
-                    if(d.subhi) document.getElementById('t-subhi').innerText = d.subhi;
-                    if(d.duhar) document.getElementById('t-duhar').innerText = d.duhar;
-                    if(d.asr) document.getElementById('t-asr').innerText = d.asr;
-                    if(d.magh) document.getElementById('t-magh').innerText = d.magh;
-                    if(d.isha) document.getElementById('t-isha').innerText = d.isha;
-                }
-            });
-        }
-
-        window.updateAzanTimes = () => {
-            const data = {
-                subhi: document.getElementById('up-subhi').value || document.getElementById('t-subhi').innerText,
-                duhar: document.getElementById('up-duhar').value || document.getElementById('t-duhar').innerText,
-                asr: document.getElementById('up-asr').value || document.getElementById('t-asr').innerText,
-                magh: document.getElementById('up-magh').value || document.getElementById('t-magh').innerText,
-                isha: document.getElementById('up-isha').value || document.getElementById('t-isha').innerText
-            };
-            setDoc(doc(db, "settings", "timings"), data, {merge: true}).then(() => alert("Timings Updated!"));
-        };
-
-        // Notice Board
-        function syncHoliday() {
-            onSnapshot(doc(db, "settings", "madrasa_status"), (snap) => {
-                const data = snap.exists() ? snap.data() : { isHoliday: false, reason: "" };
-                globalHoliday = data.isHoliday;
-                const banner = document.getElementById('holiday-banner');
-                if(globalHoliday) { banner.classList.remove('hidden'); document.getElementById('holiday-reason-text').innerText = data.reason || "Madrasa is closed today."; }
-                else banner.classList.add('hidden');
-                const btn = document.getElementById('holiday-toggle-btn');
-                btn.innerText = globalHoliday ? "CANCEL LEAVE NOTICE" : "POST LEAVE NOTICE";
-                btn.className = globalHoliday ? "w-full py-3 rounded-xl text-xs font-black uppercase bg-red-600 shadow-md" : "w-full py-3 rounded-xl text-xs font-black uppercase bg-blue-600 shadow-md";
-                loadAttendance();
-            });
-        }
-
-        window.toggleGlobalHoliday = () => {
-            const reason = document.getElementById('holiday-reason-input').value;
-            if(!globalHoliday && !reason) return alert("Please type a reason for leave!");
-            setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: !globalHoliday, reason: !globalHoliday ? reason : "" });
-            document.getElementById('holiday-reason-input').value = "";
-        };
-
-        // Navigation
         window.navigate = (p, el) => {
             if(el) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); }
-            ['home', 'tracker', 'attendance', 'results', 'history', 'profile'].forEach(pg => document.getElementById(pg+'-page').classList.toggle('hidden', !pg.includes(p)));
+            ['home', 'tracker', 'attendance', 'results', 'history', 'profile', 'chat'].forEach(pg => {
+                const element = document.getElementById(pg + '-page');
+                if(element) element.classList.toggle('hidden', pg !== p);
+            });
+            if(p === 'chat') { document.getElementById('app-header').classList.add('hidden'); document.querySelector('.bottom-nav').classList.add('hidden'); initChat(); }
+            else { document.getElementById('app-header').classList.remove('hidden'); document.querySelector('.bottom-nav').classList.remove('hidden'); }
+            
+            if(p === 'attendance') loadAttendance();
+            if(p === 'tracker') loadTracker();
             if(p === 'results') loadResults();
-            if(p.includes('tracker')) loadTracker();
-            if(p.includes('attendance')) loadAttendance();
-            if(p.includes('history')) loadHistory();
+            if(p === 'history') loadHistory();
         };
 
-        // Results
+        function loadAttendance() {
+            const isAdmin = auth.currentUser?.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+            const container = document.getElementById('attendance-list');
+            onSnapshot(query(collection(db, "daily"), where("date", "==", selectedDate)), (snap) => {
+                const data = {}; snap.forEach(d => data[d.data().name] = d.data());
+                container.innerHTML = students.map(s => {
+                    const status = data[s]?.status || "";
+                    return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="flex gap-2">
+                        <button onclick="${isAdmin ? `setA('${s}','P')` : 'alert(\'Only Usthad\')'}" class="att-btn ${status === 'P' ? 'bg-emerald-600 text-white' : ''}">PRESENT</button>
+                        <button onclick="${isAdmin ? `setA('${s}','A')` : 'alert(\'Only Usthad\')'}" class="att-btn ${status === 'A' ? 'bg-red-600 text-white' : ''}">ABSENT</button>
+                    </div></div>`;
+                }).join('');
+            });
+        }
+
+        window.setA = (n, s) => setDoc(doc(db, "daily", n + "_" + selectedDate), { name: n, date: selectedDate, status: s }, { merge: true });
+
+        function loadTracker() {
+            const container = document.getElementById('tracker-list');
+            onSnapshot(query(collection(db, "daily"), where("date", "==", selectedDate)), (snap) => {
+                const data = {}; snap.forEach(d => data[d.data().name] = d.data());
+                container.innerHTML = students.map(s => {
+                    const d = data[s] || {};
+                    return `<div class="card"><p class="text-xs font-black uppercase mb-3">${s}</p><div class="grid grid-cols-5 gap-1">
+                        ${["Subhi","Duhar","Asr","Maghrib","Isha"].map(p => `<button onclick="toggleP('${s}','${p}',${!!d[p]})" class="p-btn ${d[p] ? 'active' : ''}">${d[p] ? '✓' : p}</button>`).join('')}
+                    </div></div>`;
+                }).join('');
+            });
+        }
+
+        window.toggleP = (n, p, cur) => setDoc(doc(db, "daily", n + "_" + selectedDate), { name: n, date: selectedDate, [p]: !cur }, { merge: true });
+
         window.loadResults = () => {
             const container = document.getElementById('results-list');
             container.innerHTML = fullResults.map((r, i) => `
-                <div class="card res-card result-item" onclick="document.getElementById('marks-${i}').classList.toggle('hidden')">
+                <div class="card res-card" onclick="document.getElementById('marks-${i}').classList.toggle('hidden')">
                     <div class="flex justify-between items-center">
-                        <div>
-                            <p class="student-name text-[10px] font-black text-gray-800 uppercase">${r.name}</p>
-                            <p class="text-[8px] font-bold ${r.remark === 'DISTINCTION' ? 'text-emerald-600' : 'text-gray-400'}">${r.remark}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-lg font-black text-emerald-800">${r.total}/600</p>
-                        </div>
+                        <div><p class="text-[10px] font-black uppercase">${r.name}</p><p class="text-[8px] font-bold ${r.remark === 'DISTINCTION' ? 'text-emerald-600' : 'text-gray-400'}">${r.remark}</p></div>
+                        <p class="text-lg font-black text-emerald-800">${r.total}/600</p>
                     </div>
                     <div id="marks-${i}" class="hidden subject-grid">
-                        <div class="sub-box"><p class="text-[7px] text-gray-400 uppercase">Duroosul I</p><p class="text-[10px] font-black">${r.scores['Dur-1']}</p></div>
-                        <div class="sub-box"><p class="text-[7px] text-gray-400 uppercase">Fiqh</p><p class="text-[10px] font-black">${r.scores['Fiq']}</p></div>
-                        <div class="sub-box"><p class="text-[7px] text-gray-400 uppercase">Tajweed</p><p class="text-[10px] font-black">${r.scores['Taj']}</p></div>
-                        <div class="sub-box"><p class="text-[7px] text-gray-400 uppercase">Duroosul II</p><p class="text-[10px] font-black">${r.scores['Dur-2']}</p></div>
-                        <div class="sub-box"><p class="text-[7px] text-gray-400 uppercase">Quran</p><p class="text-[10px] font-black">${r.scores['Quran']}</p></div>
-                        <div class="sub-box"><p class="text-[7px] text-gray-400 uppercase
+                        <div class="sub-box"><p class="text-[7px] text-gray-400">Duroosul I</p><p class="text-[10px] font-black">${r.scores['Dur-1']}</p></div>
+                        <div class="sub-box"><p class="text-[7px] text-gray-400">Fiqh</p><p class="text-[10px] font-black">${r.scores['Fiq']}</p></div>
+                        <div class="sub-box"><p class="text-[7px] text-gray-400">Tajweed</p><p class="text-[10px] font-black">${r.scores['Taj']}</p></div>
+                        <div class="sub-box"><p class="text-[7px] text-gray-400">Duroosul II</p><p class="text-[10px] font-black">${r.scores['Dur-2']}</p></div>
+                        <div class="sub-box"><p class="text-[7px] text-gray-400">Quran</p><p class="text-[10px] font-black">${r.scores['Quran']}</p></div>
+                        <div class="sub-box"><p class="text-[7px] text-gray-400">Practical</p><p class="text-[10px] font-black">${r.scores['Prac']}</p></div>
+                    </div>
+                </div>`).join('');
+        };
+
+        async function loadHistory() {
+            const snap = await getDocs(collection(db, "daily"));
+            const st = {}; students.forEach(s => st[s] = { p:0, pr:0 });
+            snap.forEach(d => {
+                const doc = d.data();
+                if(st[doc.name]) {
+                    ["Subhi","Duhar","Asr","Maghrib","Isha"].forEach(p => { if(doc[p]) st[doc.name].pr++; });
+                    if(doc.status === 'P') st[doc.name].p++;
+                }
+            });
+            document.getElementById('history-list').innerHTML = students.map(s => `<div class="card"><p class="font-black text-sm uppercase mb-2">${s}</p><div class="flex justify-between text-[10px] font-bold"><span class="text-emerald-600">PRAYERS: ${st[s].pr}</span><span class="text-blue-600">PRESENT: ${st[s].p}</span></div></div>`).join('');
+        }
+
+        function initChat() {
+            const user = auth.currentUser;
+            const isAdmin = user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+            if (isAdmin) chatName = "ADMIN";
+            else if (!chatName) {
+                let n = prompt("Name:"); if (n && n.trim()) { chatName = n.trim(); localStorage.setItem('madrasa_chat_name', chatName); }
+                else { navigate('profile'); return; }
+            }
+            onSnapshot(query(collection(db, "messages"), orderBy("timestamp", "asc")), (snap) => {
+                const container = document.getElementById('chat-messages'); container.innerHTML = "";
+                snap.forEach(d => {
+                    const data = d.data(); const isMe = data.sender === chatName;
+                    container.innerHTML += `<div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-2">
+                        <span class="text-[8px] font-black uppercase text-gray-400 px-1">${data.sender} ${isAdmin ? `<button onclick="deleteMsg('${d.id}')" class="text-red-500 ml-2">DEL</button>` : ''}</span>
+                        <div class="msg-box ${isMe ? 'msg-me' : 'msg-them'}"><p>${data.text}</p></div>
+                    </div>`;
+                });
+               
