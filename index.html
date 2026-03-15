@@ -16,7 +16,7 @@
         .nav-item { text-align: center; font-size: 10px; color: #94a3b8; font-weight: 800; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary); }
         .btn-main { background: var(--primary); color: white; width: 100%; padding: 14px; border-radius: 12px; font-weight: 800; text-transform: uppercase; }
-        .admin-only { background: #f0fdf4; border: 1px dashed #10b981; padding: 15px; border-radius: 15px; margin: 15px; }
+        .admin-only { background: #f0fdf4; border: 1px dashed #10b981; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -26,7 +26,7 @@
             <h2 class="text-2xl font-black text-emerald-900 mb-6 uppercase">Hidayatul Islam</h2>
             <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl bg-gray-50 mb-4 border font-bold outline-none">
             <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl bg-gray-50 mb-6 border font-bold outline-none">
-            <button onclick="handleAuth()" id="auth-btn" class="btn-main">Login</button>
+            <button onclick="handleAuth()" id="auth-btn" class="btn-main shadow-lg">Login</button>
             <p class="mt-6 text-xs font-bold text-gray-400 uppercase">New? <span onclick="toggleAuth()" id="toggle-text" class="text-emerald-700 underline">Register</span></p>
         </div>
     </div>
@@ -38,24 +38,34 @@
         </div>
 
         <div id="home-page" class="view-page p-4">
-            <div id="admin-header-tool" class="admin-only hidden mb-4">
-                <p class="text-[9px] font-black text-emerald-700 mb-3 uppercase text-center"><i class="fa-solid fa-pen-to-square"></i> Edit Header Details (Usthad Only)</p>
-                <div class="space-y-2">
-                    <input type="text" id="edit-name" placeholder="Madrasa Name" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
-                    <input type="text" id="edit-sub" placeholder="Place, Class & Year (e.g. Achangi • Class 6)" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
-                    <button onclick="updateHeader()" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[10px] font-black uppercase">Update Header</button>
+            
+            <div id="admin-tools" class="hidden">
+                <div class="admin-only">
+                    <p class="text-[9px] font-black text-emerald-700 mb-3 uppercase text-center"><i class="fa-solid fa-tools"></i> Usthad Control Panel</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <input type="text" id="edit-name" placeholder="Edit Madrasa Name" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
+                        <input type="text" id="edit-sub" placeholder="Edit Place/Class/Year" class="w-full p-3 rounded-lg border text-xs font-bold outline-none">
+                        <button onclick="updateHeader()" class="w-full bg-emerald-700 text-white py-2 rounded-lg text-[9px] font-black uppercase">Update Header</button>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <p class="text-[8px] font-black text-gray-400 mb-2 uppercase">Edit Azan Times</p>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <input type="text" id="up-subhi" placeholder="Subhi" class="p-2 border rounded text-xs font-bold">
+                        <input type="text" id="up-duhar" placeholder="Duhar" class="p-2 border rounded text-xs font-bold">
+                        <input type="text" id="up-asr" placeholder="Asr" class="p-2 border rounded text-xs font-bold">
+                        <input type="text" id="up-magh" placeholder="Maghrib" class="p-2 border rounded text-xs font-bold">
+                        <input type="text" id="up-isha" placeholder="Isha" class="p-2 border rounded text-xs font-bold">
+                    </div>
+                    <button onclick="updateAzanTimes()" class="w-full bg-blue-700 text-white py-2 rounded-lg text-[9px] font-black uppercase">Update Timings</button>
                 </div>
             </div>
 
-            <div id="admin-notice-tool" class="admin-only hidden">
-                <p class="text-[9px] font-black text-red-600 mb-2 uppercase">Post Leave Notice</p>
-                <textarea id="leave-reason" class="w-full p-3 border rounded-xl text-xs mb-2 outline-none" placeholder="Reason for leave..."></textarea>
-                <button onclick="postLeave()" class="bg-red-600 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase">Post Leave</button>
-            </div>
-            
-            <div class="card mt-4">
+            <div class="card mt-2">
                 <p class="text-[10px] font-black text-gray-400 text-center mb-4 uppercase">Azan Timings</p>
-                <div id="azan-display" class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center">
+                <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center">
                     <div class="bg-emerald-50 p-2 rounded-lg">SUBHI<br><span id="t-subhi">05:15</span></div>
                     <div class="bg-emerald-50 p-2 rounded-lg">DUHAR<br><span id="t-duhar">12:38</span></div>
                     <div class="bg-emerald-50 p-2 rounded-lg">ASR<br><span id="t-asr">03:58</span></div>
@@ -65,7 +75,7 @@
             </div>
         </div>
 
-        <div class="bottom-nav">
+        <div class="bottom-nav shadow-lg">
             <div class="nav-item active" onclick="navigate('home', this)"><i class="fa-solid fa-house text-xl mb-1"></i><br>HOME</div>
             <div class="nav-item" onclick="navigate('tracker', this)"><i class="fa-solid fa-calendar-check text-xl mb-1"></i><br>TRACKER</div>
             <div class="nav-item" onclick="navigate('results', this)"><i class="fa-solid fa-graduation-cap text-xl mb-1"></i><br>RESULTS</div>
@@ -98,41 +108,57 @@
             document.getElementById('main-content').classList.toggle('hidden', !u);
             if(u) {
                 const isAdmin = u.email === ADMIN_EMAIL;
-                document.getElementById('admin-header-tool').classList.toggle('hidden', !isAdmin);
-                document.getElementById('admin-notice-tool').classList.toggle('hidden', !isAdmin);
-                syncHeader();
+                document.getElementById('admin-tools').classList.toggle('hidden', !isAdmin);
+                syncData();
             }
         });
 
-        // Header വിവരങ്ങൾ ഡാറ്റാബേസിൽ നിന്ന് എടുക്കുന്നു
-        function syncHeader() {
+        // ലൈവ് ഡാറ്റ സിങ്ക് ചെയ്യുക
+        function syncData() {
+            // Header Sync
             onSnapshot(doc(db, "settings", "header_info"), (snap) => {
                 if(snap.exists()) {
-                    const data = snap.data();
-                    document.getElementById('display-madrasa-name').innerText = data.name || "Hidayatul Islam";
-                    document.getElementById('display-sub-text').innerText = data.subtext || "Achangi • Class 6 • 2026";
+                    const d = snap.data();
+                    document.getElementById('display-madrasa-name').innerText = d.name || "Hidayatul Islam";
+                    document.getElementById('display-sub-text').innerText = d.subtext || "Achangi • Class 6 • 2026";
+                }
+            });
+            // Azan Sync
+            onSnapshot(doc(db, "settings", "timings"), (snap) => {
+                if(snap.exists()){
+                    const d = snap.data();
+                    if(d.subhi) document.getElementById('t-subhi').innerText = d.subhi;
+                    if(d.duhar) document.getElementById('t-duhar').innerText = d.duhar;
+                    if(d.asr) document.getElementById('t-asr').innerText = d.asr;
+                    if(d.magh) document.getElementById('t-magh').innerText = d.magh;
+                    if(d.isha) document.getElementById('t-isha').innerText = d.isha;
                 }
             });
         }
 
-        // Header അപ്ഡേറ്റ് ചെയ്യുന്നു (Admin Only)
+        // അപ്ഡേറ്റ് ഫംഗ്‌ഷനുകൾ
         window.updateHeader = async () => {
             const name = document.getElementById('edit-name').value;
             const sub = document.getElementById('edit-sub').value;
-            if(!name || !sub) return alert("Please fill both fields!");
-            
-            await setDoc(doc(db, "settings", "header_info"), {
-                name: name,
-                subtext: sub
-            }, { merge: true });
-            
-            alert("Header Updated Successfully!");
-            document.getElementById('edit-name').value = "";
-            document.getElementById('edit-sub').value = "";
+            if(!name || !sub) return alert("Fill all fields");
+            await setDoc(doc(db, "settings", "header_info"), { name, subtext: sub }, { merge: true });
+            alert("Header Updated!");
         };
 
-        // ... (handleAuth, logout, navigate functions old same) ...
-        window.handleAuth = () => { /* ... */ }; 
+        window.updateAzanTimes = async () => {
+            const data = {
+                subhi: document.getElementById('up-subhi').value || document.getElementById('t-subhi').innerText,
+                duhar: document.getElementById('up-duhar').value || document.getElementById('t-duhar').innerText,
+                asr: document.getElementById('up-asr').value || document.getElementById('t-asr').innerText,
+                magh: document.getElementById('up-magh').value || document.getElementById('t-magh').innerText,
+                isha: document.getElementById('up-isha').value || document.getElementById('t-isha').innerText
+            };
+            await setDoc(doc(db, "settings", "timings"), data, { merge: true });
+            alert("Azan Timings Updated!");
+        };
+
+        // ... (Auth & Navigation logic same as before) ...
+        window.handleAuth = () => { /* ... */ };
         window.logout = () => signOut(auth);
         window.navigate = (p, el) => { /* ... */ };
     </script>
