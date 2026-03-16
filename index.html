@@ -1,67 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam Connect - Single Page</title>
+    <title>ಹಿದಾಯತುಲ್ ಇಸ್ಲಾಂ ಮದರಸ - ಕನೆಕ್ಟ್</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #065f46; --bg: #f8fafc; }
-        body { background: var(--bg); font-family: sans-serif; }
+        body { background: var(--bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .section-card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .glass-header { background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white; border-radius: 0 0 30px 30px; padding: 35px 20px; text-align: center; position: sticky; top: 0; z-index: 1000; }
         .p-badge { background: #10b981; color: white; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; }
         .a-badge { background: #ef4444; color: white; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; }
         .marquee-container { background: #fffbeb; border: 1px solid #fde68a; padding: 8px; border-radius: 12px; overflow: hidden; white-space: nowrap; margin-bottom: 20px; }
-        .marquee-text { display: inline-block; animation: scroll-left 15s linear infinite; color: #92400e; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+        .marquee-text { display: inline-block; animation: scroll-left 15s linear infinite; color: #92400e; font-weight: 800; font-size: 14px; }
         @keyframes scroll-left { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .poster-card { background: #fef9c3; border: 2px dashed #eab308; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
     <div class="glass-header shadow-lg">
-        <h1 class="text-xl font-black uppercase tracking-tighter">HIDAYATUL ISLAM MADRASA</h1>
-        <p class="text-[9px] opacity-80 mt-1 font-bold tracking-widest uppercase">Achangi, Saklashpura</p>
-        <div class="mt-4"><input type="date" id="global-date" class="bg-white/20 border-none text-white font-black text-xs p-2 rounded-lg outline-none cursor-pointer"></div>
+        <h1 class="text-xl font-black tracking-tighter">ಹಿದಾಯತುಲ್ ಇಸ್ಲಾಂ ಮದರಸ</h1>
+        <p class="text-[10px] opacity-80 mt-1 font-bold tracking-widest uppercase">ಅಚಂಗಿ, ಸಕ್ಲೇಶಪುರ</p>
+        <div class="mt-4"><input type="date" id="global-date" class="bg-white/20 border-none text-white font-black text-xs p-2 rounded-lg outline-none"></div>
     </div>
 
     <div class="p-4 max-w-md mx-auto">
         
         <div class="marquee-container shadow-sm">
-            <div class="marquee-text" id="scroll-notice">WELCOME TO HIDAYATUL ISLAM CONNECT... ADMISSIONS ARE OPEN... REGULAR UPDATES AVAILABLE BELOW...</div>
+            <div class="marquee-text" id="scroll-notice">ಹಿದಾಯತುಲ್ ಇಸ್ಲಾಂ ಮದರಸ ಕನೆಕ್ಟ್ ಪೋರ್ಟಲ್‌ಗೆ ಸ್ವಾಗತ... ಮಾರ್ಚ್ 29 ರಂದು ಮದರಸ ತೆರೆಯಲಿದೆ...</div>
+        </div>
+
+        <div class="poster-card shadow-md">
+            <div class="flex justify-center mb-3 text-amber-500"><i class="fa-solid fa-bullhorn text-3xl animate-bounce"></i></div>
+            <h2 class="text-lg font-black text-amber-900 leading-tight">
+                ಮದರಸಗಳು 2026 ಮಾರ್ಚ್ 29 ರಂದು ತೆರೆಯಲಿರುವುದು
+            </h2>
+            <div class="h-1 w-16 bg-amber-200 mx-auto my-3"></div>
+            <p class="text-[10px] font-bold text-amber-700">
+                ರಂಜಾನ್ ರಜೆ ಮುಗಿದು 2026 ಮಾರ್ಚ್ 29 ರವಿವಾರದಂದು <br> ಮದರಸ ಪುನರಾರಂಭಗೊಳ್ಳಲಿದೆ.
+            </p>
         </div>
 
         <div class="section-card">
-            <p class="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-clock mr-1"></i> Prayer Timings</p>
-            <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center uppercase">
-                <div class="bg-emerald-50 p-2 rounded-xl">SUBHI<br><span id="t-subhi" class="text-[11px]">05:13</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">DUHAR<br><span id="t-duhar" class="text-[11px]">12:37</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">ASR<br><span id="t-asr" class="text-[11px]">03:57</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">MAGRIB<br><span id="t-magh" class="text-[11px]">06:39</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">ISHA<br><span id="t-isha" class="text-[11px]">07:49</span></div>
+            <p class="text-[11px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-clock mr-1"></i> ಅಜಾನ್ ಸಮಯ</p>
+            <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center">
+                <div class="bg-emerald-50 p-2 rounded-xl">ಸುಬಹಿ<br><span id="t-subhi" class="text-[11px]">05:13</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">ದುಹರ್<br><span id="t-duhar" class="text-[11px]">12:37</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">ಅಸರ್<br><span id="t-asr" class="text-[11px]">03:57</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">ಮಗ್ರಿಬ್<br><span id="t-magh" class="text-[11px]">06:39</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">ಇಶಾ<br><span id="t-isha" class="text-[11px]">07:49</span></div>
             </div>
         </div>
 
         <div class="section-card bg-emerald-900 text-white">
-            <p class="text-[10px] font-black opacity-60 mb-2 uppercase tracking-widest"><i class="fa-solid fa-book-open mr-1"></i> Today's Homework</p>
-            <p id="display-homework" class="text-sm font-bold">No work posted for today.</p>
+            <p class="text-[11px] font-black opacity-60 mb-2 uppercase tracking-widest"><i class="fa-solid fa-book-open mr-1"></i> ಇಂದಿನ ಮನೆಗೆಲಸ</p>
+            <p id="display-homework" class="text-sm font-bold">ಯಾವುದೇ ಅಪ್‌ಡೇಟ್ ಇಲ್ಲ.</p>
         </div>
 
         <div class="section-card">
-            <p class="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-clipboard-check mr-1"></i> Student Attendance</p>
+            <p class="text-[11px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-user-check mr-1"></i> ದೈನಂದಿನ ಹಾಜರಾತಿ</p>
             <div id="attendance-list" class="space-y-2">
                 </div>
         </div>
 
         <div class="section-card">
-            <p class="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-person-praying mr-1"></i> Namaz Tracker</p>
+            <p class="text-[11px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-person-praying mr-1"></i> ನಮಾಜ್ ಟ್ರ್ಯಾಕರ್</p>
             <div id="tracker-list" class="space-y-4">
                 </div>
         </div>
 
         <div class="py-10 text-center opacity-30">
-            <p class="text-[9px] font-black uppercase tracking-widest">Digital Connect Portal</p>
+            <p class="text-[9px] font-black uppercase tracking-widest">Digital Connect Portal - Hidayatul Islam</p>
         </div>
     </div>
 
@@ -108,7 +120,7 @@
                 onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${name}`), snap => {
                     const el = document.getElementById(`att-${name}`);
                     if(el && snap.exists()){
-                        el.innerHTML = snap.data().status === 'present' ? '<span class="p-badge">PRESENT</span>' : '<span class="a-badge">ABSENT</span>';
+                        el.innerHTML = snap.data().status === 'present' ? '<span class="p-badge">ಹಾಜರು</span>' : '<span class="a-badge">ಗೈರು</span>';
                     } else if(el) { el.innerHTML = '<span class="text-gray-300">--</span>'; }
                 });
             });
@@ -141,7 +153,6 @@
             });
         }
 
-        // Prayer Timings from screenshot logic
         onSnapshot(doc(db, "settings", "timings"), snap => {
             if(snap.exists()){
                 const d = snap.data();
