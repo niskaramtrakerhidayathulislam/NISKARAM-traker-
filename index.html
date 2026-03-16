@@ -1,55 +1,169 @@
 <!DOCTYPE html>
-<html lang="kn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam Connect</title>
+    <title>Hidayatul Islam Connect - Single Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            background-color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .main-card {
-            background: white;
-            border-radius: 30px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-        .header-bg {
-            background: linear-gradient(135deg, #065f46 0%, #059669 100%);
-        }
+        :root { --primary: #065f46; --bg: #f8fafc; }
+        body { background: var(--bg); font-family: sans-serif; }
+        .section-card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .glass-header { background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white; border-radius: 0 0 30px 30px; padding: 35px 20px; text-align: center; position: sticky; top: 0; z-index: 1000; }
+        .p-badge { background: #10b981; color: white; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; }
+        .a-badge { background: #ef4444; color: white; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; }
+        .marquee-container { background: #fffbeb; border: 1px solid #fde68a; padding: 8px; border-radius: 12px; overflow: hidden; white-space: nowrap; margin-bottom: 20px; }
+        .marquee-text { display: inline-block; animation: scroll-left 15s linear infinite; color: #92400e; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+        @keyframes scroll-left { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
+<body>
 
-    <div class="main-card w-full max-w-md overflow-hidden text-center">
-        <div class="header-bg p-10 text-white">
-            <i class="fa-solid fa-clock-rotate-left text-5xl mb-4 opacity-80"></i>
-            <h1 class="text-xl font-black uppercase tracking-tighter">
-                HIDAYATUL ISLAM CONNECT
-            </h1>
+    <div class="glass-header shadow-lg">
+        <h1 class="text-xl font-black uppercase tracking-tighter">HIDAYATUL ISLAM MADRASA</h1>
+        <p class="text-[9px] opacity-80 mt-1 font-bold tracking-widest uppercase">Achangi, Saklashpura</p>
+        <div class="mt-4"><input type="date" id="global-date" class="bg-white/20 border-none text-white font-black text-xs p-2 rounded-lg outline-none cursor-pointer"></div>
+    </div>
+
+    <div class="p-4 max-w-md mx-auto">
+        
+        <div class="marquee-container shadow-sm">
+            <div class="marquee-text" id="scroll-notice">WELCOME TO HIDAYATUL ISLAM CONNECT... ADMISSIONS ARE OPEN... REGULAR UPDATES AVAILABLE BELOW...</div>
         </div>
 
-        <div class="p-10">
-            <h2 class="text-2xl font-bold text-emerald-900 mb-4 leading-relaxed">
-                ಸದ್ಯಕ್ಕೆ ಇದನ್ನು ಸ್ಥಗಿತಗೊಳಿಸಲಾಗಿದೆ
-            </h2>
-            
-            <div class="w-16 h-1 bg-emerald-100 mx-auto mb-6"></div>
-            
-            <p class="text-gray-500 text-sm font-medium leading-loose">
-                ಮದರಸಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಅಪ್‌ಡೇಟ್‌ಗಳಿಗಾಗಿ ಮತ್ತು <br>
-                ಹೆಚ್ಚಿನ ಮಾಹಿತಿಗಾಗಿ ದಯವಿಟ್ಟು ನೇರವಾಗಿ ಸಂಪರ್ಕಿಸಿ.
-            </p>
-
-            <div class="mt-10">
-                <p class="text-[10px] font-black text-gray-300 uppercase tracking-widest">
-                    Hidayatul Islam Madrasa, Achangi
-                </p>
+        <div class="section-card">
+            <p class="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-clock mr-1"></i> Prayer Timings</p>
+            <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center uppercase">
+                <div class="bg-emerald-50 p-2 rounded-xl">SUBHI<br><span id="t-subhi" class="text-[11px]">05:13</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">DUHAR<br><span id="t-duhar" class="text-[11px]">12:37</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">ASR<br><span id="t-asr" class="text-[11px]">03:57</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">MAGRIB<br><span id="t-magh" class="text-[11px]">06:39</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">ISHA<br><span id="t-isha" class="text-[11px]">07:49</span></div>
             </div>
+        </div>
+
+        <div class="section-card bg-emerald-900 text-white">
+            <p class="text-[10px] font-black opacity-60 mb-2 uppercase tracking-widest"><i class="fa-solid fa-book-open mr-1"></i> Today's Homework</p>
+            <p id="display-homework" class="text-sm font-bold">No work posted for today.</p>
+        </div>
+
+        <div class="section-card">
+            <p class="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-clipboard-check mr-1"></i> Student Attendance</p>
+            <div id="attendance-list" class="space-y-2">
+                </div>
+        </div>
+
+        <div class="section-card">
+            <p class="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-person-praying mr-1"></i> Namaz Tracker</p>
+            <div id="tracker-list" class="space-y-4">
+                </div>
+        </div>
+
+        <div class="py-10 text-center opacity-30">
+            <p class="text-[9px] font-black uppercase tracking-widest">Digital Connect Portal</p>
         </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnSz248OfMbDr3V3kD9NAZkVxxON2fIvE",
+            authDomain: "madrasa-4c7e2.firebaseapp.com",
+            projectId: "madrasa-4c7e2",
+            storageBucket: "madrasa-4c7e2.firebasestorage.app",
+            messagingSenderId: "770067409084",
+            appId: "1:770067409084:web:52e38ae80a3601245248b9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let studentList = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
+        let selectedDate = new Date().toLocaleDateString('en-CA');
+        document.getElementById('global-date').value = selectedDate;
+
+        document.getElementById('global-date').onchange = (e) => { 
+            selectedDate = e.target.value; 
+            refreshData(); 
+        };
+
+        function refreshData() {
+            renderAttendance();
+            renderNamaz();
+        }
+
+        function renderAttendance() {
+            const container = document.getElementById('attendance-list');
+            container.innerHTML = studentList.map(name => `
+                <div class="flex justify-between items-center border-b border-gray-50 py-2">
+                    <span class="text-xs font-bold text-gray-700">${name}</span>
+                    <span id="att-${name}" class="text-[9px] font-black text-gray-200">...</span>
+                </div>
+            `).join('');
+            
+            studentList.forEach(name => {
+                onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${name}`), snap => {
+                    const el = document.getElementById(`att-${name}`);
+                    if(el && snap.exists()){
+                        el.innerHTML = snap.data().status === 'present' ? '<span class="p-badge">PRESENT</span>' : '<span class="a-badge">ABSENT</span>';
+                    } else if(el) { el.innerHTML = '<span class="text-gray-300">--</span>'; }
+                });
+            });
+        }
+
+        function renderNamaz() {
+            const container = document.getElementById('tracker-list');
+            container.innerHTML = studentList.map(name => `
+                <div class="bg-gray-50 p-3 rounded-xl">
+                    <p class="text-[10px] font-black uppercase mb-2 text-emerald-900">${name}</p>
+                    <div class="flex gap-1">
+                        ${["Subhi", "Duhar", "Asr", "Maghrib", "Isha"].map(p => `
+                            <div id="n-${name}-${p}" class="flex-1 text-center py-2 rounded-lg bg-white border border-gray-100 text-[9px] font-bold text-gray-300">${p[0]}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            studentList.forEach(name => {
+                onSnapshot(doc(db, "namaz_tracker", `${selectedDate}_${name}`), snap => {
+                    const data = snap.data();
+                    ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"].forEach(p => {
+                        const el = document.getElementById(`n-${name}-${p}`);
+                        if(el){
+                            if(data && data[p]) { el.style.background = "#10b981"; el.style.color = "white"; }
+                            else { el.style.background = "white"; el.style.color = "#d1d5db"; }
+                        }
+                    });
+                });
+            });
+        }
+
+        // Prayer Timings from screenshot logic
+        onSnapshot(doc(db, "settings", "timings"), snap => {
+            if(snap.exists()){
+                const d = snap.data();
+                if(d.subhi) document.getElementById('t-subhi').innerText = d.subhi;
+                if(d.duhar) document.getElementById('t-duhar').innerText = d.duhar;
+                if(d.asr) document.getElementById('t-asr').innerText = d.asr;
+                if(d.magh) document.getElementById('t-magh').innerText = d.magh;
+                if(d.isha) document.getElementById('t-isha').innerText = d.isha;
+            }
+        });
+
+        onSnapshot(doc(db, "settings", "homework"), snap => {
+            if(snap.exists()) document.getElementById('display-homework').innerText = snap.data().text;
+        });
+
+        onSnapshot(doc(db, "settings", "madrasa_status"), snap => {
+            if(snap.exists() && snap.data().reason) {
+                document.getElementById('scroll-notice').innerText = snap.data().reason;
+            }
+        });
+
+        refreshData();
+    </script>
 </body>
 </html>
