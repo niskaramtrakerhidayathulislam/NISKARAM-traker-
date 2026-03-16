@@ -3,83 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ಹಿದಾಯತುಲ್ ಇಸ್ಲಾಂ ಮದರಸ - ಕನೆಕ್ಟ್</title>
+    <title>Hidayatul Islam Madrasa - Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #065f46; --bg: #f8fafc; }
-        body { background: var(--bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .section-card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .glass-header { background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white; border-radius: 0 0 30px 30px; padding: 35px 20px; text-align: center; position: sticky; top: 0; z-index: 1000; }
-        .p-badge { background: #10b981; color: white; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; }
-        .a-badge { background: #ef4444; color: white; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; }
-        .marquee-container { background: #fffbeb; border: 1px solid #fde68a; padding: 8px; border-radius: 12px; overflow: hidden; white-space: nowrap; margin-bottom: 20px; }
-        .marquee-text { display: inline-block; animation: scroll-left 15s linear infinite; color: #92400e; font-weight: 800; font-size: 14px; }
-        @keyframes scroll-left { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .poster-card { background: #fef9c3; border: 2px dashed #eab308; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        body { background: var(--bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding-bottom: 100px; }
+        .glass-header { background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white; border-radius: 0 0 50px 50px; padding: 40px 20px; text-align: center; }
+        .section-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .namaz-btn { flex: 1; text-align: center; py: 3; border-radius: 12px; border: 1px solid #f1f5f9; font-size: 10px; font-weight: 800; color: #cbd5e1; background: white; }
+        .active-green { background: #10b981 !important; color: white !important; border-color: #059669 !important; }
+        .att-status { font-size: 10px; font-weight: 800; }
+        .present-text { color: #10b981; }
+        .absent-text { color: #ef4444; }
+        .admin-box { display: none; background: #fffbeb; border: 1px dashed #f59e0b; padding: 15px; border-radius: 20px; margin-bottom: 20px; }
+        .show-admin { display: block !important; }
     </style>
 </head>
 <body>
 
     <div class="glass-header shadow-lg">
-        <h1 class="text-xl font-black tracking-tighter">ಹಿದಾಯತುಲ್ ಇಸ್ಲಾಂ ಮದರಸ</h1>
-        <p class="text-[10px] opacity-80 mt-1 font-bold tracking-widest uppercase">ಅಚಂಗಿ, ಸಕ್ಲೇಶಪುರ</p>
-        <div class="mt-4"><input type="date" id="global-date" class="bg-white/20 border-none text-white font-black text-xs p-2 rounded-lg outline-none"></div>
+        <div class="flex justify-between items-center mb-4 px-2">
+            <h2 class="text-sm font-bold uppercase tracking-wider">Niscaram Tracker</h2>
+            <img src="https://www.samastha.in/logo.png" class="h-8 w-8 rounded-full bg-white p-1" alt="Logo">
+        </div>
+        <h1 class="text-2xl font-black mb-1">ಹಿದಾಯತುಲ್ ಇಸ್ಲಾಂ ಮದರಸ</h1>
+        <p class="text-xs opacity-80 font-medium mb-4">ಅಚಂಗಿ, ಸಕ್ಲೇಶಪುರ</p>
+        <div class="flex justify-center">
+            <input type="date" id="global-date" class="bg-white/20 border-none text-white font-bold text-sm p-2 rounded-xl outline-none text-center">
+        </div>
     </div>
 
     <div class="p-4 max-w-md mx-auto">
-        
-        <div class="marquee-container shadow-sm">
-            <div class="marquee-text" id="scroll-notice">ಹಿದಾಯತುಲ್ ಇಸ್ಲಾಂ ಮದರಸ ಕನೆಕ್ಟ್ ಪೋರ್ಟಲ್‌ಗೆ ಸ್ವಾಗತ... ಮಾರ್ಚ್ 29 ರಂದು ಮದರಸ ತೆರೆಯಲಿದೆ...</div>
-        </div>
 
-        <div class="poster-card shadow-md">
-            <div class="flex justify-center mb-3 text-amber-500"><i class="fa-solid fa-bullhorn text-3xl animate-bounce"></i></div>
-            <h2 class="text-lg font-black text-amber-900 leading-tight">
-                ಮದರಸಗಳು 2026 ಮಾರ್ಚ್ 29 ರಂದು ತೆರೆಯಲಿರುವುದು
-            </h2>
-            <div class="h-1 w-16 bg-amber-200 mx-auto my-3"></div>
-            <p class="text-[10px] font-bold text-amber-700">
-                ರಂಜಾನ್ ರಜೆ ಮುಗಿದು 2026 ಮಾರ್ಚ್ 29 ರವಿವಾರದಂದು <br> ಮದರಸ ಪುನರಾರಂಭಗೊಳ್ಳಲಿದೆ.
-            </p>
-        </div>
-
-        <div class="section-card">
-            <p class="text-[11px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-clock mr-1"></i> ಅಜಾನ್ ಸಮಯ</p>
-            <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center">
-                <div class="bg-emerald-50 p-2 rounded-xl">ಸುಬಹಿ<br><span id="t-subhi" class="text-[11px]">05:13</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">ದುಹರ್<br><span id="t-duhar" class="text-[11px]">12:37</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">ಅಸರ್<br><span id="t-asr" class="text-[11px]">03:57</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">ಮಗ್ರಿಬ್<br><span id="t-magh" class="text-[11px]">06:39</span></div>
-                <div class="bg-emerald-50 p-2 rounded-xl">ಇಶಾ<br><span id="t-isha" class="text-[11px]">07:49</span></div>
+        <div class="grid grid-cols-5 gap-2 mb-6">
+            <div class="bg-emerald-50 p-2 rounded-xl text-center border border-emerald-100">
+                <p class="text-[8px] font-black text-emerald-800">05:13</p>
+            </div>
+            <div class="bg-emerald-50 p-2 rounded-xl text-center border border-emerald-100">
+                <p class="text-[8px] font-black text-emerald-800">12:37</p>
+            </div>
+            <div class="bg-emerald-50 p-2 rounded-xl text-center border border-emerald-100">
+                <p class="text-[8px] font-black text-emerald-800">03:57</p>
+            </div>
+            <div class="bg-emerald-50 p-2 rounded-xl text-center border border-emerald-100">
+                <p class="text-[8px] font-black text-emerald-800">06:39</p>
+            </div>
+            <div class="bg-emerald-50 p-2 rounded-xl text-center border border-emerald-100">
+                <p class="text-[8px] font-black text-emerald-800">07:49</p>
             </div>
         </div>
 
-        <div class="section-card bg-emerald-900 text-white">
-            <p class="text-[11px] font-black opacity-60 mb-2 uppercase tracking-widest"><i class="fa-solid fa-book-open mr-1"></i> ಇಂದಿನ ಮನೆಗೆಲಸ</p>
+        <div class="section-card bg-[#064e3b] text-white">
+            <div class="flex items-center gap-2 mb-2 opacity-70">
+                <i class="fa-solid fa-book-open text-sm"></i>
+                <p class="text-[10px] font-black uppercase tracking-widest">ಇಂದಿನ ಮನೆಗೆಲಸ</p>
+            </div>
             <p id="display-homework" class="text-sm font-bold">ಯಾವುದೇ ಅಪ್‌ಡೇಟ್ ಇಲ್ಲ.</p>
         </div>
 
-        <div class="section-card">
-            <p class="text-[11px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-user-check mr-1"></i> ದೈನಂದಿನ ಹಾಜರಾತಿ</p>
-            <div id="attendance-list" class="space-y-2">
-                </div>
+        <div id="admin-tools" class="admin-box">
+            <p class="text-center text-[10px] font-black text-amber-800 mb-3 uppercase">Usthad Control Panel</p>
+            <textarea id="homework-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Update homework here..."></textarea>
+            <button onclick="saveHomework()" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[10px] font-black uppercase">Post Homework</button>
         </div>
 
         <div class="section-card">
-            <p class="text-[11px] font-black text-gray-400 mb-4 uppercase tracking-widest text-center"><i class="fa-solid fa-person-praying mr-1"></i> ನಮಾಜ್ ಟ್ರ್ಯಾಕರ್</p>
-            <div id="tracker-list" class="space-y-4">
+            <div class="flex items-center justify-center gap-2 mb-6 opacity-40">
+                <i class="fa-solid fa-user-check text-sm"></i>
+                <p class="text-[10px] font-black uppercase tracking-widest">ದೈನಂದಿನ ಹಾಜರಾತಿ</p>
+            </div>
+            <div id="attendance-list" class="space-y-4">
                 </div>
         </div>
 
-        <div class="py-10 text-center opacity-30">
-            <p class="text-[9px] font-black uppercase tracking-widest">Digital Connect Portal - Hidayatul Islam</p>
+        <div class="flex items-center justify-center gap-2 mb-4 opacity-40 mt-8">
+            <i class="fa-solid fa-person-praying text-sm"></i>
+            <p class="text-[10px] font-black uppercase tracking-widest">ನಮಾಜ್ ಟ್ರ್ಯಾಕರ್</p>
+        </div>
+        <div id="namaz-list" class="space-y-3">
+            </div>
+
+        <div class="py-12 text-center">
+            <button onclick="triggerAdmin()" class="text-[8px] font-black text-gray-200 uppercase tracking-[5px]">Admin</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCnSz248OfMbDr3V3kD9NAZkVxxON2fIvE",
@@ -93,88 +105,100 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let studentList = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
+        const students = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha"];
         let selectedDate = new Date().toLocaleDateString('en-CA');
-        document.getElementById('global-date').value = selectedDate;
+        let isAdmin = false;
 
-        document.getElementById('global-date').onchange = (e) => { 
-            selectedDate = e.target.value; 
-            refreshData(); 
+        document.getElementById('global-date').value = selectedDate;
+        document.getElementById('global-date').onchange = (e) => { selectedDate = e.target.value; loadAll(); };
+
+        window.triggerAdmin = () => {
+            const pin = prompt("Enter Admin PIN:");
+            if(pin === "8181") {
+                isAdmin = true;
+                document.getElementById('admin-tools').classList.add('show-admin');
+                alert("Admin Mode Enabled");
+            }
         };
 
-        function refreshData() {
+        function loadAll() {
             renderAttendance();
             renderNamaz();
         }
 
         function renderAttendance() {
             const container = document.getElementById('attendance-list');
-            container.innerHTML = studentList.map(name => `
-                <div class="flex justify-between items-center border-b border-gray-50 py-2">
-                    <span class="text-xs font-bold text-gray-700">${name}</span>
-                    <span id="att-${name}" class="text-[9px] font-black text-gray-200">...</span>
+            container.innerHTML = students.map(name => `
+                <div class="flex justify-between items-center px-2">
+                    <span class="text-xs font-black text-gray-700 uppercase">${name}</span>
+                    <button onclick="toggleAttendance('${name}')" id="att-${name}" class="text-[10px] font-black text-gray-200">...</button>
                 </div>
             `).join('');
             
-            studentList.forEach(name => {
+            students.forEach(name => {
                 onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${name}`), snap => {
-                    const el = document.getElementById(`att-${name}`);
-                    if(el && snap.exists()){
-                        el.innerHTML = snap.data().status === 'present' ? '<span class="p-badge">ಹಾಜರು</span>' : '<span class="a-badge">ಗೈರು</span>';
-                    } else if(el) { el.innerHTML = '<span class="text-gray-300">--</span>'; }
+                    const btn = document.getElementById(`att-${name}`);
+                    if(btn && snap.exists()){
+                        const status = snap.data().status;
+                        btn.innerHTML = status === 'present' ? '<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>' : '<i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>';
+                    } else if(btn) { btn.innerHTML = '<i class="fa-solid fa-circle text-gray-100 text-lg"></i>'; }
                 });
             });
         }
 
         function renderNamaz() {
-            const container = document.getElementById('tracker-list');
-            container.innerHTML = studentList.map(name => `
-                <div class="bg-gray-50 p-3 rounded-xl">
-                    <p class="text-[10px] font-black uppercase mb-2 text-emerald-900">${name}</p>
+            const container = document.getElementById('namaz-list');
+            container.innerHTML = students.map(name => `
+                <div class="bg-white p-4 rounded-[20px] shadow-sm border border-gray-50">
+                    <p class="text-[10px] font-black uppercase mb-3 text-emerald-900 ml-1">${name}</p>
                     <div class="flex gap-1">
                         ${["Subhi", "Duhar", "Asr", "Maghrib", "Isha"].map(p => `
-                            <div id="n-${name}-${p}" class="flex-1 text-center py-2 rounded-lg bg-white border border-gray-100 text-[9px] font-bold text-gray-300">${p[0]}</div>
+                            <button onclick="toggleNamaz('${name}','${p}')" id="n-${name}-${p}" class="namaz-btn py-3 rounded-lg border text-[10px] font-bold uppercase">${p[0]}</button>
                         `).join('')}
                     </div>
                 </div>
             `).join('');
 
-            studentList.forEach(name => {
+            students.forEach(name => {
                 onSnapshot(doc(db, "namaz_tracker", `${selectedDate}_${name}`), snap => {
                     const data = snap.data();
                     ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"].forEach(p => {
-                        const el = document.getElementById(`n-${name}-${p}`);
-                        if(el){
-                            if(data && data[p]) { el.style.background = "#10b981"; el.style.color = "white"; }
-                            else { el.style.background = "white"; el.style.color = "#d1d5db"; }
+                        const btn = document.getElementById(`n-${name}-${p}`);
+                        if(btn){
+                            if(data && data[p]) btn.classList.add('active-green');
+                            else btn.classList.remove('active-green');
                         }
                     });
                 });
             });
         }
 
-        onSnapshot(doc(db, "settings", "timings"), snap => {
-            if(snap.exists()){
-                const d = snap.data();
-                if(d.subhi) document.getElementById('t-subhi').innerText = d.subhi;
-                if(d.duhar) document.getElementById('t-duhar').innerText = d.duhar;
-                if(d.asr) document.getElementById('t-asr').innerText = d.asr;
-                if(d.magh) document.getElementById('t-magh').innerText = d.magh;
-                if(d.isha) document.getElementById('t-isha').innerText = d.isha;
-            }
-        });
+        window.toggleAttendance = async (name) => {
+            if(!isAdmin) return;
+            const ref = doc(db, "daily_attendance", `${selectedDate}_${name}`);
+            const snap = await getDoc(ref);
+            await setDoc(ref, { name: name, status: (snap.exists() && snap.data().status === 'present') ? 'absent' : 'present' });
+        };
+
+        window.toggleNamaz = async (name, p) => {
+            if(!isAdmin) return;
+            const ref = doc(db, "namaz_tracker", `${selectedDate}_${name}`);
+            const snap = await getDoc(ref);
+            await setDoc(ref, { [p]: !(snap.exists() && snap.data()[p]) }, { merge: true });
+        };
+
+        window.saveHomework = async () => {
+            const text = document.getElementById('homework-input').value;
+            await setDoc(doc(db, "settings", "homework"), { text: text });
+            document.getElementById('homework-input').value = "";
+            alert("Updated");
+        };
 
         onSnapshot(doc(db, "settings", "homework"), snap => {
             if(snap.exists()) document.getElementById('display-homework').innerText = snap.data().text;
         });
 
-        onSnapshot(doc(db, "settings", "madrasa_status"), snap => {
-            if(snap.exists() && snap.data().reason) {
-                document.getElementById('scroll-notice').innerText = snap.data().reason;
-            }
-        });
-
-        refreshData();
+        loadAll();
     </script>
 </body>
 </html>
