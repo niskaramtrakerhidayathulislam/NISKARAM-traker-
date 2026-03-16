@@ -1,65 +1,303 @@
 <!DOCTYPE html>
-<html lang="ml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Niskaram Tracker</title>
+    <title>Hidayatul Islam Connect</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f3f4f6; font-family: sans-serif; }
-        .header-bg { background-color: #065f46; color: white; }
+        :root { --primary: #065f46; --bg: #f8fafc; }
+        body { background: var(--bg); font-family: sans-serif; padding-bottom: 100px; }
+        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; border: 1px solid #edf2f7; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .glass-header { background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white; border-radius: 0 0 35px 35px; padding: 30px 20px; text-align: center; }
+        .bottom-nav { background: white; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 2000; }
+        .nav-item { text-align: center; font-size: 8px; color: #94a3b8; font-weight: 800; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--primary); }
+        .admin-box { background: #f0fdf4; border: 1px dashed #10b981; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
+        .notice-card { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .view-page { display: none; }
+        .view-page.active { display: block; }
+        .p-btn-active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
+        .att-btn { padding: 8px 12px; border-radius: 10px; font-weight: 900; border: 2px solid #e2e8f0; font-size: 10px; min-width: 90px; }
+        .is-present { background: #10b981 !important; color: white !important; border-color: #059669; }
+        .is-absent { background: #ef4444 !important; color: white !important; border-color: #b91c1c; }
+        .prayer-label { font-size: 7px; text-transform: uppercase; font-weight: 900; color: #64748b; margin-bottom: 2px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="header-bg p-6 rounded-b-3xl shadow-lg text-center">
-        <h1 class="text-2xl font-bold">Tracker</h1>
-        <p class="text-sm opacity-80">SAKLESHPUR MOSQUE</p>
+    <div class="glass-header shadow-lg">
+        <h1 id="display-madrasa-name" class="text-xl font-black uppercase text-white tracking-tighter">Hidayatul Islam</h1>
+        <p id="display-sub-text" class="text-[9px] font-bold opacity-80 uppercase text-white tracking-widest">Achangi • Class 6 • 2026</p>
     </div>
 
-    <div class="m-4 p-6 bg-emerald-700 text-white rounded-2xl shadow-md">
-        <p class="uppercase text-xs font-semibold opacity-75">Today's Date</p>
-        <h2 id="currentDate" class="text-xl font-bold mt-1"></h2>
-    </div>
-
-    <div class="px-4">
-        <h3 class="text-gray-700 font-bold mb-3 flex items-center">
-            <span class="mr-2">🏆</span> Leaderboards
-        </h3>
-
-        <div id="studentList" class="space-y-3">
+    <div id="home-page" class="view-page active p-4">
+        <div id="holiday-banner" class="notice-card hidden">
+            <p id="holiday-reason-text" class="text-sm font-bold text-amber-900"></p>
+        </div>
+        <div class="admin-box">
+            <p class="text-[10px] font-black text-emerald-700 mb-3 uppercase text-center font-bold underline">HOME ADMIN</p>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <input type="text" id="up-subhi" placeholder="Subhi" class="p-2 border rounded text-[10px] font-bold outline-none">
+                <input type="text" id="up-duhar" placeholder="Duhar" class="p-2 border rounded text-[10px] font-bold outline-none">
+                <input type="text" id="up-asr" placeholder="Asr" class="p-2 border rounded text-[10px] font-bold outline-none">
+                <input type="text" id="up-magh" placeholder="Magh" class="p-2 border rounded text-[10px] font-bold outline-none">
+                <input type="text" id="up-isha" placeholder="Isha" class="p-2 border rounded text-[10px] font-bold outline-none">
+                <button id="btn-save-timings" class="bg-emerald-600 text-white rounded text-[8px] font-black uppercase shadow-md">Update</button>
             </div>
+            <textarea id="holiday-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Type notice..."></textarea>
+            <div class="flex gap-2 mb-4">
+                <button id="btn-post-notice" class="flex-1 bg-amber-600 text-white py-3 rounded-xl text-[9px] font-black uppercase shadow-sm">Post Notice</button>
+                <button id="btn-clear-notice" class="bg-gray-400 text-white px-4 py-3 rounded-xl text-[9px] font-black uppercase">Clear</button>
+            </div>
+            <input type="text" id="edit-name" placeholder="Madrasa Name" class="w-full p-3 border rounded text-xs font-bold mb-2 outline-none">
+            <input type="text" id="edit-sub" placeholder="Place Info" class="w-full p-3 border rounded text-xs font-bold mb-2 outline-none">
+            <button id="btn-save-name" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[9px] font-black uppercase shadow-sm">Save Header</button>
+        </div>
+        <div class="card">
+            <div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-emerald-800 text-center uppercase">
+                <div class="bg-emerald-50 p-2 rounded-xl">SUBHI<br><span id="t-subhi">--:--</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">DUHAR<br><span id="t-duhar">--:--</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">ASR<br><span id="t-asr">--:--</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">MAGH<br><span id="t-magh">--:--</span></div>
+                <div class="bg-emerald-50 p-2 rounded-xl">ISHA<br><span id="t-isha">--:--</span></div>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // ഇന്നത്തെ തീയതി കാണിക്കാൻ
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', options);
+    <div id="tracker-page" class="view-page p-4">
+        <div id="tracker-list" class="space-y-3"></div>
+    </div>
 
-        // നിങ്ങളുടെ വിദ്യാർത്ഥികളുടെ ലിസ്റ്റ്
-        const students = ["Dishan", "Talhat", "Sifan", "Yasin", "Suhair", "Faasil"];
+    <div id="attendance-page" class="view-page p-4">
+        <div class="admin-box">
+            <div class="flex gap-2">
+                <input type="text" id="new-student-name" placeholder="Student Name" class="flex-1 p-2 border rounded text-xs font-bold outline-none">
+                <button id="btn-add-student" class="bg-emerald-700 text-white px-5 rounded text-[10px] font-bold uppercase shadow-sm">Add</button>
+            </div>
+        </div>
+        <div id="attendance-list" class="space-y-3"></div>
+    </div>
 
-        const listContainer = document.getElementById('studentList');
+    <div id="stats-page" class="view-page p-4">
+        <div id="stats-list" class="space-y-3"></div>
+    </div>
 
-        students.forEach((name, index) => {
-            const card = `
-                <div class="bg-white p-4 rounded-xl shadow-sm flex items-center justify-between border-l-4 border-yellow-400">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center font-bold text-gray-600">
-                            ${name[0]}
-                        </div>
-                        <div>
-                            <p class="font-bold text-gray-800">${name}</p>
-                            <p class="text-xs text-gray-500">Class: 1</p>
-                        </div>
-                    </div>
-                    <div class="bg-blue-50 px-3 py-1 rounded-lg text-blue-600 text-sm font-bold">
-                        Points: 0
+    <div id="results-page" class="view-page p-4">
+        <div class="card bg-emerald-50 border-emerald-200">
+            <p class="text-[9px] font-black text-emerald-700 mb-1 uppercase tracking-widest">Homework</p>
+            <p id="display-homework" class="text-sm font-bold text-emerald-800">No homework posted.</p>
+        </div>
+        <div class="card">
+            <p class="text-[9px] font-black text-gray-500 mb-3 uppercase tracking-widest">Message to Usthad</p>
+            <input type="text" id="parent-student-name" placeholder="Student Name" class="w-full p-2 border rounded-xl text-xs font-bold mb-2">
+            <textarea id="parent-complaint" class="w-full p-2 border rounded-xl text-xs font-bold mb-2" placeholder="Message..."></textarea>
+            <button id="btn-send-complaint" class="w-full bg-emerald-700 text-white py-2 rounded-xl text-[10px] font-black uppercase">Send Privately</button>
+        </div>
+        <div class="admin-box mt-4">
+            <textarea id="homework-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Update homework..."></textarea>
+            <button id="btn-save-homework" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[9px] font-black uppercase">Post Work</button>
+            <p class="text-[8px] font-black text-rose-600 mt-4 mb-2 uppercase tracking-widest">Private Messages</p>
+            <div id="complaints-list" class="space-y-2"></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div id="nav-home" class="nav-item active" onclick="navigate('home')"><i class="fa-solid fa-house text-lg mb-1"></i><br>HOME</div>
+        <div id="nav-tracker" class="nav-item" onclick="navigate('tracker')"><i class="fa-solid fa-person-praying text-lg mb-1"></i><br>NAMAZ</div>
+        <div id="nav-attendance" class="nav-item" onclick="navigate('attendance')"><i class="fa-solid fa-clipboard-user text-lg mb-1"></i><br>HAJAR</div>
+        <div id="nav-stats" class="nav-item" onclick="navigate('stats')"><i class="fa-solid fa-chart-line text-lg mb-1"></i><br>STATS</div>
+        <div id="nav-results" class="nav-item" onclick="navigate('results')"><i class="fa-solid fa-users text-lg mb-1"></i><br>COMMUNITY</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot, getDoc, collection, addDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnSz248OfMbDr3V3kD9NAZkVxxON2fIvE",
+            authDomain: "madrasa-4c7e2.firebaseapp.com",
+            projectId: "madrasa-4c7e2",
+            storageBucket: "madrasa-4c7e2.firebasestorage.app",
+            messagingSenderId: "770067409084",
+            appId: "1:770067409084:web:52e38ae80a3601245248b9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let studentList = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
+
+        window.navigate = (p) => {
+            document.querySelectorAll('.view-page').forEach(page => page.classList.remove('active'));
+            document.getElementById(p + '-page').classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('nav-' + p).classList.add('active');
+            if(p === 'tracker') renderTracker();
+            if(p === 'attendance') renderAttendance();
+            if(p === 'stats') renderStats();
+        };
+
+        onSnapshot(doc(db, "settings", "students_list"), (snap) => {
+            if (snap.exists()) studentList = snap.data().names;
+            renderTracker(); renderAttendance(); renderStats();
+        });
+
+        function renderTracker() {
+            const container = document.getElementById('tracker-list');
+            container.innerHTML = studentList.map(name => `
+                <div class="card">
+                    <p class="text-[11px] font-black uppercase mb-3 text-emerald-900">${name}</p>
+                    <div class="grid grid-cols-5 gap-1">
+                        ${["Subhi", "Duhar", "Asr", "Maghrib", "Isha"].map(p => `<div class="text-center"><p class="prayer-label">${p}</p><button id="n-${name}-${p}" onclick="togglePrayer('${name}', '${p}')" class="bg-gray-50 py-3 rounded-lg border text-[10px] font-bold w-full">${p[0]}</button></div>`).join('')}
                     </div>
                 </div>
-            `;
-            listContainer.innerHTML += card;
+            `).join('');
+            syncTrackerData();
+        }
+
+        function renderAttendance() {
+            const container = document.getElementById('attendance-list');
+            container.innerHTML = studentList.map(name => `
+                <div class="card flex justify-between items-center py-2">
+                    <p class="text-[11px] font-black uppercase text-emerald-900 font-bold">${name}</p>
+                    <button id="att-${name}" onclick="toggleAttendance('${name}')" class="att-btn">MARK</button>
+                </div>
+            `).join('');
+            syncAttendanceData();
+        }
+
+        function renderStats() {
+            const container = document.getElementById('stats-list');
+            container.innerHTML = studentList.map(name => `<div class="card"><p class="text-[11px] font-black uppercase text-emerald-900 mb-2">${name}</p><p class="text-[9px] font-bold text-gray-500 uppercase">Weekly/Monthly History Loading...</p></div>`).join('');
+        }
+
+        window.toggleAttendance = async (name) => {
+            const date = new Date().toLocaleDateString('en-CA');
+            const ref = doc(db, "daily_attendance", `${date}_${name}`);
+            const snap = await getDoc(ref);
+            let status = snap.exists() ? snap.data().status : 'none';
+            await setDoc(ref, { status: status === 'present' ? 'absent' : 'present' });
+        };
+
+        function syncAttendanceData() {
+            const date = new Date().toLocaleDateString('en-CA');
+            studentList.forEach(name => {
+                onSnapshot(doc(db, "daily_attendance", `${date}_${name}`), (snap) => {
+                    const btn = document.getElementById(`att-${name}`);
+                    if(!btn) return;
+                    if(snap.exists()) {
+                        const s = snap.data().status;
+                        btn.className = `att-btn ${s === 'present' ? 'is-present' : 'is-absent'}`;
+                        btn.innerText = s === 'present' ? 'PRESENT' : 'ABSENT';
+                    } else { btn.className = "att-btn"; btn.innerText = "MARK"; }
+                });
+            });
+        }
+
+        window.togglePrayer = async (student, prayer) => {
+            const date = new Date().toLocaleDateString('en-CA');
+            const ref = doc(db, "namaz_tracker", `${date}_${student}`);
+            const snap = await getDoc(ref);
+            let current = snap.exists() ? snap.data()[prayer] : false;
+            await setDoc(ref, { [prayer]: !current }, { merge: true });
+        };
+
+        function syncTrackerData() {
+            const date = new Date().toLocaleDateString('en-CA');
+            studentList.forEach(name => {
+                onSnapshot(doc(db, "namaz_tracker", `${date}_${name}`), (snap) => {
+                    const data = snap.data();
+                    ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"].forEach(p => {
+                        const btn = document.getElementById(`n-${name}-${p}`);
+                        if(btn && data && data[p]) btn.classList.add('p-btn-active');
+                        else if(btn) btn.classList.remove('p-btn-active');
+                    });
+                });
+            });
+        }
+
+        // Home Page Logic
+        onSnapshot(doc(db, "settings", "madrasa_status"), (snap) => {
+            const banner = document.getElementById('holiday-banner');
+            if(snap.exists() && snap.data().isHoliday) {
+                banner.classList.remove('hidden');
+                document.getElementById('holiday-reason-text').innerText = snap.data().reason;
+            } else banner.classList.add('hidden');
         });
+
+        document.getElementById('btn-post-notice').onclick = async () => {
+            await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: true, reason: document.getElementById('holiday-input').value });
+            document.getElementById('holiday-input').value = "";
+        };
+
+        document.getElementById('btn-clear-notice').onclick = async () => {
+            await setDoc(doc(db, "settings", "madrasa_status"), { isHoliday: false, reason: "" });
+        };
+
+        // Header and Timings Sync
+        onSnapshot(doc(db, "settings", "header_info"), (snap) => {
+            if(snap.exists()) {
+                document.getElementById('display-madrasa-name').innerText = snap.data().name;
+                document.getElementById('display-sub-text').innerText = snap.data().subtext;
+            }
+        });
+
+        onSnapshot(doc(db, "settings", "timings"), (snap) => {
+            if(snap.exists()){
+                const d = snap.data();
+                ["subhi", "duhar", "asr", "magh", "isha"].forEach(p => {
+                    if(d[p]) document.getElementById('t-' + p).innerText = d[p];
+                });
+            }
+        });
+
+        document.getElementById('btn-save-timings').onclick = async () => {
+            await setDoc(doc(db, "settings", "timings"), {
+                subhi: document.getElementById('up-subhi').value,
+                duhar: document.getElementById('up-duhar').value,
+                asr: document.getElementById('up-asr').value,
+                magh: document.getElementById('up-magh').value,
+                isha: document.getElementById('up-isha').value
+            }, {merge: true});
+            alert("Updated!");
+        };
+
+        document.getElementById('btn-save-name').onclick = async () => {
+            await setDoc(doc(db, "settings", "header_info"), { name: document.getElementById('edit-name').value, subtext: document.getElementById('edit-sub').value });
+            alert("Saved!");
+        };
+
+        // Community Logic
+        onSnapshot(doc(db, "settings", "homework"), (snap) => {
+            if(snap.exists()) document.getElementById('display-homework').innerText = snap.data().text;
+        });
+
+        document.getElementById('btn-save-homework').onclick = async () => {
+            await setDoc(doc(db, "settings", "homework"), { text: document.getElementById('homework-input').value });
+            alert("Posted!");
+        };
+
+        document.getElementById('btn-send-complaint').onclick = async () => {
+            const student = document.getElementById('parent-student-name').value;
+            const text = document.getElementById('parent-complaint').value;
+            if(student && text) await addDoc(collection(db, "complaints"), { student, text, timestamp: new Date() });
+            document.getElementById('parent-student-name').value = ""; document.getElementById('parent-complaint').value = ""; alert("Sent!");
+        };
+
+        onSnapshot(query(collection(db, "complaints"), orderBy("timestamp", "desc"), limit(5)), (snap) => {
+            const list = document.getElementById('complaints-list'); list.innerHTML = "";
+            snap.forEach(doc => {
+                const d = doc.data();
+                list.innerHTML += `<div class="p-3 bg-rose-50 border-l-4 border-rose-400 rounded-lg mb-2"><p class="text-[10px] font-black text-rose-800 uppercase">${d.student}</p><p class="text-xs font-bold text-gray-800">${d.text}</p></div>`;
+            });
+        });
+
+        document.getElementById('btn-add-student').onclick = async () => {
+            const name = document.getElementById('new-student-name').value.trim();
+            if (name) await setDoc(doc(db, "settings", "students_list"), { names: [...studentList, name] });
+        };
     </script>
 </body>
 </html>
