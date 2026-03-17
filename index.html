@@ -46,17 +46,26 @@
     <div id="home-page" class="view-page active p-4">
         <div class="card bg-emerald-700 text-white p-6">
             <p class="text-[10px] font-bold uppercase opacity-80">Notice Board</p>
-            <p id="display-notice" class="text-lg font-black mt-1">Welcome to EduSafa Digital Portal</p>
+            <p id="display-notice" class="text-lg font-black mt-1">Welcome to Hidayatul Islam Madrasa Portal</p>
         </div>
         
         <div class="grid grid-cols-2 gap-3 mb-4">
-            <div class="card text-center"><p class="text-[8px] font-black text-gray-400 uppercase">Status</p><p class="text-xs font-bold text-emerald-700">Madrasa Open</p></div>
-            <div class="card text-center"><p class="text-[8px] font-black text-gray-400 uppercase">Today's Topic</p><p id="display-homework" class="text-xs font-bold text-amber-600">Loading...</p></div>
+            <div class="card text-center">
+                <p class="text-[8px] font-black text-gray-400 uppercase">Status</p>
+                <p id="display-status" class="text-xs font-bold text-emerald-700">Loading...</p>
+            </div>
+            <div class="card text-center">
+                <p class="text-[8px] font-black text-gray-400 uppercase">Today's Topic</p>
+                <p id="display-topic" class="text-xs font-bold text-amber-600">Loading...</p>
+            </div>
         </div>
 
         <div class="admin-box" id="admin-home">
-            <textarea id="notice-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2" placeholder="Write Notice..."></textarea>
-            <button id="btn-post-notice" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[10px] font-black uppercase">Update Dashboard</button>
+            <p class="text-[10px] font-bold mb-2 uppercase text-emerald-700 text-center underline">Admin Dashboard Update</p>
+            <textarea id="notice-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Update Notice Board..."></textarea>
+            <input type="text" id="status-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Status (eg: Madrasa Open)">
+            <input type="text" id="topic-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Today's Topic (eg: Fiqh Page 10)">
+            <button id="btn-post-notice" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[10px] font-black uppercase">Update Website</button>
         </div>
     </div>
 
@@ -117,7 +126,7 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Your Exact Student List
+        // Student List (Kept Exactly Same)
         const studentList = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         let selectedDate = new Date().toLocaleDateString('en-CA');
         let isUsthad = false;
@@ -125,7 +134,7 @@
         document.getElementById('global-date').value = selectedDate;
         document.getElementById('global-date').onchange = (e) => { selectedDate = e.target.value; renderAll(); };
 
-        // Auth Logic
+        // Authentication State
         onAuthStateChanged(auth, user => {
             isUsthad = user && user.email === "kereemk81@gmail.com";
             document.querySelectorAll('.admin-box').forEach(b => b.style.display = isUsthad ? 'block' : 'none');
@@ -138,7 +147,7 @@
         document.getElementById('btn-auth-action').onclick = () => {
             const e = document.getElementById('auth-email').value;
             const p = document.getElementById('auth-pass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Login Failed"));
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Login Failed: Check Credentials"));
         };
         document.getElementById('btn-logout').onclick = () => signOut(auth);
 
@@ -162,7 +171,31 @@
             renderFees();
         }
 
-        // --- ATTENDANCE ---
+        // --- DASHBOARD UPDATES (STATUS & TOPIC) ---
+        document.getElementById('btn-post-notice').onclick = async () => {
+            if(!isUsthad) return;
+            const noticeTxt = document.getElementById('notice-input').value;
+            const statusTxt = document.getElementById('status-input').value;
+            const topicTxt = document.getElementById('topic-input').value;
+            
+            await setDoc(doc(db, "settings", "dashboard"), { 
+                notice: noticeTxt,
+                status: statusTxt,
+                topic: topicTxt
+            });
+            alert("Dashboard Updated Successfully!");
+        };
+
+        onSnapshot(doc(db, "settings", "dashboard"), snap => {
+            if(snap.exists()){
+                const d = snap.data();
+                document.getElementById('display-notice').innerText = d.notice || "Welcome to Hidayatul Islam";
+                document.getElementById('display-status').innerText = d.status || "Madrasa Open";
+                document.getElementById('display-topic').innerText = d.topic || "Loading...";
+            }
+        });
+
+        // --- ATTENDANCE LOGIC ---
         function renderAttendance() {
             const container = document.getElementById('attendance-list');
             container.innerHTML = studentList.map(name => `
@@ -193,7 +226,7 @@
             });
         }
 
-        // --- ROUTINE (Quran & Study) ---
+        // --- ROUTINE TRACKER (Quran & Study) ---
         function renderRoutine() {
             const container = document.getElementById('routine-list');
             container.innerHTML = studentList.map(name => `
@@ -229,13 +262,13 @@
             });
         }
 
-        // --- MARKS ---
+        // --- MARKS MANAGEMENT ---
         document.getElementById('btn-save-mark').onclick = async () => {
             const s = document.getElementById('mark-student-select').value;
             const v = document.getElementById('mark-value').value;
             if(s && v) {
                 await setDoc(doc(db, "marks", s), { score: v, date: selectedDate });
-                alert("Marks Updated");
+                alert("Marks Updated for " + s);
             }
         };
 
@@ -253,11 +286,11 @@
             });
         }
 
-        // --- FEES ---
+        // --- FEE MANAGEMENT ---
         document.getElementById('btn-mark-paid').onclick = async () => {
             const s = document.getElementById('fee-student-select').value;
             await setDoc(doc(db, "fees", s), { status: 'Paid', date: new Date().toLocaleDateString() });
-            alert("Fee Recorded");
+            alert("Fee status updated for " + s);
         };
 
         function renderFees() {
@@ -274,16 +307,6 @@
                 });
             });
         }
-
-        // Dashboard Notice
-        document.getElementById('btn-post-notice').onclick = async () => {
-            const txt = document.getElementById('notice-input').value;
-            await setDoc(doc(db, "settings", "dashboard"), { notice: txt });
-            alert("Updated");
-        };
-        onSnapshot(doc(db, "settings", "dashboard"), snap => {
-            if(snap.exists()) document.getElementById('display-notice').innerText = snap.data().notice;
-        });
 
     </script>
 </body>
