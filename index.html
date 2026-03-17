@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam Connect - EduSafa</title>
+    <title>Hidayatul Islam - Simple & Powerful</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -17,86 +17,79 @@
         .admin-box { background: #f0fdf4; border: 1px dashed #10b981; padding: 15px; border-radius: 15px; margin-bottom: 15px; display: none; }
         .view-page { display: none; }
         .view-page.active { display: block; }
-        .p-btn-active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
+        .p-btn-active { background-color: #10b981 !important; color: white !important; }
         .att-btn { padding: 8px 12px; border-radius: 10px; font-weight: 900; border: 2px solid #e2e8f0; font-size: 10px; min-width: 80px; text-transform: uppercase; }
         .is-present { background: #10b981 !important; color: white !important; }
         .is-absent { background: #ef4444 !important; color: white !important; }
         .date-input { background: rgba(255,255,255,0.2); border: none; color: white; font-weight: 900; font-size: 12px; padding: 6px 12px; border-radius: 10px; outline: none; }
-        .badge { font-size: 9px; padding: 2px 8px; border-radius: 20px; font-weight: bold; }
-        .prayer-btn { padding: 10px 4px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 9px; font-weight: 900; background: #f8fafc; transition: 0.3s; }
+        .star-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .star-card { background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); border: 2px solid #fbbf24; text-align: center; padding: 15px; border-radius: 20px; }
+        .star-img { width: 65px; height: 65px; border-radius: 50%; border: 3px solid white; object-fit: cover; margin: 0 auto 8px; }
+        .prayer-btn { padding: 10px 4px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 9px; font-weight: 900; background: #f8fafc; }
     </style>
 </head>
 <body>
 
     <div id="login-overlay" class="fixed inset-0 bg-emerald-900 z-[5000] flex items-center justify-center p-6 text-center">
         <div class="bg-white w-full max-w-md rounded-3xl p-8 shadow-2xl">
-            <h2 id="auth-title" class="text-2xl font-black text-emerald-900 mb-6 uppercase">Admin Login</h2>
-            <input type="email" id="auth-email" placeholder="Email Address" class="w-full p-4 border rounded-xl mb-3 outline-none font-bold">
-            <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 outline-none font-bold">
+            <h2 class="text-2xl font-black text-emerald-900 mb-6 uppercase">Admin Login</h2>
+            <input type="email" id="auth-email" placeholder="Email" class="w-full p-4 border rounded-xl mb-3 font-bold outline-none">
+            <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 font-bold outline-none">
             <button id="btn-auth-action" class="w-full bg-emerald-700 text-white py-4 rounded-xl font-black uppercase mb-4 shadow-lg">Login</button>
-            <p onclick="document.getElementById('login-overlay').classList.add('hidden')" class="text-xs font-bold text-gray-500 cursor-pointer uppercase">View Only Mode</p>
+            <p onclick="document.getElementById('login-overlay').classList.add('hidden')" class="text-xs font-bold text-gray-500 cursor-pointer uppercase">Skip</p>
         </div>
     </div>
 
     <div class="glass-header shadow-lg">
         <button id="btn-logout" class="absolute right-6 top-8 text-white opacity-50 hidden"><i class="fa-solid fa-right-from-bracket text-xl"></i></button>
-        <h1 id="madrasa-title-display" class="text-xl font-black uppercase text-white tracking-tighter">HIDAYATUL ISLAM MADRASA</h1>
+        <h1 class="text-xl font-black uppercase text-white tracking-tighter">HIDAYATUL ISLAM MADRASA</h1>
         <div class="mt-3"><input type="date" id="global-date" class="date-input"></div>
     </div>
 
     <div id="home-page" class="view-page active p-4">
+        <p id="star-title" class="text-[10px] font-black text-amber-700 text-center uppercase mb-2 hidden">⭐ Stars of the Week ⭐</p>
+        <div id="star-display-container" class="star-container"></div>
+
         <div class="card bg-emerald-700 text-white p-6">
             <p class="text-[10px] font-bold uppercase opacity-80">Notice Board</p>
-            <p id="display-notice" class="text-lg font-black mt-1">Welcome to Hidayatul Islam Madrasa Portal</p>
+            <p id="display-notice" class="text-lg font-black mt-1">Welcome to Hidayatul Islam Portal</p>
         </div>
         
         <div class="grid grid-cols-2 gap-3 mb-4">
-            <div class="card text-center">
-                <p class="text-[8px] font-black text-gray-400 uppercase">Status</p>
-                <p id="display-status" class="text-xs font-bold text-emerald-700">Loading...</p>
-            </div>
-            <div class="card text-center">
-                <p class="text-[8px] font-black text-gray-400 uppercase">Today's Topic</p>
-                <p id="display-topic" class="text-xs font-bold text-amber-600">Loading...</p>
-            </div>
+            <div class="card text-center"><p class="text-[8px] font-black text-gray-400 uppercase">Status</p><p id="display-status" class="text-xs font-bold text-emerald-700">Open</p></div>
+            <div class="card text-center"><p class="text-[8px] font-black text-gray-400 uppercase">Topic</p><p id="display-topic" class="text-xs font-bold text-amber-600">...</p></div>
         </div>
 
         <div class="admin-box" id="admin-home">
-            <p class="text-[10px] font-bold mb-2 uppercase text-emerald-700 text-center underline">Admin Dashboard Update</p>
-            <textarea id="notice-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Update Notice Board..."></textarea>
-            <input type="text" id="status-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Status (eg: Madrasa Open)">
-            <input type="text" id="topic-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Today's Topic (eg: Fiqh Page 10)">
+            <p class="text-[10px] font-black text-emerald-700 mb-3 text-center uppercase underline">Update Stars</p>
+            <select id="star-select" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none"></select>
+            <input type="text" id="star-url-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Paste Photo Link Here">
+            <div class="flex gap-2 mb-4">
+                <button id="btn-add-star" class="flex-1 bg-amber-500 text-white py-3 rounded-xl text-[9px] font-black uppercase">Add Star</button>
+                <button id="btn-clear-stars" class="bg-rose-500 text-white px-4 rounded-xl text-[9px] font-black uppercase">Clear All</button>
+            </div>
+            <hr class="mb-4">
+            <textarea id="notice-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2" placeholder="Notice"></textarea>
+            <input type="text" id="status-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2" placeholder="Status">
+            <input type="text" id="topic-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2" placeholder="Topic">
             <button id="btn-post-notice" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[10px] font-black uppercase">Update Website</button>
         </div>
     </div>
 
-    <div id="hajar-page" class="view-page p-4">
-        <h2 class="text-center font-black text-emerald-900 uppercase mb-4">Attendance Register</h2>
-        <div id="attendance-list" class="space-y-3"></div>
-    </div>
-
-    <div id="routine-page" class="view-page p-4">
-        <h2 class="text-center font-black text-emerald-900 uppercase mb-4">Daily Routine Tracker</h2>
-        <div id="routine-list" class="space-y-4"></div>
-    </div>
-
+    <div id="hajar-page" class="view-page p-4"><div id="attendance-list" class="space-y-3"></div></div>
+    <div id="routine-page" class="view-page p-4"><div id="routine-list" class="space-y-4"></div></div>
     <div id="stats-page" class="view-page p-4">
         <div class="admin-box" id="admin-marks">
-            <p class="text-[10px] font-bold mb-2 uppercase text-emerald-700 text-center">Update Student Marks</p>
-            <div class="flex gap-2">
-                <select id="mark-student-select" class="flex-1 p-2 border rounded text-xs font-bold"></select>
-                <input type="number" id="mark-value" placeholder="Marks" class="w-20 p-2 border rounded text-xs font-bold">
-                <button id="btn-save-mark" class="bg-emerald-700 text-white px-4 rounded text-[10px] font-black">SAVE</button>
-            </div>
+            <select id="mark-student-select" class="w-full p-2 border rounded mb-2 font-bold text-xs"></select>
+            <input type="number" id="mark-value" class="w-full p-2 border rounded mb-2 font-bold text-xs" placeholder="Marks">
+            <button id="btn-save-mark" class="w-full bg-emerald-700 text-white py-2 rounded font-black text-[10px]">SAVE</button>
         </div>
         <div id="marks-display-list" class="space-y-3"></div>
     </div>
-
     <div id="fees-page" class="view-page p-4">
-        <div class="admin-box" id="admin-fees">
-            <p class="text-[10px] font-bold mb-2 uppercase text-emerald-700 text-center">Fee Management</p>
-            <select id="fee-student-select" class="w-full p-2 border rounded text-xs font-bold mb-2"></select>
-            <button id="btn-mark-paid" class="w-full bg-emerald-700 text-white py-2 rounded text-[10px] font-black uppercase">Mark as Paid</button>
+        <div id="admin-fees" class="admin-box">
+            <select id="fee-student-select" class="w-full p-2 border rounded mb-2 font-bold text-xs"></select>
+            <button id="btn-mark-paid" class="w-full bg-emerald-700 text-white py-2 rounded font-black text-[10px]">MARK PAID</button>
         </div>
         <div id="fees-list" class="space-y-2"></div>
     </div>
@@ -111,7 +104,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc, collection, addDoc, query, orderBy, limit, getDocs, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -132,22 +125,16 @@
         let selectedDate = new Date().toLocaleDateString('en-CA');
         let isUsthad = false;
 
-        document.getElementById('global-date').value = selectedDate;
-        document.getElementById('global-date').onchange = (e) => { selectedDate = e.target.value; renderAll(); };
-
         onAuthStateChanged(auth, user => {
             isUsthad = user && user.email === "kereemk81@gmail.com";
             document.querySelectorAll('.admin-box').forEach(b => b.style.display = isUsthad ? 'block' : 'none');
             document.getElementById('btn-logout').classList.toggle('hidden', !user);
             document.getElementById('login-overlay').classList.toggle('hidden', !!user);
-            populateSelects();
-            renderAll();
+            populateSelects(); renderAll();
         });
 
         document.getElementById('btn-auth-action').onclick = () => {
-            const e = document.getElementById('auth-email').value;
-            const p = document.getElementById('auth-pass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Login Failed"));
+            signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value).catch(err => alert("Failed"));
         };
         document.getElementById('btn-logout').onclick = () => signOut(auth);
 
@@ -155,6 +142,7 @@
             const html = studentList.map(s => `<option value="${s}">${s}</option>`).join('');
             document.getElementById('mark-student-select').innerHTML = html;
             document.getElementById('fee-student-select').innerHTML = html;
+            document.getElementById('star-select').innerHTML = html;
         }
 
         window.navigate = (p) => {
@@ -164,21 +152,39 @@
             document.getElementById('nav-' + p).classList.add('active');
         };
 
-        function renderAll() {
-            renderAttendance();
-            renderRoutine();
-            renderMarks();
-            renderFees();
-        }
+        // --- ADD STAR (LINK METHOD) ---
+        document.getElementById('btn-add-star').onclick = async () => {
+            const name = document.getElementById('star-select').value;
+            const url = document.getElementById('star-url-input').value;
+            if(!url) return alert("Please paste the Photo Link!");
+            
+            const docRef = doc(db, "settings", "star_list");
+            const docSnap = await getDoc(docRef);
+            if (!docSnap.exists()) await setDoc(docRef, { stars: [] });
+            await updateDoc(docRef, { stars: arrayUnion({ name, url }) });
+            alert("Star Added!");
+            document.getElementById('star-url-input').value = "";
+        };
+
+        document.getElementById('btn-clear-stars').onclick = async () => {
+            if(confirm("Clear All Stars?")) await setDoc(doc(db, "settings", "star_list"), { stars: [] });
+        };
+
+        onSnapshot(doc(db, "settings", "star_list"), snap => {
+            const container = document.getElementById('star-display-container');
+            const title = document.getElementById('star-title');
+            container.innerHTML = "";
+            if(snap.exists() && snap.data().stars.length > 0) {
+                title.classList.remove('hidden');
+                snap.data().stars.forEach(s => {
+                    container.innerHTML += `<div class="star-card"><img src="${s.url}" class="star-img"><p class="text-[10px] font-black text-amber-900 uppercase">${s.name}</p></div>`;
+                });
+            } else { title.classList.add('hidden'); }
+        });
 
         // --- DASHBOARD ---
         document.getElementById('btn-post-notice').onclick = async () => {
-            if(!isUsthad) return;
-            await setDoc(doc(db, "settings", "dashboard"), { 
-                notice: document.getElementById('notice-input').value,
-                status: document.getElementById('status-input').value,
-                topic: document.getElementById('topic-input').value
-            });
+            await setDoc(doc(db, "settings", "dashboard"), { notice: document.getElementById('notice-input').value, status: document.getElementById('status-input').value, topic: document.getElementById('topic-input').value });
             alert("Updated!");
         };
         onSnapshot(doc(db, "settings", "dashboard"), snap => {
@@ -190,19 +196,11 @@
             }
         });
 
-        // --- HAJAR ---
+        function renderAll() { renderAttendance(); renderRoutine(); renderMarks(); renderFees(); }
+        
         function renderAttendance() {
             const container = document.getElementById('attendance-list');
             container.innerHTML = studentList.map(name => `<div class="card flex justify-between items-center py-3"><p class="text-sm font-black uppercase">${name}</p><button onclick="toggleAttendance('${name}')" id="att-${name}" class="att-btn">MARK</button></div>`).join('');
-            syncAttendance();
-        }
-        window.toggleAttendance = async (name) => {
-            if(!isUsthad) return alert("Usthad access required");
-            const ref = doc(db, "daily_attendance", `${selectedDate}_${name}`);
-            const snap = await getDoc(ref);
-            await setDoc(ref, { name, status: (snap.exists() && snap.data().status === 'present') ? 'absent' : 'present' });
-        };
-        function syncAttendance() {
             studentList.forEach(name => {
                 onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${name}`), snap => {
                     const btn = document.getElementById(`att-${name}`); if(!btn) return;
@@ -211,8 +209,12 @@
                 });
             });
         }
-
-        // --- ROUTINE (NAMAZ + QURAN + STUDY) ---
+        window.toggleAttendance = async (name) => {
+            const ref = doc(db, "daily_attendance", `${selectedDate}_${name}`);
+            const snap = await getDoc(ref);
+            await setDoc(ref, { name, status: (snap.exists() && snap.data().status === 'present') ? 'absent' : 'present' });
+        };
+        
         function renderRoutine() {
             const container = document.getElementById('routine-list');
             container.innerHTML = studentList.map(name => `
@@ -222,55 +224,37 @@
                         ${prayers.map(p => `<button onclick="toggleRoutine('${name}','${p}')" id="rot-${name}-${p}" class="prayer-btn">${p.substring(0,3).toUpperCase()}</button>`).join('')}
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <button onclick="toggleRoutine('${name}','quran')" id="rot-${name}-quran" class="p-2 border rounded-xl text-[9px] font-black uppercase">Quran Reading</button>
-                        <button onclick="toggleRoutine('${name}','study')" id="rot-${name}-study" class="p-2 border rounded-xl text-[9px] font-black uppercase">Subject Study</button>
+                        <button onclick="toggleRoutine('${name}','quran')" id="rot-${name}-quran" class="p-2 border rounded-xl text-[9px] font-black uppercase">Quran</button>
+                        <button onclick="toggleRoutine('${name}','study')" id="rot-${name}-study" class="p-2 border rounded-xl text-[9px] font-black uppercase">Study</button>
                     </div>
                 </div>`).join('');
-            syncRoutine();
-        }
-
-        window.toggleRoutine = async (name, type) => {
-            if(!isUsthad) return alert("Usthad only");
-            const ref = doc(db, "routine", `${selectedDate}_${name}`);
-            const snap = await getDoc(ref);
-            await setDoc(ref, { [type]: !(snap.exists() && snap.data()[type]) }, { merge: true });
-        };
-
-        function syncRoutine() {
             studentList.forEach(name => {
                 onSnapshot(doc(db, "routine", `${selectedDate}_${name}`), snap => {
-                    const data = snap.data();
-                    [...prayers, 'quran', 'study'].forEach(type => {
-                        const btn = document.getElementById(`rot-${name}-${type}`);
-                        if(btn) {
-                            if(data && data[type]) btn.classList.add('p-btn-active');
-                            else btn.classList.remove('p-btn-active');
-                        }
+                    const d = snap.data();
+                    [...prayers, 'quran', 'study'].forEach(t => {
+                        const btn = document.getElementById(`rot-${name}-${t}`);
+                        if(btn) { if(d && d[t]) btn.classList.add('p-btn-active'); else btn.classList.remove('p-btn-active'); }
                     });
                 });
             });
         }
+        window.toggleRoutine = async (n, t) => {
+            const ref = doc(db, "routine", `${selectedDate}_${n}`);
+            const snap = await getDoc(ref);
+            await setDoc(ref, { [t]: !(snap.exists() && snap.data()[t]) }, { merge: true });
+        };
 
-        // --- MARKS & FEES --- (Same logic as before)
-        document.getElementById('btn-save-mark').onclick = async () => {
-            const s = document.getElementById('mark-student-select').value;
-            const v = document.getElementById('mark-value').value;
-            if(s && v) { await setDoc(doc(db, "marks", s), { score: v, date: selectedDate }); alert("Saved"); }
-        };
         function renderMarks() {
-            const container = document.getElementById('marks-display-list');
-            container.innerHTML = studentList.map(name => `<div class="card flex justify-between items-center"><span class="text-xs font-bold uppercase">${name}</span><span id="mark-val-${name}" class="bg-amber-100 text-amber-700 px-3 py-1 rounded-lg font-black text-xs">--</span></div>`).join('');
-            studentList.forEach(name => { onSnapshot(doc(db, "marks", name), snap => { if(snap.exists()) document.getElementById(`mark-val-${name}`).innerText = snap.data().score; }); });
+            document.getElementById('marks-display-list').innerHTML = studentList.map(n => `<div class="card flex justify-between items-center"><span>${n}</span><span id="mark-val-${n}" class="font-black">--</span></div>`).join('');
+            studentList.forEach(n => onSnapshot(doc(db, "marks", n), snap => { if(snap.exists()) document.getElementById(`mark-val-${n}`).innerText = snap.data().score; }));
         }
-        document.getElementById('btn-mark-paid').onclick = async () => {
-            const s = document.getElementById('fee-student-select').value;
-            await setDoc(doc(db, "fees", s), { status: 'Paid', date: new Date().toLocaleDateString() }); alert("Fee Paid");
-        };
+        document.getElementById('btn-save-mark').onclick = async () => { await setDoc(doc(db, "marks", document.getElementById('mark-student-select').value), { score: document.getElementById('mark-value').value }); alert("Saved"); };
+        
         function renderFees() {
-            const container = document.getElementById('fees-list');
-            container.innerHTML = studentList.map(name => `<div class="card flex justify-between items-center py-2"><span class="text-[10px] font-bold uppercase">${name}</span><span id="fee-stat-${name}" class="badge bg-rose-100 text-rose-600">Pending</span></div>`).join('');
-            studentList.forEach(name => { onSnapshot(doc(db, "fees", name), snap => { const el = document.getElementById(`fee-stat-${name}`); if(snap.exists()) { el.innerText = "PAID"; el.className = "badge bg-emerald-100 text-emerald-600"; } }); });
+            document.getElementById('fees-list').innerHTML = studentList.map(n => `<div class="card flex justify-between"><span>${n}</span><span id="fee-stat-${n}" class="badge bg-rose-100">Pending</span></div>`).join('');
+            studentList.forEach(n => onSnapshot(doc(db, "fees", n), snap => { if(snap.exists()) { const e = document.getElementById(`fee-stat-${n}`); e.innerText = "PAID"; e.className = "badge bg-emerald-100"; } }));
         }
+        document.getElementById('btn-mark-paid').onclick = async () => { await setDoc(doc(db, "fees", document.getElementById('fee-student-select').value), { status: 'Paid' }); alert("Updated"); };
 
     </script>
 </body>
