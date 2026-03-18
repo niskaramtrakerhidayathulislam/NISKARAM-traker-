@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidayatul Islam - Live Portal</title>
+    <title>Hidayatul Islam - Smart Madrasa Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -18,15 +18,24 @@
         .view-page { display: none; }
         .view-page.active { display: block; }
         
+        /* Attendance */
         .att-btn-group { display: flex; gap: 4px; }
-        .att-btn { padding: 8px 4px; border-radius: 10px; font-weight: 900; border: 1px solid #e2e8f0; font-size: 8px; flex: 1; text-transform: uppercase; background: white; color: #94a3b8; }
+        .att-btn { padding: 8px 4px; border-radius: 10px; font-weight: 900; border: 1px solid #e2e8f0; font-size: 8px; flex: 1; text-transform: uppercase; background: white; color: #94a3b8; transition: 0.2s; }
         .is-present { background: #10b981 !important; color: white !important; border-color: #10b981 !important; }
         .is-absent { background: #ef4444 !important; color: white !important; border-color: #ef4444 !important; }
         .is-holiday { background: #f59e0b !important; color: white !important; border-color: #f59e0b !important; }
         
         .date-input { background: rgba(255,255,255,0.2); border: none; color: white; font-weight: 900; font-size: 12px; padding: 6px 12px; border-radius: 10px; outline: none; }
         .prayer-btn { padding: 10px 4px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 9px; font-weight: 900; background: #f8fafc; color: #94a3b8; }
-        .p-btn-active { background-color: #10b981 !important; color: white !important; }
+        .p-btn-active { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
+
+        /* Community & Chat */
+        .chat-box { height: 280px; overflow-y: auto; background: #f1f5f9; border-radius: 15px; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .msg { padding: 8px 12px; border-radius: 12px; font-size: 11px; max-width: 85%; position: relative; }
+        .msg-usthad { background: #dcfce7; align-self: flex-end; color: #065f46; border: 1px solid #86efac; }
+        .msg-other { background: white; align-self: flex-start; border: 1px solid #e2e8f0; }
+        .msg-name { font-size: 8px; font-weight: 900; opacity: 0.6; margin-bottom: 2px; text-transform: uppercase; }
+
         .star-card { background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); border: 2px solid #fbbf24; text-align: center; padding: 15px; border-radius: 20px; }
         .star-img { width: 65px; height: 65px; border-radius: 50%; border: 3px solid white; object-fit: cover; margin: 0 auto 8px; }
     </style>
@@ -35,11 +44,12 @@
 
     <div id="login-overlay" class="fixed inset-0 bg-emerald-900 z-[5000] flex items-center justify-center p-6 text-center">
         <div class="bg-white w-full max-w-md rounded-3xl p-8 shadow-2xl">
-            <h2 class="text-2xl font-black text-emerald-900 mb-6 uppercase">Admin Login</h2>
+            <h2 class="text-2xl font-black text-emerald-900 mb-6 uppercase">Madrasa Login</h2>
             <input type="email" id="auth-email" placeholder="Email" class="w-full p-4 border rounded-xl mb-3 font-bold outline-none">
             <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-6 font-bold outline-none">
             <button id="btn-auth-action" class="w-full bg-emerald-700 text-white py-4 rounded-xl font-black uppercase">Login</button>
-            <p onclick="document.getElementById('login-overlay').classList.add('hidden')" class="text-xs font-bold text-gray-500 cursor-pointer uppercase mt-4">View Only Mode</p>
+            <p id="auth-error" class="text-xs font-bold text-rose-500 mt-2"></p>
+            <p onclick="document.getElementById('login-overlay').classList.add('hidden')" class="text-xs font-bold text-gray-500 cursor-pointer uppercase mt-6">View Only Mode</p>
         </div>
     </div>
 
@@ -50,25 +60,24 @@
     </div>
 
     <div id="home-page" class="view-page active p-4">
+        <p id="star-title" class="text-[10px] font-black text-amber-700 text-center uppercase mb-2 hidden">⭐ Stars of the Week ⭐</p>
         <div id="star-display-container" class="grid grid-cols-2 gap-2 mb-4"></div>
+
         <div class="card bg-emerald-700 text-white p-6">
             <p class="text-[10px] font-bold uppercase opacity-80">Notice Board</p>
             <p id="display-notice" class="text-lg font-black mt-1">Welcome</p>
         </div>
+        
         <div class="grid grid-cols-2 gap-3 mb-4">
             <div class="card text-center"><p class="text-[8px] font-black text-gray-400 uppercase">Status</p><p id="display-status" class="text-xs font-bold text-emerald-700">Open</p></div>
-            <div class="card text-center"><p class="text-[8px] font-black text-gray-400 uppercase">Topic</p><p id="display-topic" class="text-xs font-bold text-amber-600">...</p></div>
+            <div class="card text-center"><p class="text-[8px] font-black text-gray-400 uppercase">Today's Topic</p><p id="display-topic" class="text-xs font-bold text-amber-600">...</p></div>
         </div>
 
         <div class="admin-box" id="admin-home">
-            <p class="text-[10px] font-black text-emerald-700 mb-2 uppercase text-center underline">Admin Dashboard</p>
             <select id="star-select" class="w-full p-3 border rounded-xl text-xs font-bold mb-2"></select>
-            <input type="text" id="star-url-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Paste Photo Link (Postimg/ImgBB)">
-            <div class="flex gap-2 mb-4">
-                <button id="btn-add-star" class="flex-1 bg-amber-500 text-white py-3 rounded-xl text-[9px] font-black uppercase">Add Star</button>
-                <button id="btn-clear-stars" class="bg-rose-500 text-white px-4 rounded-xl text-[9px] font-black uppercase">Clear All</button>
-            </div>
-            <textarea id="notice-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Update Notice"></textarea>
+            <input type="text" id="star-url-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2" placeholder="Star Photo Link">
+            <div class="flex gap-2 mb-4"><button id="btn-add-star" class="flex-1 bg-amber-500 text-white py-3 rounded-xl text-[9px] font-black uppercase">Add Star</button><button id="btn-clear-stars" class="bg-rose-500 text-white px-4 rounded-xl text-[9px] font-black uppercase">Clear</button></div>
+            <textarea id="notice-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Notice"></textarea>
             <input type="text" id="status-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Status">
             <input type="text" id="topic-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Topic">
             <button id="btn-post-notice" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[10px] font-black uppercase">Update Website</button>
@@ -76,37 +85,74 @@
     </div>
 
     <div id="hajar-page" class="view-page p-4">
-        <p class="text-[10px] font-black text-center text-gray-400 uppercase mb-3">Live Attendance</p>
+        <h2 class="text-[10px] font-black text-center text-gray-400 uppercase mb-3">Live Attendance</h2>
         <div id="attendance-list" class="space-y-3"></div>
     </div>
 
-    <div id="routine-page" class="view-page p-4">
-        <p class="text-[10px] font-black text-center text-gray-400 uppercase mb-3">Today's Routine Tracker</p>
+    <div id="diary-page" class="view-page p-4">
+        <h2 class="text-[10px] font-black text-center text-gray-400 uppercase mb-3">Activity Status</h2>
         <div id="routine-list" class="space-y-4"></div>
+    </div>
+
+    <div id="community-page" class="view-page p-4">
+        <div class="card bg-emerald-50 border-emerald-100" id="name-setup-box">
+            <p class="text-[9px] font-black text-emerald-700 mb-2 uppercase">Your Identity (Parents)</p>
+            <input type="text" id="parent-display-name" class="w-full p-3 border rounded-xl text-xs font-bold" placeholder="Enter Your/Student Name">
+        </div>
+
+        <div class="card border-l-4 border-amber-400">
+            <p class="text-[9px] font-black text-amber-600 mb-1 uppercase">Today's Homework</p>
+            <p id="hw-display" class="text-sm font-bold text-gray-800 italic">No homework posted.</p>
+            <div class="admin-box mt-3" id="admin-hw">
+                <textarea id="hw-input" class="w-full p-2 border rounded text-xs" placeholder="Write Homework..."></textarea>
+                <button id="btn-save-hw" class="w-full bg-amber-500 text-white py-2 rounded text-[9px] font-black mt-2 uppercase">Post Homework</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <p class="text-[9px] font-black text-emerald-700 mb-2 uppercase">Group Discussion</p>
+            <div id="chat-messages" class="chat-box"></div>
+            <div class="flex gap-2">
+                <input type="text" id="chat-input" class="flex-1 p-2 border rounded-xl text-xs" placeholder="Type message...">
+                <button id="btn-send-chat" class="bg-emerald-700 text-white px-4 rounded-xl"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+        <div class="card bg-rose-50 border-rose-100">
+            <p class="text-[9px] font-black text-rose-700 mb-2 uppercase">Private Message to Usthad</p>
+            <textarea id="priv-msg" class="w-full p-2 border rounded text-xs mb-2" placeholder="Message..."></textarea>
+            <button id="btn-send-priv" class="w-full bg-rose-600 text-white py-2 rounded text-[9px] font-black uppercase">Send Privately</button>
+        </div>
+
+        <div class="admin-box" id="admin-inbox">
+            <p class="text-[10px] font-black text-rose-800 uppercase mb-2 text-center underline">Private Messages Received</p>
+            <div id="private-messages-list" class="space-y-2"></div>
+        </div>
     </div>
 
     <div id="report-page" class="view-page p-4">
         <div class="card">
-            <p class="text-[10px] font-black text-gray-400 uppercase mb-3 text-center">Student Progress Report</p>
-            <select id="report-student-select" class="w-full p-3 border rounded-xl text-sm font-bold outline-none mb-3"></select>
-            <button id="btn-get-report" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[10px] font-black uppercase">Search History</button>
+            <p class="text-[10px] font-black text-gray-400 uppercase mb-3 text-center">Search Student History</p>
+            <select id="report-student-select" class="w-full p-3 border rounded-xl text-sm font-bold mb-3"></select>
+            <button id="btn-get-report" class="w-full bg-emerald-700 text-white py-3 rounded-xl text-[10px] font-black uppercase">View History</button>
         </div>
         <div id="report-result-container" class="hidden">
-            <div class="card bg-rose-50 border-rose-100"><p class="text-[10px] font-black text-rose-700 uppercase mb-2">Leave History</p><div id="leave-dates-list" class="flex flex-wrap"></div></div>
-            <div class="card bg-emerald-50 text-center"><p id="total-present-count" class="text-xs font-bold">Present: --</p><p id="total-absent-count" class="text-xs font-bold">Absent: --</p></div>
+            <div class="card bg-rose-50 border-rose-100"><p class="text-[10px] font-black text-rose-700 uppercase mb-2">Leave History</p><div id="leave-dates-list" class="flex flex-wrap gap-1"></div></div>
+            <div class="card bg-emerald-50 text-center"><p id="total-present-count" class="text-xs font-bold"></p></div>
         </div>
     </div>
 
     <div class="bottom-nav">
         <div onclick="navigate('home')" class="nav-item active" id="nav-home"><i class="fa-solid fa-house-chimney text-lg mb-1"></i><br>Home</div>
         <div onclick="navigate('hajar')" class="nav-item" id="nav-hajar"><i class="fa-solid fa-clipboard-user text-lg mb-1"></i><br>Hajar</div>
-        <div onclick="navigate('routine')" class="nav-item" id="nav-routine"><i class="fa-solid fa-book-quran text-lg mb-1"></i><br>Diary</div>
+        <div onclick="navigate('diary')" class="nav-item" id="nav-diary"><i class="fa-solid fa-book-open text-lg mb-1"></i><br>Diary</div>
+        <div onclick="navigate('community')" class="nav-item" id="nav-community"><i class="fa-solid fa-users text-lg mb-1"></i><br>Community</div>
         <div onclick="navigate('report')" class="nav-item" id="nav-report"><i class="fa-solid fa-chart-line text-lg mb-1"></i><br>Report</div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc, updateDoc, arrayUnion, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, getDoc, updateDoc, arrayUnion, collection, addDoc, query, orderBy, limit, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -123,40 +169,53 @@
         const auth = getAuth(app);
 
         const studentList = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
-        
-        const phoneNumbers = {
-            "Dishan": "918105987422",
-            "Sifan": "919535595055",
-            "Fazil": "919972576109",
-            "Suhair": "919900406129",
-            "Yaseen": "919611970850",
-            "Twalhath": "919164400782",
-            "Afreena": "918951835232",
-            "Raseena": "917338308079",
-            "Ayizza": "918867132152",
-            "Misha": "917899720054",
-            "Nila": "917996216402",
-            "Fida": "918546838515",
-            "Shakira": "917337729415",
-            "Suhaiba": "919900406129",
-            "Rifa": "919480861464"
-        };
-
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         let selectedDate = new Date().toLocaleDateString('en-CA');
         let isUsthad = false;
-        let listeners = [];
+        let activeListeners = [];
 
+        // UI Initialization
+        document.getElementById('global-date').value = selectedDate;
+        document.getElementById('global-date').onchange = (e) => { selectedDate = e.target.value; renderAll(); };
+
+        const savedName = localStorage.getItem('madrasa_user_name');
+        if(savedName) document.getElementById('parent-display-name').value = savedName;
+
+        // --- NAVIGATION ---
+        window.navigate = (pageId) => {
+            document.querySelectorAll('.view-page').forEach(page => page.classList.remove('active'));
+            const target = document.getElementById(pageId + '-page');
+            if(target) target.classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            const nav = document.getElementById('nav-' + pageId);
+            if(nav) nav.classList.add('active');
+        };
+
+        // --- AUTH ---
         onAuthStateChanged(auth, user => {
-            isUsthad = user && user.email === "kereemk81@gmail.com";
-            document.querySelectorAll('.admin-box').forEach(b => b.style.display = isUsthad ? 'block' : 'none');
-            document.getElementById('btn-logout').classList.toggle('hidden', !user);
-            document.getElementById('login-overlay').classList.toggle('hidden', !!user);
+            const overlay = document.getElementById('login-overlay');
+            if (user) {
+                isUsthad = user.email === "kereemk81@gmail.com";
+                overlay.classList.add('hidden');
+                document.getElementById('btn-logout').classList.remove('hidden');
+                document.querySelectorAll('.admin-box').forEach(b => b.style.display = isUsthad ? 'block' : 'none');
+                document.getElementById('name-setup-box').style.display = isUsthad ? 'none' : 'block';
+            } else {
+                overlay.classList.remove('hidden');
+                document.getElementById('btn-logout').classList.add('hidden');
+            }
             populateSelects(); renderAll();
         });
 
-        document.getElementById('global-date').value = selectedDate;
-        document.getElementById('global-date').onchange = (e) => { selectedDate = e.target.value; renderAll(); };
+        document.getElementById('btn-auth-action').onclick = () => {
+            const e = document.getElementById('auth-email').value;
+            const p = document.getElementById('auth-pass').value;
+            signInWithEmailAndPassword(auth, e, p).catch(err => {
+                document.getElementById('auth-error').innerText = "ലോഗിൻ പരാജയപ്പെട്ടു: വിവരങ്ങൾ പരിശോധിക്കുക.";
+            });
+        };
+        document.getElementById('btn-logout').onclick = () => signOut(auth);
 
         function populateSelects() {
             const html = studentList.map(s => `<option value="${s}">${s}</option>`).join('');
@@ -164,146 +223,70 @@
             document.getElementById('report-student-select').innerHTML = html;
         }
 
-        window.navigate = (p) => {
-            document.querySelectorAll('.view-page').forEach(page => page.classList.remove('active'));
-            document.getElementById(p + '-page').classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('nav-' + p).classList.add('active');
-        };
-
         function renderAll() {
-            listeners.forEach(unsub => unsub());
-            listeners = [];
-            renderAttendance(); renderRoutine(); syncDashboard();
+            activeListeners.forEach(unsub => unsub());
+            activeListeners = [];
+            renderAttendance(); renderRoutine(); syncDashboard(); syncCommunity();
         }
 
+        // --- HAJAR ---
         function renderAttendance() {
             const container = document.getElementById('attendance-list');
             container.innerHTML = studentList.map(name => `
-                <div class="card">
-                    <div class="flex justify-between items-center mb-2">
-                        <p class="text-xs font-black uppercase text-emerald-900">${name}</p>
-                        <div id="wa-${name}" class="hidden">
-                            <a id="wa-link-${name}" target="_blank" class="text-emerald-500 text-lg">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </a>
-                        </div>
-                    </div>
+                <div class="card flex justify-between items-center py-2">
+                    <p class="text-[13px] font-black uppercase text-emerald-900 flex-1">${name}</p>
                     <div class="att-btn-group">
-                        <button onclick="setAttendance('${name}','present')" id="btn-${name}-present" class="att-btn">Present</button>
-                        <button onclick="setAttendance('${name}','absent')" id="btn-${name}-absent" class="att-btn">Absent</button>
-                        <button onclick="setAttendance('${name}','holiday')" id="btn-${name}-holiday" class="att-btn">Holiday</button>
+                        <button onclick="setAttendance('${name}','present')" id="btn-${name}-present" class="att-btn">P</button>
+                        <button onclick="setAttendance('${name}','absent')" id="btn-${name}-absent" class="att-btn">A</button>
+                        <button onclick="setAttendance('${name}','holiday')" id="btn-${name}-holiday" class="att-btn">H</button>
                     </div>
                 </div>`).join('');
-
             studentList.forEach(name => {
-                const unsub = onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${name}`), snap => {
-                    const waDiv = document.getElementById(`wa-${name}`);
-                    const waLink = document.getElementById(`wa-link-${name}`);
-                    
+                activeListeners.push(onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${name}`), snap => {
                     ['present', 'absent', 'holiday'].forEach(st => {
                         const btn = document.getElementById(`btn-${name}-${st}`);
-                        if(!btn) return;
-                        if(snap.exists() && snap.data().status === st) {
-                            btn.className = `att-btn is-${st}`;
-                            
-                            // Absent ആണെങ്കിൽ മാത്രം WhatsApp ഐക്കൺ കാണിക്കുക
-                            if(st === 'absent' && isUsthad) {
-                                waDiv.classList.remove('hidden');
-                                const msg = `Assalamu Alaikum, ${name} is ABSENT today (${selectedDate}) in Madrasa.`;
-                                waLink.href = `https://wa.me/${phoneNumbers[name]}?text=${encodeURIComponent(msg)}`;
-                            } else {
-                                waDiv.classList.add('hidden');
-                            }
-                        }
-                        else btn.className = "att-btn";
+                        if(btn) btn.className = (snap.exists() && snap.data().status === st) ? `att-btn is-${st}` : "att-btn";
                     });
-                });
-                listeners.push(unsub);
+                }));
             });
         }
+        window.setAttendance = async (n, s) => { if(isUsthad) await setDoc(doc(db, "daily_attendance", `${selectedDate}_${n}`), { name: n, status: s }); };
 
-        window.setAttendance = async (name, status) => {
-            if(!isUsthad) return alert("Only Usthad can update.");
-            await setDoc(doc(db, "daily_attendance", `${selectedDate}_${name}`), { name, status });
-        };
-
+        // --- DIARY ---
         function renderRoutine() {
             const container = document.getElementById('routine-list');
             container.innerHTML = studentList.map(name => `
-                <div class="card">
-                    <p class="text-[11px] font-black uppercase mb-3 text-emerald-900 border-b pb-1">${name}</p>
-                    <div class="grid grid-cols-5 gap-1 mb-2">
-                        ${prayers.map(p => `<button onclick="toggleRoutine('${name}','${p}')" id="rot-${name}-${p}" class="prayer-btn">${p.substring(0,3).toUpperCase()}</button>`).join('')}
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="toggleRoutine('${name}','quran')" id="rot-${name}-quran" class="p-2 border rounded-xl text-[9px] font-black uppercase">Quran</button>
-                        <button onclick="toggleRoutine('${name}','study')" id="rot-${name}-study" class="p-2 border rounded-xl text-[9px] font-black uppercase">Study</button>
-                    </div>
-                </div>`).join('');
+                <div class="card"><p class="text-[11px] font-black text-emerald-900 border-b pb-1 mb-2 uppercase">${name}</p>
+                <div class="grid grid-cols-5 gap-1 mb-2">${prayers.map(p => `<button onclick="toggleRoutine('${name}','${p}')" id="rot-${name}-${p}" class="prayer-btn">${p.substring(0,3).toUpperCase()}</button>`).join('')}</div>
+                <div class="grid grid-cols-2 gap-2"><button onclick="toggleRoutine('${name}','quran')" id="rot-${name}-quran" class="p-2 border rounded-xl text-[9px] font-black uppercase">QURAN</button><button onclick="toggleRoutine('${name}','study')" id="rot-${name}-study" class="p-2 border rounded-xl text-[9px] font-black uppercase">STUDY</button></div></div>`).join('');
             studentList.forEach(name => {
-                const unsub = onSnapshot(doc(db, "routine", `${selectedDate}_${name}`), snap => {
+                activeListeners.push(onSnapshot(doc(db, "routine", `${selectedDate}_${name}`), snap => {
                     const d = snap.data();
                     [...prayers, 'quran', 'study'].forEach(t => {
                         const btn = document.getElementById(`rot-${name}-${t}`);
                         if(btn) { if(d && d[t]) btn.classList.add('p-btn-active'); else btn.classList.remove('p-btn-active'); }
                     });
+                }));
+            });
+        }
+        window.toggleRoutine = async (n, t) => { if(isUsthad) { const ref = doc(db, "routine", `${selectedDate}_${n}`); const snap = await getDoc(ref); await setDoc(ref, { [t]: !(snap.exists() && snap.data()[t]) }, { merge: true }); } };
+
+        // --- COMMUNITY & CHAT ---
+        function syncCommunity() {
+            onSnapshot(doc(db, "settings", "homework"), snap => { document.getElementById('hw-display').innerText = snap.exists() ? snap.data().text : "No homework posted."; });
+            
+            const qChat = query(collection(db, "chat"), orderBy("timestamp", "desc"), limit(30));
+            activeListeners.push(onSnapshot(qChat, snap => {
+                const container = document.getElementById('chat-messages');
+                container.innerHTML = "";
+                snap.docs.reverse().forEach(d => {
+                    const data = d.data();
+                    const isUsthadMsg = data.sender === "Usthad";
+                    container.innerHTML += `<div class="msg ${isUsthadMsg ? 'msg-usthad' : 'msg-other'}"><div class="msg-name">${data.sender}</div>${data.text}</div>`;
                 });
-                listeners.push(unsub);
-            });
-        }
-
-        window.toggleRoutine = async (n, t) => {
-            if(!isUsthad) return;
-            const ref = doc(db, "routine", `${selectedDate}_${n}`);
-            const snap = await getDoc(ref);
-            await setDoc(ref, { [t]: !(snap.exists() && snap.data()[t]) }, { merge: true });
-        };
-
-        function syncDashboard() {
-            listeners.push(onSnapshot(doc(db, "settings", "dashboard"), snap => {
-                if(snap.exists()){
-                    const d = snap.data();
-                    document.getElementById('display-notice').innerText = d.notice || "Welcome";
-                    document.getElementById('display-status').innerText = d.status || "Open";
-                    document.getElementById('display-topic').innerText = d.topic || "...";
-                }
+                container.scrollTop = container.scrollHeight;
             }));
-            listeners.push(onSnapshot(doc(db, "settings", "star_list"), snap => {
-                const container = document.getElementById('star-display-container'); container.innerHTML = "";
-                if(snap.exists() && snap.data().stars.length > 0){
-                    snap.data().stars.forEach(s => container.innerHTML += `<div class="star-card"><img src="${s.url}" class="star-img"><p class="text-[10px] font-black uppercase text-amber-900">${s.name}</p></div>`);
-                }
-            }));
-        }
 
-        document.getElementById('btn-auth-action').onclick = () => {
-            signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value).catch(err => alert("Login Failed"));
-        };
-        document.getElementById('btn-logout').onclick = () => signOut(auth);
-        document.getElementById('btn-add-star').onclick = async () => {
-            const docRef = doc(db, "settings", "star_list");
-            const snap = await getDoc(docRef);
-            if (!snap.exists()) await setDoc(docRef, { stars: [] });
-            await updateDoc(docRef, { stars: arrayUnion({ name: document.getElementById('star-select').value, url: document.getElementById('star-url-input').value }) });
-            alert("Added!");
-        };
-        document.getElementById('btn-clear-stars').onclick = async () => { if(confirm("Clear?")) await setDoc(doc(db, "settings", "star_list"), { stars: [] }); };
-        document.getElementById('btn-post-notice').onclick = async () => {
-            await setDoc(doc(db, "settings", "dashboard"), { notice: document.getElementById('notice-input').value, status: document.getElementById('status-input').value, topic: document.getElementById('topic-input').value });
-            alert("Updated!");
-        };
-        document.getElementById('btn-get-report').onclick = async () => {
-            const student = document.getElementById('report-student-select').value;
-            const q = query(collection(db, "daily_attendance"), where("name", "==", student));
-            const querySnapshot = await getDocs(q);
-            let absentDates = []; let presentCount = 0;
-            querySnapshot.forEach((doc) => {
-                const data = doc.data(); const dPart = doc.id.split('_')[0];
-                if(data.status === 'present') presentCount++;
-                else if(data.status === 'absent') absentDates.push(dPart);
-            });
-            document.getElementById('report-result-container').classList.remove('hidden');
-            document.getElementById('total-present-count').innerText = "Total Present: " + presentCount;
-            document.getElementById('total-absent-count').innerText = "Total Absent: " + absentDates.length;
-      
+            if(isUsthad) {
+                activeListeners.push(onSnapshot(query(collection(db, "private_messages"), orderBy("timestamp", "desc")), snap => {
+                    const list = document.getElementById('private-messages-list'); l
