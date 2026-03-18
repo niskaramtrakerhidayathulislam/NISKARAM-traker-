@@ -77,7 +77,14 @@
 
     <div id="hajar-page" class="view-page p-4">
         <p class="text-[10px] font-black text-center text-gray-400 uppercase mb-3">Live Attendance</p>
-        <div id="attendance-list" class="space-y-3"></div>
+        <div id="attendance-list" class="space-y-3 mb-6"></div>
+        
+        <div class="admin-box" id="bulk-send-section">
+            <button onclick="sendAllWhatsAppMessages()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black uppercase shadow-lg flex items-center justify-center gap-2">
+                <i class="fa-brands fa-whatsapp text-xl"></i> Send All Messages
+            </button>
+            <p class="text-[8px] text-center mt-2 text-gray-500 font-bold uppercase">Mark attendance first, then click here to notify parents</p>
+        </div>
     </div>
 
     <div id="routine-page" class="view-page p-4">
@@ -124,29 +131,19 @@
 
         const studentList = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
         
-        // വട്സാപ്പ് നമ്പർ ലിസ്റ്റ്
         const studentPhones = {
-            "Dishan": "918105987422",
-            "Sifan": "919535595055",
-            "Fazil": "919972576109",
-            "Suhair": "919900406129",
-            "Yaseen": "919611970850",
-            "Twalhath": "919164400782",
-            "Afreena": "918951835232",
-            "Raseena": "917338308079",
-            "Ayizza": "918867132152",
-            "Misha": "917899720054",
-            "Nila": "917996216402",
-            "Fida": "918546838515",
-            "Shakira": "917337729415",
-            "Suhaiba": "919900406129",
-            "Rifa": "919480861464"
+            "Dishan": "918105987422", "Sifan": "919535595055", "Fazil": "919972576109",
+            "Suhair": "919900406129", "Yaseen": "919611970850", "Twalhath": "919164400782",
+            "Afreena": "918951835232", "Raseena": "917338308079", "Ayizza": "918867132152",
+            "Misha": "917899720054", "Nila": "917996216402", "Fida": "918546838515",
+            "Shakira": "917337729415", "Suhaiba": "919900406129", "Rifa": "919480861464"
         };
 
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         let selectedDate = new Date().toLocaleDateString('en-CA');
         let isUsthad = false;
         let listeners = [];
+        let currentAttendanceState = {}; // ഹാജർ വിവരങ്ങൾ താല്ക്കാലികമായി സൂക്ഷിക്കാൻ
 
         onAuthStateChanged(auth, user => {
             isUsthad = user && user.email === "kereemk81@gmail.com";
@@ -175,6 +172,7 @@
         function renderAll() {
             listeners.forEach(unsub => unsub());
             listeners = [];
+            currentAttendanceState = {};
             renderAttendance(); renderRoutine(); syncDashboard();
         }
 
@@ -192,10 +190,12 @@
 
             studentList.forEach(name => {
                 const unsub = onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${name}`), snap => {
+                    const status = snap.exists() ? snap.data().status : null;
+                    currentAttendanceState[name] = status;
                     ['present', 'absent', 'holiday'].forEach(st => {
                         const btn = document.getElementById(`btn-${name}-${st}`);
                         if(!btn) return;
-                        if(snap.exists() && snap.data().status === st) btn.className = `att-btn is-${st}`;
+                        if(status === st) btn.className = `att-btn is-${st}`;
                         else btn.className = "att-btn";
                     });
                 });
@@ -203,23 +203,28 @@
             });
         }
 
-        // ഹാജർ രേഖപ്പെടുത്തുനതോടൊപ്പം വാട്സാപ്പ് അയക്കാനുള്ള ഫങ്ക്ഷൻ
         window.setAttendance = async (name, status) => {
             if(!isUsthad) return alert("Only Usthad can update.");
-            
-            // ഫയർബേസിൽ സേവ് ചെയ്യുന്നു
             await setDoc(doc(db, "daily_attendance", `${selectedDate}_${name}`), { name, status });
+        };
 
-            // ഓട്ടോമാറ്റിക് മെസ്സേജ് ലിങ്ക് തയ്യാറാക്കുന്നു
-            const phone = studentPhones[name];
-            if (phone && (status === 'present' || status === 'absent')) {
-                const msgStatus = status === 'present' ? "PRESENT ✅" : "ABSENT ❌";
-                const text = `Dear Parent, your child *${name}* is *${msgStatus}* at Hidayatul Islam Madrasa today (${selectedDate}).`;
-                const wpUrl = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-                
-                // വാട്സാപ്പ് പുതിയ വിൻഡോയിൽ തുറക്കുന്നു
-                window.open(wpUrl, '_blank');
+        // ബൾക്ക് മെസ്സേജ് അയക്കാനുള്ള ഫങ്ക്ഷൻ
+        window.sendAllWhatsAppMessages = async () => {
+            if(!isUsthad) return;
+            let count = 0;
+            for (const name of studentList) {
+                const status = currentAttendanceState[name];
+                const phone = studentPhones[name];
+                if (phone && (status === 'present' || status === 'absent')) {
+                    const msgStatus = status === 'present' ? "PRESENT ✅" : "ABSENT ❌";
+                    const text = `Dear Parent, your child *${name}* is *${msgStatus}* at Hidayatul Islam Madrasa today (${selectedDate}).`;
+                    const wpUrl = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+                    window.open(wpUrl, '_blank');
+                    count++;
+                    await new Promise(r => setTimeout(r, 600)); // ബ്രൗസർ ലോഡ് ബാലൻസിംഗിന്
+                }
             }
+            if(count === 0) alert("No records marked as Present/Absent!");
         };
 
         function renderRoutine() {
@@ -294,7 +299,7 @@
             let absentDates = []; let presentCount = 0;
             querySnapshot.forEach((doc) => {
                 const data = doc.data(); const dPart = doc.id.split('_')[0];
-                if(data.status === 'present') presentCount++;
+            if(data.status === 'present') presentCount++;
                 else if(data.status === 'absent') absentDates.push(dPart);
             });
             document.getElementById('report-result-container').classList.remove('hidden');
