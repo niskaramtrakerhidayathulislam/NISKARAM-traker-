@@ -123,6 +123,25 @@
         const auth = getAuth(app);
 
         const studentList = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
+        
+        const phoneNumbers = {
+            "Dishan": "918105987422",
+            "Sifan": "919535595055",
+            "Fazil": "919972576109",
+            "Suhair": "919900406129",
+            "Yaseen": "919611970850",
+            "Twalhath": "919164400782",
+            "Afreena": "918951835232",
+            "Raseena": "917338308079",
+            "Ayizza": "918867132152",
+            "Misha": "917899720054",
+            "Nila": "917996216402",
+            "Fida": "918546838515",
+            "Shakira": "917337729415",
+            "Suhaiba": "919900406129",
+            "Rifa": "919480861464"
+        };
+
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         let selectedDate = new Date().toLocaleDateString('en-CA');
         let isUsthad = false;
@@ -161,8 +180,15 @@
         function renderAttendance() {
             const container = document.getElementById('attendance-list');
             container.innerHTML = studentList.map(name => `
-                <div class="card flex justify-between items-center py-2">
-                    <p class="text-xs font-black uppercase text-emerald-900 flex-1">${name}</p>
+                <div class="card">
+                    <div class="flex justify-between items-center mb-2">
+                        <p class="text-xs font-black uppercase text-emerald-900">${name}</p>
+                        <div id="wa-${name}" class="hidden">
+                            <a id="wa-link-${name}" target="_blank" class="text-emerald-500 text-lg">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
                     <div class="att-btn-group">
                         <button onclick="setAttendance('${name}','present')" id="btn-${name}-present" class="att-btn">Present</button>
                         <button onclick="setAttendance('${name}','absent')" id="btn-${name}-absent" class="att-btn">Absent</button>
@@ -172,10 +198,24 @@
 
             studentList.forEach(name => {
                 const unsub = onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${name}`), snap => {
+                    const waDiv = document.getElementById(`wa-${name}`);
+                    const waLink = document.getElementById(`wa-link-${name}`);
+                    
                     ['present', 'absent', 'holiday'].forEach(st => {
                         const btn = document.getElementById(`btn-${name}-${st}`);
                         if(!btn) return;
-                        if(snap.exists() && snap.data().status === st) btn.className = `att-btn is-${st}`;
+                        if(snap.exists() && snap.data().status === st) {
+                            btn.className = `att-btn is-${st}`;
+                            
+                            // Absent ആണെങ്കിൽ മാത്രം WhatsApp ഐക്കൺ കാണിക്കുക
+                            if(st === 'absent' && isUsthad) {
+                                waDiv.classList.remove('hidden');
+                                const msg = `Assalamu Alaikum, ${name} is ABSENT today (${selectedDate}) in Madrasa.`;
+                                waLink.href = `https://wa.me/${phoneNumbers[name]}?text=${encodeURIComponent(msg)}`;
+                            } else {
+                                waDiv.classList.add('hidden');
+                            }
+                        }
                         else btn.className = "att-btn";
                     });
                 });
@@ -231,11 +271,9 @@
             }));
             listeners.push(onSnapshot(doc(db, "settings", "star_list"), snap => {
                 const container = document.getElementById('star-display-container'); container.innerHTML = "";
-                const title = document.getElementById('star-title');
                 if(snap.exists() && snap.data().stars.length > 0){
-                    title.classList.remove('hidden');
                     snap.data().stars.forEach(s => container.innerHTML += `<div class="star-card"><img src="${s.url}" class="star-img"><p class="text-[10px] font-black uppercase text-amber-900">${s.name}</p></div>`);
-                } else { title.classList.add('hidden'); }
+                }
             }));
         }
 
@@ -268,8 +306,4 @@
             document.getElementById('report-result-container').classList.remove('hidden');
             document.getElementById('total-present-count').innerText = "Total Present: " + presentCount;
             document.getElementById('total-absent-count').innerText = "Total Absent: " + absentDates.length;
-            document.getElementById('leave-dates-list').innerHTML = absentDates.map(d => `<span class="bg-rose-100 text-rose-700 px-2 py-1 rounded text-[10px] font-bold m-1">${d}</span>`).join('');
-        };
-    </script>
-</body>
-</html>
+      
