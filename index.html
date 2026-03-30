@@ -24,7 +24,8 @@
         .is-absent { background: #ef4444 !important; color: white !important; border-color: #ef4444 !important; }
         .is-holiday { background: #f59e0b !important; color: white !important; border-color: #f59e0b !important; }
         
-        .date-input { background: rgba(255,255,255,0.2); border: none; color: white; font-weight: 900; font-size: 12px; padding: 6px 12px; border-radius: 10px; outline: none; }
+        .date-input, .class-select { background: rgba(255,255,255,0.2); border: none; color: white; font-weight: 900; font-size: 12px; padding: 6px 12px; border-radius: 10px; outline: none; }
+        .class-select option { color: black; }
         .prayer-btn { padding: 10px 4px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 9px; font-weight: 900; background: #f8fafc; color: #94a3b8; }
         .p-btn-active { background-color: #10b981 !important; color: white !important; }
         .star-card { background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); border: 2px solid #fbbf24; text-align: center; padding: 15px; border-radius: 20px; }
@@ -46,7 +47,11 @@
     <div class="glass-header shadow-lg">
         <button id="btn-logout" class="absolute right-6 top-8 text-white opacity-50 hidden"><i class="fa-solid fa-right-from-bracket text-xl"></i></button>
         <h1 class="text-xl font-black uppercase text-white tracking-tighter">HIDAYATUL ISLAM MADRASA</h1>
-        <div class="mt-3"><input type="date" id="global-date" class="date-input"></div>
+        <div class="mt-3 flex justify-center gap-2">
+            <input type="date" id="global-date" class="date-input">
+            <select id="global-class-select" class="class-select">
+                </select>
+        </div>
     </div>
 
     <div id="home-page" class="view-page active p-4">
@@ -62,6 +67,7 @@
 
         <div class="admin-box" id="admin-home">
             <p class="text-[10px] font-black text-emerald-700 mb-2 uppercase text-center underline">Admin Dashboard</p>
+            <button id="btn-manage-students" onclick="addStudentPrompt()" class="w-full bg-blue-500 text-white py-3 rounded-xl text-[10px] font-black uppercase mb-3">Add Student to This Class</button>
             <select id="star-select" class="w-full p-3 border rounded-xl text-xs font-bold mb-2"></select>
             <input type="text" id="star-url-input" class="w-full p-3 border rounded-xl text-xs font-bold mb-2 outline-none" placeholder="Paste Photo Link (Postimg/ImgBB)">
             <div class="flex gap-2 mb-4">
@@ -113,7 +119,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc, updateDoc, arrayUnion, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, getDoc, updateDoc, arrayUnion, arrayRemove, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -129,35 +135,60 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        const studentList = ["Dishan", "Sifan", "Fazil", "Suhair", "Yaseen", "Twalhath", "Afreena", "Raseena", "Ayizza", "Misha", "Nila", "Fida", "Shakira", "Suhaiba", "Rifa"];
-        
-        const studentPhones = {
-            "Dishan": "918105987422", "Sifan": "919535595055", "Fazil": "919972576109",
-            "Suhair": "919900406129", "Yaseen": "919611970850", "Twalhath": "919164400782",
-            "Afreena": "918951835232", "Raseena": "917338308079", "Ayizza": "918867132152",
-            "Misha": "917899720054", "Nila": "917996216402", "Fida": "918546838515",
-            "Shakira": "917337729415", "Suhaiba": "919900406129", "Rifa": "919480861464"
-        };
+        // Global State
+        let currentClass = "Class 1";
+        let studentList = []; // Now stores objects: {name, phone}
 
         const prayers = ["Subhi", "Duhar", "Asr", "Maghrib", "Isha"];
         let selectedDate = new Date().toLocaleDateString('en-CA');
         let isUsthad = false;
         let listeners = [];
-        let currentAttendanceState = {}; // ഹാജർ വിവരങ്ങൾ താല്ക്കാലികമായി സൂക്ഷിക്കാൻ
+        let currentAttendanceState = {};
+
+        // Populate Class Dropdown
+        const classSelector = document.getElementById('global-class-select');
+        for(let i=1; i<=10; i++) {
+            let opt = document.createElement('option');
+            opt.value = `Class ${i}`;
+            opt.innerText = `Class ${i}`;
+            classSelector.appendChild(opt);
+        }
 
         onAuthStateChanged(auth, user => {
             isUsthad = user && user.email === "kereemk81@gmail.com";
             document.querySelectorAll('.admin-box').forEach(b => b.style.display = isUsthad ? 'block' : 'none');
             document.getElementById('btn-logout').classList.toggle('hidden', !user);
             document.getElementById('login-overlay').classList.toggle('hidden', !!user);
-            populateSelects(); renderAll();
+            startClassSync();
         });
+
+        function startClassSync() {
+            listeners.forEach(unsub => unsub());
+            listeners = [];
+
+            const classRef = doc(db, "classes", currentClass);
+            const unsubClass = onSnapshot(classRef, (snap) => {
+                if (snap.exists()) {
+                    studentList = snap.data().students || [];
+                } else {
+                    studentList = [];
+                }
+                populateSelects();
+                renderAll();
+            });
+            listeners.push(unsubClass);
+        }
+
+        classSelector.onchange = (e) => {
+            currentClass = e.target.value;
+            startClassSync();
+        };
 
         document.getElementById('global-date').value = selectedDate;
         document.getElementById('global-date').onchange = (e) => { selectedDate = e.target.value; renderAll(); };
 
         function populateSelects() {
-            const html = studentList.map(s => `<option value="${s}">${s}</option>`).join('');
+            const html = studentList.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
             document.getElementById('star-select').innerHTML = html;
             document.getElementById('report-student-select').innerHTML = html;
         }
@@ -170,30 +201,36 @@
         };
 
         function renderAll() {
-            listeners.forEach(unsub => unsub());
-            listeners = [];
             currentAttendanceState = {};
-            renderAttendance(); renderRoutine(); syncDashboard();
+            renderAttendance(); 
+            renderRoutine(); 
+            syncDashboard();
         }
 
         function renderAttendance() {
             const container = document.getElementById('attendance-list');
-            container.innerHTML = studentList.map(name => `
+            container.innerHTML = studentList.map(student => `
                 <div class="card flex justify-between items-center py-2">
-                    <p class="text-xs font-black uppercase text-emerald-900 flex-1">${name}</p>
+                    <div class="flex items-center gap-2 flex-1">
+                        ${isUsthad ? `<button onclick="deleteStudent('${student.name}', '${student.phone}')" class="text-rose-500 text-xs">❌</button>` : ''}
+                        <div>
+                           <p class="text-xs font-black uppercase text-emerald-900">${student.name}</p>
+                           <p class="text-[7px] text-gray-400 font-bold">${student.phone}</p>
+                        </div>
+                    </div>
                     <div class="att-btn-group">
-                        <button onclick="setAttendance('${name}','present')" id="btn-${name}-present" class="att-btn">Present</button>
-                        <button onclick="setAttendance('${name}','absent')" id="btn-${name}-absent" class="att-btn">Absent</button>
-                        <button onclick="setAttendance('${name}','holiday')" id="btn-${name}-holiday" class="att-btn">Holiday</button>
+                        <button onclick="setAttendance('${student.name}','present')" id="btn-${student.name}-present" class="att-btn">Present</button>
+                        <button onclick="setAttendance('${student.name}','absent')" id="btn-${student.name}-absent" class="att-btn">Absent</button>
+                        <button onclick="setAttendance('${student.name}','holiday')" id="btn-${student.name}-holiday" class="att-btn">Holiday</button>
                     </div>
                 </div>`).join('');
 
-            studentList.forEach(name => {
-                const unsub = onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${name}`), snap => {
+            studentList.forEach(student => {
+                const unsub = onSnapshot(doc(db, "daily_attendance", `${selectedDate}_${student.name}`), snap => {
                     const status = snap.exists() ? snap.data().status : null;
-                    currentAttendanceState[name] = status;
+                    currentAttendanceState[student.name] = status;
                     ['present', 'absent', 'holiday'].forEach(st => {
-                        const btn = document.getElementById(`btn-${name}-${st}`);
+                        const btn = document.getElementById(`btn-${student.name}-${st}`);
                         if(!btn) return;
                         if(status === st) btn.className = `att-btn is-${st}`;
                         else btn.className = "att-btn";
@@ -203,48 +240,64 @@
             });
         }
 
+        window.addStudentPrompt = async () => {
+            const name = prompt("Enter Student Name:");
+            if (!name) return;
+            const phone = prompt("Enter Parent WhatsApp Number (with 91):", "91");
+            if (phone) {
+                const ref = doc(db, "classes", currentClass);
+                const snap = await getDoc(ref);
+                if (!snap.exists()) await setDoc(ref, { students: [] });
+                await updateDoc(ref, { students: arrayUnion({ name, phone }) });
+            }
+        };
+
+        window.deleteStudent = async (name, phone) => {
+            if(confirm(`Remove ${name} from ${currentClass}?`)) {
+                await updateDoc(doc(db, "classes", currentClass), { students: arrayRemove({ name, phone }) });
+            }
+        };
+
         window.setAttendance = async (name, status) => {
             if(!isUsthad) return alert("Only Usthad can update.");
             await setDoc(doc(db, "daily_attendance", `${selectedDate}_${name}`), { name, status });
         };
 
-        // ബൾക്ക് മെസ്സേജ് അയക്കാനുള്ള ഫങ്ക്ഷൻ
         window.sendAllWhatsAppMessages = async () => {
             if(!isUsthad) return;
             let count = 0;
-            for (const name of studentList) {
-                const status = currentAttendanceState[name];
-                const phone = studentPhones[name];
+            for (const student of studentList) {
+                const status = currentAttendanceState[student.name];
+                const phone = student.phone;
                 if (phone && (status === 'present' || status === 'absent')) {
                     const msgStatus = status === 'present' ? "PRESENT ✅" : "ABSENT ❌";
-                    const text = `Dear Parent, your child *${name}* is *${msgStatus}* at Hidayatul Islam Madrasa today (${selectedDate}).`;
+                    const text = `Dear Parent, your child *${student.name}* is *${msgStatus}* at Hidayatul Islam Madrasa today (${selectedDate}).`;
                     const wpUrl = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
                     window.open(wpUrl, '_blank');
                     count++;
-                    await new Promise(r => setTimeout(r, 600)); // ബ്രൗസർ ലോഡ് ബാലൻസിംഗിന്
+                    await new Promise(r => setTimeout(r, 800));
                 }
             }
-            if(count === 0) alert("No records marked as Present/Absent!");
+            if(count === 0) alert("No records marked as Present/Absent in this class!");
         };
 
         function renderRoutine() {
             const container = document.getElementById('routine-list');
-            container.innerHTML = studentList.map(name => `
+            container.innerHTML = studentList.map(student => `
                 <div class="card">
-                    <p class="text-[11px] font-black uppercase mb-3 text-emerald-900 border-b pb-1">${name}</p>
-                    <div class="grid grid-cols-5 gap-1 mb-2">
-                        ${prayers.map(p => `<button onclick="toggleRoutine('${name}','${p}')" id="rot-${name}-${p}" class="prayer-btn">${p.substring(0,3).toUpperCase()}</button>`).join('')}
+                    <p class="text-[11px] font-black uppercase mb-3 text-emerald-900 border-b pb-1">${student.name}</p><div class="grid grid-cols-5 gap-1 mb-2">
+                        ${prayers.map(p => `<button onclick="toggleRoutine('${student.name}','${p}')" id="rot-${student.name}-${p}" class="prayer-btn">${p.substring(0,3).toUpperCase()}</button>`).join('')}
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <button onclick="toggleRoutine('${name}','quran')" id="rot-${name}-quran" class="p-2 border rounded-xl text-[9px] font-black uppercase">Quran</button>
-                        <button onclick="toggleRoutine('${name}','study')" id="rot-${name}-study" class="p-2 border rounded-xl text-[9px] font-black uppercase">Study</button>
+                        <button onclick="toggleRoutine('${student.name}','quran')" id="rot-${student.name}-quran" class="p-2 border rounded-xl text-[9px] font-black uppercase">Quran</button>
+                        <button onclick="toggleRoutine('${student.name}','study')" id="rot-${student.name}-study" class="p-2 border rounded-xl text-[9px] font-black uppercase">Study</button>
                     </div>
                 </div>`).join('');
-            studentList.forEach(name => {
-                const unsub = onSnapshot(doc(db, "routine", `${selectedDate}_${name}`), snap => {
+            studentList.forEach(student => {
+                const unsub = onSnapshot(doc(db, "routine", `${selectedDate}_${student.name}`), snap => {
                     const d = snap.data();
                     [...prayers, 'quran', 'study'].forEach(t => {
-                        const btn = document.getElementById(`rot-${name}-${t}`);
+                        const btn = document.getElementById(`rot-${student.name}-${t}`);
                         if(btn) { if(d && d[t]) btn.classList.add('p-btn-active'); else btn.classList.remove('p-btn-active'); }
                     });
                 });
@@ -285,8 +338,7 @@
             const snap = await getDoc(docRef);
             if (!snap.exists()) await setDoc(docRef, { stars: [] });
             await updateDoc(docRef, { stars: arrayUnion({ name: document.getElementById('star-select').value, url: document.getElementById('star-url-input').value }) });
-            alert("Added!");
-        };
+            alert("Added!");};
         document.getElementById('btn-clear-stars').onclick = async () => { if(confirm("Clear?")) await setDoc(doc(db, "settings", "star_list"), { stars: [] }); };
         document.getElementById('btn-post-notice').onclick = async () => {
             await setDoc(doc(db, "settings", "dashboard"), { notice: document.getElementById('notice-input').value, status: document.getElementById('status-input').value, topic: document.getElementById('topic-input').value });
